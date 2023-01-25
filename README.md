@@ -86,6 +86,7 @@ allprojects {
         ... your repositories
         maven{url = uri("https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp")}
         maven{url = uri("https://developer.huawei.com/repo/")}
+        maven{url = uri("https://jitpack.io")}
     }
 }
 ```

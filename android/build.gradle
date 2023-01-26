@@ -74,8 +74,8 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  debugImplementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:6.0.0-alpha1-dev"
-  releaseImplementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:6.0.0-alpha1-release"
+  debugImplementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:6.0.0-dev"
+  releaseImplementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:6.0.0-release"
 }
 
 if (isNewArchitectureEnabled()) {

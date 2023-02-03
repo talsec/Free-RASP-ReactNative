@@ -253,7 +253,15 @@ const actions = {
   // iOS only
   'passcode': () => {
     console.log('passcode');
+  }
+  // Android only
+  'onUnlockedDevice': () => {
+    console.log('onUnlockedDeviceDetected');
   },
+  // Android only
+  'onHardwareBackedKeystoreNotAvailable': () => {
+    console.log('onHardwareBackedKeystoreNotAvailableDetected');
+  }
 };
 
 useFreeRasp(config, actions);

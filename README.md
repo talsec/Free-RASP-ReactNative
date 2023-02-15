@@ -257,6 +257,15 @@ And you're done 🎉!
 
 If you encounter any other issues, you can see the list of solved issues [here](https://github.com/talsec/Free-RASP-ReactNative/issues?q=is%3Aissue+is%3Aclosed), or open up a [new one](https://github.com/talsec/Free-RASP-ReactNative/issues?q=is%3Aissue+is%3Aopen).
 
+# Troubleshooting
+
+### Could not determine the dependencies of task `':freerasp-react-native:compileDebugAidl'`
+
+**Solution:**
+
+* In `package.json`, update `react-native` to a higher patch version and run `npm install` (or `yarn install`).
+* [See this issue to find out which patch version is relevant for you.](https://github.com/facebook/react-native/issues/35210)
+
 # Security Report
 
 The Security Report is a weekly summary describing the application's security state and characteristics of the devices it runs on in a practical and easy-to-understand way.
@@ -307,7 +316,7 @@ Learn more about commercial features at  [https://talsec.app](https://talsec.app
             <td>advanced</td>
         </tr>
         <tr>
-            <td>Runtime reverse engineering controls 
+            <td>Runtime reverse engineering controls
                 <ul>
                     <li>Debug</li>
                     <li>Emulator</li>
@@ -318,7 +327,7 @@ Learn more about commercial features at  [https://talsec.app](https://talsec.app
             <td>advanced</td>
         </tr>
         <tr>
-            <td>Runtime integrity controls 
+            <td>Runtime integrity controls
                 <ul>
                     <li>Tamper protection</li>
                     <li>Repackaging / Cloning protection</li>
@@ -330,7 +339,7 @@ Learn more about commercial features at  [https://talsec.app](https://talsec.app
             <td>advanced</td>
         </tr>
         <tr>
-            <td>Device OS security status check 
+            <td>Device OS security status check
                 <ul>
                     <li>HW security module control</li>
                     <li>Screen lock control</li>
@@ -340,7 +349,7 @@ Learn more about commercial features at  [https://talsec.app](https://talsec.app
             <td>yes</td>
         </tr>
         <tr>
-            <td>UI protection 
+            <td>UI protection
                 <ul>
                     <li>Overlay protection</li>
                     <li>Accessibility services protection</li>
@@ -353,7 +362,7 @@ Learn more about commercial features at  [https://talsec.app](https://talsec.app
             <td colspan=5><strong>Hardening suite</strong></td>
         </tr>
         <tr>
-            <td>Security hardening suite 
+            <td>Security hardening suite
                 <ul>
                     <li>Customer Data Encryption (local storage)</li>
                     <li>End-to-end encryption</li>

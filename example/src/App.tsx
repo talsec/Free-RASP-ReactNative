@@ -1,9 +1,16 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
+import { Platform } from 'react-native';
 import { useFreeRasp } from 'freerasp-react-native';
+import { DemoApp } from './DemoApp';
+import { commonChecks, iosChecks } from './checks';
 
 const App = () => {
+  const [appChecks, setAppChecks] = React.useState([
+    ...commonChecks,
+    ...(Platform.OS === 'ios' ? iosChecks : []),
+  ]);
+
   const config = {
     androidConfig: {
       packageName: 'com.freeraspreactnativeexample',
@@ -20,70 +27,109 @@ const App = () => {
   const actions = {
     // Android & iOS
     'privilegedAccess': () => {
-      console.log('privilegedAccess');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Privileged Access'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
     },
     // Android & iOS
     'debug': () => {
-      console.log('debug');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Debug' ? { ...threat, status: 'nok' } : threat
+        )
+      );
     },
     // Android & iOS
     'simulator': () => {
-      console.log('simulator');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Simulator' ? { ...threat, status: 'nok' } : threat
+        )
+      );
     },
     // Android & iOS
     'appIntegrity': () => {
-      console.log('appIntegrity');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'App Integrity'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
     },
     // Android & iOS
     'unofficialStore': () => {
-      console.log('unofficialStore');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Unofficial Store'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
     },
     // Android & iOS
     'hooks': () => {
-      console.log('hooks');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Hooks' ? { ...threat, status: 'nok' } : threat
+        )
+      );
     },
     // Android & iOS
     'device binding': () => {
-      console.log('device binding');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Device Binding'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
     },
     // iOS only
     'deviceID': () => {
-      console.log('deviceID');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Device ID' ? { ...threat, status: 'nok' } : threat
+        )
+      );
     },
     // iOS only
     'missingSecureEnclave': () => {
-      console.log('missingSecureEnclave');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Missing Secure Enclave'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
     },
     // iOS only
     'passcodeChange': () => {
-      console.log('passcodeChange');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Passcode Change'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
     },
     // iOS only
     'passcode': () => {
-      console.log('passcode');
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Passcode' ? { ...threat, status: 'nok' } : threat
+        )
+      );
     },
   };
 
   useFreeRasp(config, actions);
 
-  return (
-    <View style={styles.container}>
-      <Text>Hello from the freeRASP app!</Text>
-    </View>
-  );
+  return <DemoApp checks={appChecks} />;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});
 
 export default App;

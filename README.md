@@ -1,8 +1,7 @@
-
-
 ![FreeRasp](https://raw.githubusercontent.com/talsec/Free-RASP-Community/master/visuals/freeRASPforRN.png)
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/talsec/Free-RASP-Community?color=green) ![GitHub](https://img.shields.io/github/license/talsec/Free-RASP-Community) ![GitHub](https://img.shields.io/github/last-commit/talsec/Free-RASP-Community) ![Publisher](https://img.shields.io/pub/publisher/freerasp)
+
 # freeRASP for React Native
 
 freeRASP for React Native is a mobile in-app protection and security monitoring plugin. It aims to cover the main aspects of RASP (Runtime App Self Protection) and application shielding.
@@ -10,18 +9,19 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
 # :notebook_with_decorative_cover: Table of contents
 
 - [Overview](#overview)
+- [Requirements](#requirements)
 - [Usage](#usage)
-  * [(Optional) Create a new React Native demo application](#optional-create-a-new-react-native-demo-application)
-  * [Step 1: Install the plugin](#step-1-install-the-plugin)
-  * [Step 2: Set up the dependencies](#step-2-set-up-the-dependencies)
-  * [Step 3: Dev vs Release version](#step-3-dev-vs-release-version)
-  * [Step 4: Import freeRASP into the app](#step-4-import-freerasp-into-the-app)
-  * [Step 5: Setup the configuration, callbacks and initialize freeRASP](#step-5-setup-the-configuration-callbacks-and-initialize-freerasp)
-  * [Step 6: User Data Policies](#step-6-user-data-policies)
+  - [(Optional) Create a new React Native demo application](#optional-create-a-new-react-native-demo-application)
+  - [Step 1: Install the plugin](#step-1-install-the-plugin)
+  - [Step 2: Set up the dependencies](#step-2-set-up-the-dependencies)
+  - [Step 3: Dev vs Release version](#step-3-dev-vs-release-version)
+  - [Step 4: Import freeRASP into the app](#step-4-import-freerasp-into-the-app)
+  - [Step 5: Setup the configuration, callbacks and initialize freeRASP](#step-5-setup-the-configuration-callbacks-and-initialize-freerasp)
+  - [Step 6: User Data Policies](#step-6-user-data-policies)
 - [Security Report](#security-report)
 - [Enterprise Services](#bar_chart-enterprise-services)
-  * [Commercial version](#commercial-version)
-  * [Plans Comparison](#plans-comparison)
+  - [Commercial version](#commercial-version)
+  - [Plans Comparison](#plans-comparison)
 
 # Overview
 
@@ -29,17 +29,17 @@ The freeRASP is available for Flutter, Cordova, React Native, Android, and iOS d
 
 freeRASP plugin is designed to combat
 
-* Reverse engineering attempts
-* Re-publishing or tampering with the apps
-* Running application in a compromised OS environment
-* Malware, fraudsters, and cybercriminal activities
+- Reverse engineering attempts
+- Re-publishing or tampering with the apps
+- Running application in a compromised OS environment
+- Malware, fraudsters, and cybercriminal activities
 
 Key features are the detection and prevention of
 
-* Root/Jailbreak (e.g., unc0ver, check1rain)
-* Hooking framework (e.g., Frida, Shadow)
-* Untrusted installation method
-* App/Device (un)binding
+- Root/Jailbreak (e.g., unc0ver, check1rain)
+- Hooking framework (e.g., Frida, Shadow)
+- Untrusted installation method
+- App/Device (un)binding
 
 Additional freeRASP features include low latency, easy integration and a weekly [Security Report](#security-report) containing detailed information about detected incidents and potential threats, summarizing the state of your app security.
 
@@ -47,10 +47,10 @@ The commercial version provides a top-notch protection level, extra features, su
 
 It allows easy to implement API protection and App Integrity verification on the backend to prevent API abuse:
 
-* Bruteforce attacks
-* Botnets
-* Session-hijacking
-* DDoS
+- Bruteforce attacks
+- Botnets
+- Session-hijacking
+- DDoS
 
 It is a unified solution that works across all mobile platforms without dependency on external web services (i.e., without extra latency, an additional point of failure, and maintenance costs).
 
@@ -58,12 +58,19 @@ Learn more about commercial features at [https://talsec.app](https://talsec.app)
 
 Learn more about freemium freeRASP features at [GitHub main repository](https://github.com/talsec/Free-RASP-Community).
 
+# Requirements
+
+Following minimal version requirements has to be met
+in order to run freeRASP in your app:
+
+- `react-native` >= `0.65.3`
+
 # Usage
 
 We will guide you step-by-step, but you can always check the expected result in the example.
 
-
 ## (Optional) Create a new React Native demo application
+
 Create a new React Native project:
 
     $ npx react-native init AwesomeProject
@@ -77,8 +84,11 @@ or
     $ yarn add https://github.com/talsec/Free-RASP-ReactNative.git
 
 ## Step 2: Set up the dependencies
+
 ### Android
+
 freeRASP needs to have access to the maven repository containing freeRASP. Add following lines into the `android/build.gradle` file, in the `allprojects.repositories` section:
+
 ```gradle
 allprojects {
     repositories {
@@ -93,58 +103,61 @@ allprojects {
 ```
 
 ### iOS
+
 freeRASP React Native plugin uses Pods. Navigate to the `ios` folder and run:
 
     $ pod install
 
-
 ## Step 3: Dev vs Release version
+
 The Dev version is used to not complicate the development process of the application, e.g. if you would implement killing of the application on the debugger callback. It disables some checks which won't be triggered during the development process:
 
-* Emulator-usage (simulator)
-* Debugging (debug)
-* Signing (appIntegrity)
-* Unofficial store (unofficialStore)
+- Emulator-usage (simulator)
+- Debugging (debug)
+- Signing (appIntegrity)
+- Unofficial store (unofficialStore)
 
 Which version of freeRASP is used is tied to the application's development stage - more precisely, how the application is compiled.
 
 ### Android
+
 Android implementation of the React Native plugin detects selected development stage and automatically applies the suitable version of the library.
 
-* `npx react-native run-android` (debug) -> uses dev version of freeRASP
-* `npx react-native run-android --variant release` (release) -> uses release version of freeRASP
+- `npx react-native run-android` (debug) -> uses dev version of freeRASP
+- `npx react-native run-android --variant release` (release) -> uses release version of freeRASP
 
 ### iOS
+
 For the iOS implemtation, it's neccesary to add script into the Xcode environment, that automatically switches between the library dev/release versions according to selected development stage. Then, it is necessary to embedd a symlink to correct TalsecRuntime.xcframework.
 
-1. Add pre-built script for changing the Debug and Release versions of the framework:
-   * Open up the **.xcworkspace** file
-   * Go to **Product** -> **Scheme** -> **Edit Scheme...** -> **Build (dropdown arrow)** -> **Pre-actions**
-   * Hit  **+**  and then  **New Run Script Action**
-   * Set  **Provide build setting from**  to  your application
-   * Copy-paste following script:
-        ```shell
-        cd "${SRCROOT}/../node_modules/freerasp-react-native/ios"
-        if [ "${CONFIGURATION}" = "Release" ]; then
-            rm -rf ./TalsecRuntime.xcframework
-            ln -s ./Release/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
-        else
-            rm -rf ./TalsecRuntime.xcframework
-            ln -s ./Debug/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
-        fi
-        ```
-   * **Close**
-3. Add dependency on the symlink
-   * Go to your **Target** -> **Build Phases** -> **Link Binary With Libraries**
-   * Add dependency (drag & drop right after **libPods**) on the symlink on the following location:
-     *AwesomeProject/node_modules/freerasp-react-native/ios/TalsecRuntime.xcframework*
-   * If there is no symlink, try to create it manually in that folder by the following command:
-   *     $ ln -s ./Debug/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
-
+1.  Add pre-built script for changing the Debug and Release versions of the framework:
+    - Open up the **.xcworkspace** file
+    - Go to **Product** -> **Scheme** -> **Edit Scheme...** -> **Build (dropdown arrow)** -> **Pre-actions**
+    - Hit **+** and then **New Run Script Action**
+    - Set **Provide build setting from** to your application
+    - Copy-paste following script:
+      ```shell
+      cd "${SRCROOT}/../node_modules/freerasp-react-native/ios"
+      if [ "${CONFIGURATION}" = "Release" ]; then
+          rm -rf ./TalsecRuntime.xcframework
+          ln -s ./Release/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
+      else
+          rm -rf ./TalsecRuntime.xcframework
+          ln -s ./Debug/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
+      fi
+      ```
+    - **Close**
+2.  Add dependency on the symlink
+    - Go to your **Target** -> **Build Phases** -> **Link Binary With Libraries**
+    - Add dependency (drag & drop right after **libPods**) on the symlink on the following location:
+      _AwesomeProject/node_modules/freerasp-react-native/ios/TalsecRuntime.xcframework_
+    - If there is no symlink, try to create it manually in that folder by the following command:
+    -     $ ln -s ./Debug/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
 
 Followingly:
-* `npx react-native run-ios` (debug) -> uses dev version of freeRASP
-* `npx react-native run-ios --configuration Release` (release) -> uses release version of freeRASP
+
+- `npx react-native run-ios` (debug) -> uses dev version of freeRASP
+- `npx react-native run-ios --configuration Release` (release) -> uses release version of freeRASP
 
 ## Step 4: Import freeRASP into the app
 
@@ -155,14 +168,18 @@ import { useFreeRasp } from 'freerasp-react-native';
 ```
 
 ## Step 5: Setup the configuration, callbacks and initialize freeRASP
+
 First, the configuration and callbacks will be explained. Then the **Initialization** chapter shows the implementation.
+
 ### Configuration
+
 You need to provide configuration for freeRASP to work properly and initialize it. The freeRASP configuration contains configs for both Android and iOS. You must fill all the required values for the plugin to work.
 
 For Android:
-  - `packageName` - package name of your app you chose when you created it
-  - `certificateHashes` - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
-  - `supportedAlternativeStores` _(optional)_ - If you publish on the Google Play Store and/or Huawei AppGallery, you **don't have to assign anything** there as those are supported out of the box.
+
+- `packageName` - package name of your app you chose when you created it
+- `certificateHashes` - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
+- `supportedAlternativeStores` _(optional)_ - If you publish on the Google Play Store and/or Huawei AppGallery, you **don't have to assign anything** there as those are supported out of the box.
 
 For iOS similarly to Android, `appBundleId` and `appTeamId` are required.
 
@@ -264,8 +281,8 @@ If you encounter any other issues, you can see the list of solved issues [here](
 
 **Solution:**
 
-* In `package.json`, update `react-native` to a higher patch version and run `npm install` (or `yarn install`).
-* [See this issue to find out which patch version is relevant for you.](https://github.com/facebook/react-native/issues/35210)
+- In `package.json`, update `react-native` to a higher patch version and run `npm install` (or `yarn install`).
+- [See this issue to find out which patch version is relevant for you.](https://github.com/facebook/react-native/issues/35210)
 
 # Security Report
 
@@ -278,24 +295,25 @@ To receive Security Reports, fill out the _watcherMail_ field in [config](#step-
 ![dashboard](https://raw.githubusercontent.com/talsec/Free-RASP-Community/master/visuals/dashboard.png)
 
 # :bar_chart: Enterprise Services
+
 We provide app security hardening SDK: i.e. AppiCrypt®, Customer Data Encryption (local storage), End-to-end encryption, Strings protection (e.g. API keys) and Dynamic Certificate Pinning to our commercial customers as well. To get the most advanced protection compliant with PSD2 RT and eIDAS and support from our experts, contact us at [talsec.app](https://talsec.app).
 
 ## Commercial version
+
 The commercial version provides a top-notch protection level, extra features, support, and maintenance. One of the most valued commercial features is [AppiCrypt®](https://www.talsec.app/appicrypt) - App Integrity Cryptogram.
 
 It allows easy to implement API protection and App Integrity verification on the backend to prevent API abuse:
 
--   Bruteforce attacks
--   Botnets
--   Session-hijacking
--   DDoS
+- Bruteforce attacks
+- Botnets
+- Session-hijacking
+- DDoS
 
 It is a unified solution that works across all mobile platforms without dependency on external web services (i.e., without extra latency, an additional point of failure, and maintenance costs).
 
-Learn more about commercial features at  [https://talsec.app](https://talsec.app/).
+Learn more about commercial features at [https://talsec.app](https://talsec.app/).
 
 **TIP:** You can try freeRASP and then upgrade easily to an enterprise service.
-
 
 ## Plans Comparison
 

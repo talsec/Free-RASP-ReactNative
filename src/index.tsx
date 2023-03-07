@@ -30,6 +30,8 @@ type NativeEventEmitterActions = {
   'missingSecureEnclave'?: () => any;
   'passcodeChange'?: () => any;
   'passcode'?: () => any;
+  'unlockedDevice'?: () => any;
+  'hardwareBackedKeystoreNotAvailable'?: () => any;
   'started'?: () => any;
   'initializationError'?: (reason: { message: string }) => any;
 };

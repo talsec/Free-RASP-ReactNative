@@ -78,23 +78,23 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
     sendOngoingPluginResult("device binding", null)
   }
 
+  // This is optional. Use only if you are interested in device state information like device lock and HW backed keystore state
+  private val deviceStateListener = object : ThreatListener.DeviceState {
+    override fun onUnlockedDeviceDetected() {
+      sendOngoingPluginResult("unlockedDevice", null)
+    }
+
+    override fun onHardwareBackedKeystoreNotAvailableDetected() {
+      sendOngoingPluginResult("hardwareBackedKeystoreNotAvailable", null)
+    }
+  }
+
   private fun sendOngoingPluginResult(eventName: String, params: WritableMap?) {
     reactContext
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(eventName, params)
   }
 
-    // This is optional. Use only if you are interested in device state information like device lock and HW backed keystore state
-    private val deviceStateListener = object : ThreatListener.DeviceState {
-        override fun onUnlockedDeviceDetected() {
-          sendOngoingPluginResult("onUnlockedDeviceDetected", null)
-        }
-
-        override fun onHardwareBackedKeystoreNotAvailableDetected() {
-            // Set your reaction
-            sendOngoingPluginResult("onHardwareBackedKeystoreNotAvailableDetected", null)
-        }
-    }
 
   private fun parseTalsecConfig(config: ReadableMap): TalsecConfig {
     val androidConfig = config.getMap("androidConfig")!!

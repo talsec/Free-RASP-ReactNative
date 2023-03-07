@@ -238,29 +238,21 @@ const actions = {
   'device binding': () => {
     console.log('device binding');
   },
-  // iOS only
-  'deviceID': () => {
-    console.log('deviceID');
+  // Android & iOS
+  'passcode': () => {
+    console.log('passcode');
   },
-  // iOS only
-  'missingSecureEnclave': () => {
-    console.log('missingSecureEnclave');
-  },
+  // Android & iOS
+  'hardwareBackedKeystoreNotAvailable': () => {
+    console.log('hardwareBackedKeystoreNotAvailable');
+  }
   // iOS only
   'passcodeChange': () => {
     console.log('passcodeChange');
   },
   // iOS only
-  'passcode': () => {
-    console.log('passcode');
-  }
-  // Android only
-  'onUnlockedDevice': () => {
-    console.log('onUnlockedDeviceDetected');
-  },
-  // Android only
-  'onHardwareBackedKeystoreNotAvailable': () => {
-    console.log('onHardwareBackedKeystoreNotAvailableDetected');
+  'deviceID': () => {
+    console.log('deviceID');
   }
 };
 

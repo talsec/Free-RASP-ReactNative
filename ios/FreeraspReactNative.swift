@@ -41,13 +41,17 @@ class FreeraspReactNative: RCTEventEmitter {
     }
     
     override func supportedEvents() -> [String]! {
-        return ["initializationError", "started", "privilegedAccess", "debug", "simulator", "appIntegrity", "unofficialStore", "hooks", "device binding", "deviceID", "missingSecureEnclave", "passcodeChange", "passcode"]
+        return ["initializationError", "started", "privilegedAccess", "debug", "simulator", "appIntegrity", "unofficialStore", "hooks", "device binding", "deviceID", "hardwareBackedKeystoreNotAvailable", "passcodeChange", "passcode"]
     }
 }
 
 extension SecurityThreatCenter: SecurityThreatHandler {
     public func threatDetected(_ securityThreat: TalsecRuntime.SecurityThreat) {
         // It is better to implement security reactions (e.g. killing the app) here.
-        FreeraspReactNative.shared!.sendEvent(withName: securityThreat.rawValue, body: securityThreat.rawValue)
+        if (securityThreat.rawValue == "missingSecureEnclave") {
+            FreeraspReactNative.shared!.sendEvent(withName: "hardwareBackedKeystoreNotAvailable", body: "hardwareBackedKeystoreNotAvailable")
+        } else {
+            FreeraspReactNative.shared!.sendEvent(withName: securityThreat.rawValue, body: securityThreat.rawValue)
+        }
     }
 }

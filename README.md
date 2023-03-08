@@ -239,21 +239,21 @@ const actions = {
     console.log('device binding');
   },
   // Android & iOS
-  'passcode': () => {
-    console.log('passcode');
-  },
-  // Android & iOS
   'hardwareBackedKeystoreNotAvailable': () => {
     console.log('hardwareBackedKeystoreNotAvailable');
-  }
-  // iOS only
-  'passcodeChange': () => {
-    console.log('passcodeChange');
+  },
+  // Android & iOS
+  'passcode': () => {
+    console.log('passcode');
   },
   // iOS only
   'deviceID': () => {
     console.log('deviceID');
-  }
+  },
+  // iOS only
+  'passcodeChange': () => {
+    console.log('passcodeChange');
+  },
 };
 
 useFreeRasp(config, actions);

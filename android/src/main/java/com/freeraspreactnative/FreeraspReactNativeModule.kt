@@ -12,9 +12,9 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
 class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext), ThreatListener.ThreatDetected {
+  ReactContextBaseJavaModule(reactContext), ThreatListener.ThreatDetected, FreeraspDeviceStateListener.DeviceStateListener {
 
-  private val listener = ThreatListener(this)
+  private val listener = ThreatListener(this, FreeraspDeviceStateListener)
 
   override fun getName(): String {
     return NAME
@@ -27,8 +27,8 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
 
     try {
       val config = parseTalsecConfig(options)
+      FreeraspDeviceStateListener.listener = this
       listener.registerListener(reactContext)
-      ThreatListener( this,deviceStateListener).registerListener(reactContext)
       Talsec.start(reactContext, config)
       sendOngoingPluginResult("started", null)
 
@@ -78,15 +78,8 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
     sendOngoingPluginResult("device binding", null)
   }
 
-  // This is optional. Use only if you are interested in device state information like device lock and HW backed keystore state
-  private val deviceStateListener = object : ThreatListener.DeviceState {
-    override fun onUnlockedDeviceDetected() {
-      sendOngoingPluginResult("unlockedDevice", null)
-    }
-
-    override fun onHardwareBackedKeystoreNotAvailableDetected() {
-      sendOngoingPluginResult("hardwareBackedKeystoreNotAvailable", null)
-    }
+  override fun deviceStateChangeDetected(threatType: String) {
+    sendOngoingPluginResult(threatType, null)
   }
 
   private fun sendOngoingPluginResult(eventName: String, params: WritableMap?) {
@@ -94,7 +87,6 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
       .emit(eventName, params)
   }
-
 
   private fun parseTalsecConfig(config: ReadableMap): TalsecConfig {
     val androidConfig = config.getMap("androidConfig")!!

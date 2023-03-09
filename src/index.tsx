@@ -29,7 +29,7 @@ type NativeEventEmitterActions = {
   'deviceID'?: () => any;
   'passcodeChange'?: () => any;
   'passcode'?: () => any;
-  'hardwareBackedKeystoreNotAvailable'?: () => any;
+  'secureHardwareNotAvailable'?: () => any;
   'started'?: () => any;
   'initializationError'?: (reason: { message: string }) => any;
 };

@@ -14,7 +14,7 @@ internal object FreeraspDeviceStateListener: ThreatListener.DeviceState {
 
   override fun onHardwareBackedKeystoreNotAvailableDetected() {
     "hardwareBackedKeystoreNotAvailable".let {
-      listener?.deviceStateChangeDetected(it)
+      listener?.deviceStateChangeDetected("secureHardwareNotAvailable")
     }
   }
 

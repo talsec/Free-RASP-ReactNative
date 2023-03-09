@@ -90,10 +90,10 @@ const App = () => {
       );
     },
     // Android & iOS
-    'hardwareBackedKeystoreNotAvailable': () => {
+    'secureHardwareNotAvailable': () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
-          threat.name === 'Hardware Backed Keystore'
+          threat.name === 'Secure Hardware Not Available'
             ? { ...threat, status: 'nok' }
             : threat
         )

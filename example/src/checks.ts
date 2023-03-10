@@ -6,11 +6,11 @@ export const commonChecks = [
   { name: 'Unofficial Store', status: 'ok' },
   { name: 'Hooks', status: 'ok' },
   { name: 'Device Binding', status: 'ok' },
+  { name: 'Secure Hardware Not Available', status: 'ok' },
+  { name: 'Passcode', status: 'ok' },
 ];
 
 export const iosChecks = [
   { name: 'Device ID', status: 'ok' },
-  { name: 'Missing Secure Enclave', status: 'ok' },
   { name: 'Passcode Change', status: 'ok' },
-  { name: 'Passcode', status: 'ok' },
 ];

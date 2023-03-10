@@ -89,21 +89,29 @@ const App = () => {
         )
       );
     },
+    // Android & iOS
+    'secureHardwareNotAvailable': () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Secure Hardware Not Available'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
+    // Android & iOS
+    'passcode': () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Passcode' ? { ...threat, status: 'nok' } : threat
+        )
+      );
+    },
     // iOS only
     'deviceID': () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Device ID' ? { ...threat, status: 'nok' } : threat
-        )
-      );
-    },
-    // iOS only
-    'missingSecureEnclave': () => {
-      setAppChecks((currentState) =>
-        currentState.map((threat) =>
-          threat.name === 'Missing Secure Enclave'
-            ? { ...threat, status: 'nok' }
-            : threat
         )
       );
     },
@@ -114,14 +122,6 @@ const App = () => {
           threat.name === 'Passcode Change'
             ? { ...threat, status: 'nok' }
             : threat
-        )
-      );
-    },
-    // iOS only
-    'passcode': () => {
-      setAppChecks((currentState) =>
-        currentState.map((threat) =>
-          threat.name === 'Passcode' ? { ...threat, status: 'nok' } : threat
         )
       );
     },

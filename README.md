@@ -238,21 +238,21 @@ const actions = {
   'device binding': () => {
     console.log('device binding');
   },
+  // Android & iOS
+  'secureHardwareNotAvailable': () => {
+    console.log('secureHardwareNotAvailable');
+  },
+  // Android & iOS
+  'passcode': () => {
+    console.log('passcode');
+  },
   // iOS only
   'deviceID': () => {
     console.log('deviceID');
   },
   // iOS only
-  'missingSecureEnclave': () => {
-    console.log('missingSecureEnclave');
-  },
-  // iOS only
   'passcodeChange': () => {
     console.log('passcodeChange');
-  },
-  // iOS only
-  'passcode': () => {
-    console.log('passcode');
   },
 };
 
@@ -290,7 +290,7 @@ The Security Report is a weekly summary describing the application's security st
 
 The report provides a quick overview of the security incidents, their dynamics, app integrity, and reverse engineering attempts. It contains info about the security of devices, such as OS version or the ratio of devices with screen locks and biometrics. Each visualization also comes with a concise explanation.
 
-To receive Security Reports, fill out the _watcherMail_ field in [config](#step-3-setup-the-configuration-for-your-app).
+To receive Security Reports, fill out the _watcherMail_ field in [config](#configuration).
 
 ![dashboard](https://raw.githubusercontent.com/talsec/Free-RASP-Community/master/visuals/dashboard.png)
 
@@ -423,6 +423,7 @@ Learn more about commercial features at [https://talsec.app](https://talsec.app/
             <td>no</td>
             <td>yes</td>
         </tr>
+        <tr>
          <td colspan=5><strong>Fair usage policy</strong></td>
         </tr>
         <tr>

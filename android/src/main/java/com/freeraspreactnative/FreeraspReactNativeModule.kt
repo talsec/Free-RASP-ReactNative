@@ -12,9 +12,9 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
 class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext), ThreatListener.ThreatDetected {
+  ReactContextBaseJavaModule(reactContext), ThreatListener.ThreatDetected, FreeraspDeviceStateListener.DeviceStateListener {
 
-  private val listener = ThreatListener(this)
+  private val listener = ThreatListener(this, FreeraspDeviceStateListener)
 
   override fun getName(): String {
     return NAME
@@ -27,6 +27,7 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
 
     try {
       val config = parseTalsecConfig(options)
+      FreeraspDeviceStateListener.listener = this
       listener.registerListener(reactContext)
       Talsec.start(reactContext, config)
       sendOngoingPluginResult("started", null)
@@ -75,6 +76,10 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
 
   override fun onDeviceBindingDetected() {
     sendOngoingPluginResult("device binding", null)
+  }
+
+  override fun deviceStateChangeDetected(threatType: String) {
+    sendOngoingPluginResult(threatType, null)
   }
 
   private fun sendOngoingPluginResult(eventName: String, params: WritableMap?) {

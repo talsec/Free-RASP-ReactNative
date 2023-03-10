@@ -27,9 +27,9 @@ type NativeEventEmitterActions = {
   'hooks'?: () => any;
   'device binding'?: () => any;
   'deviceID'?: () => any;
-  'missingSecureEnclave'?: () => any;
   'passcodeChange'?: () => any;
   'passcode'?: () => any;
+  'secureHardwareNotAvailable'?: () => any;
   'started'?: () => any;
   'initializationError'?: (reason: { message: string }) => any;
 };

@@ -17,7 +17,8 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
   - [Step 3: Dev vs Release version](#step-3-dev-vs-release-version)
   - [Step 4: Import freeRASP into the app](#step-4-import-freerasp-into-the-app)
   - [Step 5: Setup the configuration, callbacks and initialize freeRASP](#step-5-setup-the-configuration-callbacks-and-initialize-freerasp)
-  - [Step 6: User Data Policies](#step-6-user-data-policies)
+  - [Step 6: Additional note about obfuscation](#step-6-additional-note-about-obfuscation)
+  - [Step 7: User Data Policies](#step-7-user-data-policies)
 - [Security Report](#security-report)
 - [Enterprise Services](#bar_chart-enterprise-services)
   - [Commercial version](#commercial-version)
@@ -263,7 +264,31 @@ When freeRASP initializes correctly, you should see `freeRASP initialized` messa
 
 _You can override this default behavior by extending the `actions` object with `'started'` key (to change action after successful initialization), and `'initializationError'` key (to set up action after unsuccessful initialization)_
 
-## Step 6: User Data Policies
+## Step 6: Additional note about obfuscation
+The freeRASP contains public API, so the integration process is as simple as possible. Unfortunately, this public API also creates opportunities for the attacker to use publicly available information to interrupt freeRASP operations or modify your custom reaction implementation in threat callbacks. In order for freeRASP to be as effective as possible, it is highly recommended to apply obfuscation to the final package/application, making the public API more difficult to find and also partially randomized for each application so it cannot be automatically abused by generic hooking scripts.
+
+### Android
+The majority of Android projects support code shrinking and obfuscation without any additional need for setup. The owner of the project can define the set of rules that are usually automatically used when the application is built in the release mode. For more information, please visit the official documentation
+* https://developer.android.com/studio/build/shrink-code 
+* https://www.guardsquare.com/manual/configuration/usage
+
+You can make sure, that the obfuscation is enabled by checking the value of **minifyEnabled** property in your **module's build.gradle** file.
+```gradle
+android {
+    ...
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+```
+
+
+## Step 7: User Data Policies
 
 Google Play [requires](https://support.google.com/googleplay/android-developer/answer/10787469?hl=en) all app publishers to declare how they collect and handle user data for the apps they publish on Google Play. They should inform users properly of the data collected by the apps and how the data is shared and processed. Therefore, Google will reject the apps which do not comply with the policy.
 

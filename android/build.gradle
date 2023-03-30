@@ -61,9 +61,14 @@ android {
 repositories {
   mavenCentral()
   google()
-  maven{url = uri("https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp")}
-  maven{url = uri("https://developer.huawei.com/repo/")}
-  maven{url = uri("https://jitpack.io")}
+}
+
+rootProject.allprojects {
+  repositories {
+    maven{url "https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp"}
+    maven{url "https://developer.huawei.com/repo/"}
+    maven{url "https://jitpack.io"}
+  }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")

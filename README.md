@@ -88,20 +88,7 @@ or
 
 ### Android
 
-freeRASP needs to have access to the maven repository containing freeRASP. Add following lines into the `android/build.gradle` file, in the `allprojects.repositories` section:
-
-```gradle
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        ... your repositories
-        maven{url = uri("https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp")}
-        maven{url = uri("https://developer.huawei.com/repo/")}
-        maven{url = uri("https://jitpack.io")}
-    }
-}
-```
+_All dependencies of freeRASP for Android are resolved automatically._
 
 ### iOS
 
@@ -265,14 +252,18 @@ When freeRASP initializes correctly, you should see `freeRASP initialized` messa
 _You can override this default behavior by extending the `actions` object with `'started'` key (to change action after successful initialization), and `'initializationError'` key (to set up action after unsuccessful initialization)_
 
 ## Step 6: Additional note about obfuscation
+
 The freeRASP contains public API, so the integration process is as simple as possible. Unfortunately, this public API also creates opportunities for the attacker to use publicly available information to interrupt freeRASP operations or modify your custom reaction implementation in threat callbacks. In order for freeRASP to be as effective as possible, it is highly recommended to apply obfuscation to the final package/application, making the public API more difficult to find and also partially randomized for each application so it cannot be automatically abused by generic hooking scripts.
 
 ### Android
+
 The majority of Android projects support code shrinking and obfuscation without any additional need for setup. The owner of the project can define the set of rules that are usually automatically used when the application is built in the release mode. For more information, please visit the official documentation
-* https://developer.android.com/studio/build/shrink-code 
-* https://www.guardsquare.com/manual/configuration/usage
+
+- https://developer.android.com/studio/build/shrink-code
+- https://www.guardsquare.com/manual/configuration/usage
 
 You can make sure, that the obfuscation is enabled by checking the value of **minifyEnabled** property in your **module's build.gradle** file.
+
 ```gradle
 android {
     ...
@@ -286,7 +277,6 @@ android {
     }
 }
 ```
-
 
 ## Step 7: User Data Policies
 

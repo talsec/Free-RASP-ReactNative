@@ -3,14 +3,14 @@ import TalsecRuntime
 
 @objc(FreeraspReactNative)
 class FreeraspReactNative: RCTEventEmitter {
-    
+
     public static var shared:FreeraspReactNative?
-    
+
     override init() {
         super.init()
         FreeraspReactNative.shared = self
     }
-    
+
     @objc(talsecStart:)
     func talsecStart(options: NSDictionary) -> Void {
         do {
@@ -22,7 +22,7 @@ class FreeraspReactNative: RCTEventEmitter {
         }
         self.sendEvent(withName: "started", body: "started")
     }
-    
+
     func initializeTalsec(talsecConfig: NSDictionary) throws {
         guard let iosConfig = talsecConfig["iosConfig"] as? NSDictionary else {
             throw NSError(domain: "Missing iosConfig parameter in Talsec Native Plugin", code: 1)
@@ -39,19 +39,22 @@ class FreeraspReactNative: RCTEventEmitter {
         let config = TalsecConfig(appBundleIds: [appBundleIds], appTeamId: appTeamId, watcherMailAddress: watcherMailAddress)
         Talsec.start(config: config)
     }
-    
+
     override func supportedEvents() -> [String]! {
-        return ["initializationError", "started", "privilegedAccess", "debug", "simulator", "appIntegrity", "unofficialStore", "hooks", "device binding", "deviceID", "secureHardwareNotAvailable", "passcodeChange", "passcode"]
+        return ["initializationError", "started", "privilegedAccess", "debug", "simulator", "appIntegrity", "unofficialStore", "hooks", "deviceBinding", "deviceID", "secureHardwareNotAvailable", "passcodeChange", "passcode"]
     }
 }
 
 extension SecurityThreatCenter: SecurityThreatHandler {
     public func threatDetected(_ securityThreat: TalsecRuntime.SecurityThreat) {
         // It is better to implement security reactions (e.g. killing the app) here.
-        if (securityThreat.rawValue == "missingSecureEnclave") {
-            FreeraspReactNative.shared!.sendEvent(withName: "secureHardwareNotAvailable", body: "secureHardwareNotAvailable")
-        } else {
-            FreeraspReactNative.shared!.sendEvent(withName: securityThreat.rawValue, body: securityThreat.rawValue)
+        switch securityThreat.rawValue {
+            case "missingSecureEnclave":
+                FreeraspReactNative.shared!.sendEvent(withName: "secureHardwareNotAvailable", body: "secureHardwareNotAvailable")
+            case "device binding":
+                FreeraspReactNative.shared!.sendEvent(withName: "deviceBinding", body: "deviceBinding")
+            default:
+                FreeraspReactNative.shared!.sendEvent(withName: securityThreat.rawValue, body: securityThreat.rawValue)
         }
     }
 }

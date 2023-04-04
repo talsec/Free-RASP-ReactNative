@@ -75,7 +75,7 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
   }
 
   override fun onDeviceBindingDetected() {
-    sendOngoingPluginResult("device binding", null)
+    sendOngoingPluginResult("deviceBinding", null)
   }
 
   override fun deviceStateChangeDetected(threatType: String) {

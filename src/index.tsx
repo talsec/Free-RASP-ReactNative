@@ -19,19 +19,19 @@ type TalsecConfig = {
 };
 
 type NativeEventEmitterActions = {
-  'privilegedAccess'?: () => any;
-  'debug'?: () => any;
-  'simulator'?: () => any;
-  'appIntegrity'?: () => any;
-  'unofficialStore'?: () => any;
-  'hooks'?: () => any;
-  'device binding'?: () => any;
-  'deviceID'?: () => any;
-  'passcodeChange'?: () => any;
-  'passcode'?: () => any;
-  'secureHardwareNotAvailable'?: () => any;
-  'started'?: () => any;
-  'initializationError'?: (reason: { message: string }) => any;
+  privilegedAccess?: () => any;
+  debug?: () => any;
+  simulator?: () => any;
+  appIntegrity?: () => any;
+  unofficialStore?: () => any;
+  hooks?: () => any;
+  deviceBinding?: () => any;
+  deviceID?: () => any;
+  passcodeChange?: () => any;
+  passcode?: () => any;
+  secureHardwareNotAvailable?: () => any;
+  started?: () => any;
+  initializationError?: (reason: { message: string }) => any;
 };
 
 const { FreeraspReactNative } = NativeModules;

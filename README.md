@@ -199,47 +199,47 @@ const config = {
 // reactions for detected threats
 const actions = {
   // Android & iOS
-  'privilegedAccess': () => {
+  privilegedAccess: () => {
     console.log('privilegedAccess');
   },
   // Android & iOS
-  'debug': () => {
+  debug: () => {
     console.log('debug');
   },
   // Android & iOS
-  'simulator': () => {
+  simulator: () => {
     console.log('simulator');
   },
   // Android & iOS
-  'appIntegrity': () => {
+  appIntegrity: () => {
     console.log('appIntegrity');
   },
   // Android & iOS
-  'unofficialStore': () => {
+  unofficialStore: () => {
     console.log('unofficialStore');
   },
   // Android & iOS
-  'hooks': () => {
+  hooks: () => {
     console.log('hooks');
   },
   // Android & iOS
-  'device binding': () => {
-    console.log('device binding');
+  deviceBinding: () => {
+    console.log('deviceBinding');
   },
   // Android & iOS
-  'secureHardwareNotAvailable': () => {
+  secureHardwareNotAvailable: () => {
     console.log('secureHardwareNotAvailable');
   },
   // Android & iOS
-  'passcode': () => {
+  passcode: () => {
     console.log('passcode');
   },
   // iOS only
-  'deviceID': () => {
+  deviceID: () => {
     console.log('deviceID');
   },
   // iOS only
-  'passcodeChange': () => {
+  passcodeChange: () => {
     console.log('passcodeChange');
   },
 };

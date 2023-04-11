@@ -14,7 +14,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		A41E05192962BAB100B363A8 /* TalsecRuntime.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A44E6986295D7CAB000A719C /* TalsecRuntime.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +43,8 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-FreeraspReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FreeraspReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FreeraspReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		8C2BD8B529DF06E4000304E9 /* Talsec */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Talsec; path = ../../ios/Talsec; sourceTree = "<group>"; };
+		8C2BD8BB29DF0976000304E9 /* TalsecRuntime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TalsecRuntime.xcframework; path = ../../ios/Talsec/TalsecRuntime.xcframework; sourceTree = "<group>"; };
 		A41E05172962B9FD00B363A8 /* TalsecRuntime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TalsecRuntime.xcframework; path = "../../../../React/test2/someTestProject/node_modules/freerasp-react-native/ios/TalsecRuntime.xcframework"; sourceTree = "<group>"; };
 		A44E6986295D7CAB000A719C /* TalsecRuntime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TalsecRuntime.xcframework; path = ../../ios/TalsecRuntime.xcframework; sourceTree = "<group>"; };
 		A44E698B295D7E12000A719C /* TalsecRuntime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TalsecRuntime.xcframework; path = ../../ios/Debug/TalsecRuntime.xcframework; sourceTree = "<group>"; };
@@ -65,7 +66,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-FreeraspReactNativeExample.a in Frameworks */,
-				A41E05192962BAB100B363A8 /* TalsecRuntime.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +105,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8C2BD8BB29DF0976000304E9 /* TalsecRuntime.xcframework */,
+				8C2BD8B529DF06E4000304E9 /* Talsec */,
 				A44E6986295D7CAB000A719C /* TalsecRuntime.xcframework */,
 				A44E698B295D7E12000A719C /* TalsecRuntime.xcframework */,
 				A44E69A2295DA98F000A719C /* TalsecRuntime.xcframework */,

@@ -6,16 +6,17 @@ import {
 } from 'react-native';
 
 type TalsecConfig = {
-  androidConfig: {
+  androidConfig?: {
     packageName: string;
     certificateHashes: string[];
     supportedAlternativeStores?: string[];
   };
-  iosConfig: {
+  iosConfig?: {
     appBundleId: string;
     appTeamId: string;
   };
   watcherMail: string;
+  isProd?: boolean;
 };
 
 type NativeEventEmitterActions = {

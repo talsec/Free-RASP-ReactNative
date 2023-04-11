@@ -14,11 +14,10 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
   - [(Optional) Create a new React Native demo application](#optional-create-a-new-react-native-demo-application)
   - [Step 1: Install the plugin](#step-1-install-the-plugin)
   - [Step 2: Set up the dependencies](#step-2-set-up-the-dependencies)
-  - [Step 3: Dev vs Release version](#step-3-dev-vs-release-version)
-  - [Step 4: Import freeRASP into the app](#step-4-import-freerasp-into-the-app)
-  - [Step 5: Setup the configuration, callbacks and initialize freeRASP](#step-5-setup-the-configuration-callbacks-and-initialize-freerasp)
-  - [Step 6: Additional note about obfuscation](#step-6-additional-note-about-obfuscation)
-  - [Step 7: User Data Policies](#step-7-user-data-policies)
+  - [Step 3: Import freeRASP into the app](#step-3-import-freerasp-into-the-app)
+  - [Step 4: Setup the configuration, callbacks and initialize freeRASP](#step-4-setup-the-configuration-callbacks-and-initialize-freerasp)
+  - [Step 5: Additional note about obfuscation](#step-5-additional-note-about-obfuscation)
+  - [Step 6: User Data Policies](#step-6-user-data-policies)
 - [Security Report](#security-report)
 - [Enterprise Services](#bar_chart-enterprise-services)
   - [Commercial version](#commercial-version)
@@ -96,7 +95,45 @@ freeRASP React Native plugin uses Pods. Navigate to the `ios` folder and run:
 
     $ pod install
 
-## Step 3: Dev vs Release version
+## Step 3: Import freeRASP into the app
+
+We provide a custom hook that handles all required logic as registration of freeRASP, mounting and unmounting of listeners for you. Import the hook into your app:
+
+```ts
+import { useFreeRasp } from 'freerasp-react-native';
+```
+
+## Step 4: Setup the configuration, callbacks and initialize freeRASP
+
+First, the configuration and callbacks will be explained. Then the [Initialization](#initialization) chapter shows the implementation.
+
+### Configuration
+
+You need to provide configuration for freeRASP to work properly and initialize it. The freeRASP configuration is an JavaScript object that contains configs for both Android and iOS, as well as common configuration. You must fill all the required values for the plugin to work. If you are developing for just one platform, you can skip configuration of the other.
+
+#### Android configuration:
+
+Create an object under `androidConfig` key with following entries:
+
+- `packageName` _: string_ - package name of your app you chose when you created it
+- `certificateHashes` _: string[]_ - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
+- `supportedAlternativeStores` _: string[] | undefined_ - If you publish on the Google Play Store and/or Huawei AppGallery, you **don't have to assign anything** there as those are supported out of the box.
+
+#### iOS configuration
+
+Create an object under `iosConfig` key with following entries:
+
+- `appBundleId` _: string_ - Bundle ID of your app
+- `appTeamId` _: string_ - the Apple Team ID
+
+#### Common configuration
+
+Lastly, set up common configuration for both iOS and Android:
+
+- `watcherMail` _: string_ - your mail address where you wish to receive reports. Mail has a strict form `name@domain.com` which is passed as String.
+- `isProd` _: boolean | undefined_ - defaults to `true` when undefined. If you want to use the Dev version to disable checks described [in the chapter below](#dev-vs-release-version), set the parameter to `false`. Make sure that you have the Release version in the production (i.e. isProd set to true)!
+
+### Dev vs Release version
 
 The Dev version is used to not complicate the development process of the application, e.g. if you would implement killing of the application on the debugger callback. It disables some checks which won't be triggered during the development process:
 
@@ -105,77 +142,9 @@ The Dev version is used to not complicate the development process of the applica
 - Signing (appIntegrity)
 - Unofficial store (unofficialStore)
 
-Which version of freeRASP is used is tied to the application's development stage - more precisely, how the application is compiled.
-
-### Android
-
-Android implementation of the React Native plugin detects selected development stage and automatically applies the suitable version of the library.
-
-- `npx react-native run-android` (debug) -> uses dev version of freeRASP
-- `npx react-native run-android --variant release` (release) -> uses release version of freeRASP
-
-### iOS
-
-For the iOS implemtation, it's neccesary to add script into the Xcode environment, that automatically switches between the library dev/release versions according to selected development stage. Then, it is necessary to embedd a symlink to correct TalsecRuntime.xcframework.
-
-1.  Add pre-built script for changing the Debug and Release versions of the framework:
-    - Open up the **.xcworkspace** file
-    - Go to **Product** -> **Scheme** -> **Edit Scheme...** -> **Build (dropdown arrow)** -> **Pre-actions**
-    - Hit **+** and then **New Run Script Action**
-    - Set **Provide build setting from** to your application
-    - Copy-paste following script:
-      ```shell
-      cd "${SRCROOT}/../node_modules/freerasp-react-native/ios"
-      if [ "${CONFIGURATION}" = "Release" ]; then
-          rm -rf ./TalsecRuntime.xcframework
-          ln -s ./Release/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
-      else
-          rm -rf ./TalsecRuntime.xcframework
-          ln -s ./Debug/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
-      fi
-      ```
-    - **Close**
-2.  Add dependency on the symlink
-    - Go to your **Target** -> **Build Phases** -> **Link Binary With Libraries**
-    - Add dependency (drag & drop right after **libPods**) on the symlink on the following location:
-      _AwesomeProject/node_modules/freerasp-react-native/ios/TalsecRuntime.xcframework_
-    - If there is no symlink, try to create it manually in that folder by the following command:
-    -     $ ln -s ./Debug/TalsecRuntime.xcframework/ TalsecRuntime.xcframework
-
-Followingly:
-
-- `npx react-native run-ios` (debug) -> uses dev version of freeRASP
-- `npx react-native run-ios --configuration Release` (release) -> uses release version of freeRASP
-
-## Step 4: Import freeRASP into the app
-
-We provide a custom hook that handles all required logic as registration of freeRASP, mounting and unmounting of listeners for you. Import the hook into your app:
-
-```ts
-import { useFreeRasp } from 'freerasp-react-native';
-```
-
-## Step 5: Setup the configuration, callbacks and initialize freeRASP
-
-First, the configuration and callbacks will be explained. Then the **Initialization** chapter shows the implementation.
-
-### Configuration
-
-You need to provide configuration for freeRASP to work properly and initialize it. The freeRASP configuration contains configs for both Android and iOS. You must fill all the required values for the plugin to work.
-
-For Android:
-
-- `packageName` - package name of your app you chose when you created it
-- `certificateHashes` - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
-- `supportedAlternativeStores` _(optional)_ - If you publish on the Google Play Store and/or Huawei AppGallery, you **don't have to assign anything** there as those are supported out of the box.
-
-For iOS similarly to Android, `appBundleId` and `appTeamId` are required.
-
-Lastly, pass a mail address to `watcherMail` to be able to get reports. Mail has a strict form `name@domain.com` which is passed as String.
-
 ### Callbacks
 
-freeRASP executes periodical checks when the application is running. Handle the detected threats in the **listeners**. For example, you can log the event, show a window to the user or kill the application. Visit our [wiki](https://github.com/talsec/Free-RASP-Community/wiki/Threat-detection) to learn more details about the performed checks and their importance for app security.
+freeRASP executes periodical checks when the application is running. Handle the detected threats in the **listeners**. For example, you can log the event, show a window to the user or kill the application. [Visit our wiki](https://github.com/talsec/Free-RASP-Community/wiki/Threat-detection) to learn more details about the performed checks and their importance for app security.
 
 ### Initialization
 
@@ -249,9 +218,9 @@ useFreeRasp(config, actions);
 
 When freeRASP initializes correctly, you should see `freeRASP initialized` message in logs. Otherwise, you'll see warning with description of what went wrong.
 
-_You can override this default behavior by extending the `actions` object with `'started'` key (to change action after successful initialization), and `'initializationError'` key (to set up action after unsuccessful initialization)_
+_You can override this default behavior by extending the `actions` object with `started` key (to change action after successful initialization), and `initializationError` key (to set up action after unsuccessful initialization)_
 
-## Step 6: Additional note about obfuscation
+## Step 5: Additional note about obfuscation
 
 The freeRASP contains public API, so the integration process is as simple as possible. Unfortunately, this public API also creates opportunities for the attacker to use publicly available information to interrupt freeRASP operations or modify your custom reaction implementation in threat callbacks. In order for freeRASP to be as effective as possible, it is highly recommended to apply obfuscation to the final package/application, making the public API more difficult to find and also partially randomized for each application so it cannot be automatically abused by generic hooking scripts.
 
@@ -278,7 +247,7 @@ android {
 }
 ```
 
-## Step 7: User Data Policies
+## Step 6: User Data Policies
 
 Google Play [requires](https://support.google.com/googleplay/android-developer/answer/10787469?hl=en) all app publishers to declare how they collect and handle user data for the apps they publish on Google Play. They should inform users properly of the data collected by the apps and how the data is shared and processed. Therefore, Google will reject the apps which do not comply with the policy.
 

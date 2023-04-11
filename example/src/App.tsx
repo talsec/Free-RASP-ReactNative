@@ -22,6 +22,7 @@ const App = () => {
       appTeamId: 'your_team_ID',
     },
     watcherMail: 'your_email_address@example.com',
+    isProd: true,
   };
 
   const actions = {

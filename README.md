@@ -109,31 +109,42 @@ First, the configuration and callbacks will be explained. Then the [Initializati
 
 ### Configuration
 
-You need to provide configuration for freeRASP to work properly and initialize it. The freeRASP configuration is an JavaScript object that contains configs for both Android and iOS, as well as common configuration. You must fill all the required values for the plugin to work. If you are developing for just one platform, you can skip configuration of the other.
+You need to provide configuration for freeRASP to work properly and initialize it. The freeRASP configuration is an JavaScript object that contains configs for both Android and iOS, as well as common configuration. You must fill all the required values for the plugin to work. Use the following template to provide configuration to the Talsec plugin. You can find detailed description of the configuration below.
 
-#### Android configuration:
+```ts
+// app configuration
+const config = {
+  androidConfig: {
+    packageName: 'com.awesomeproject',
+    certificateHashes: ['your_signing_certificate_hash_base64'],
+    // supportedAlternativeStores: ['storeOne', 'storeTwo'],
+  },
+  iosConfig: {
+    appBundleId: 'com.awesomeproject',
+    appTeamId: 'your_team_ID',
+  },
+  watcherMail: 'your_email_address@example.com',
+  isProd: true,
+};
+```
 
-Create an object under `androidConfig` key with following entries:
+#### The configuration object should consist of:
 
-- `packageName` _: string_ - package name of your app you chose when you created it
-- `certificateHashes` _: string[]_ - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
-- `supportedAlternativeStores` _: string[] | undefined_ - If you publish on the Google Play Store and/or Huawei AppGallery, you **don't have to assign anything** there as those are supported out of the box.
+1. `androidConfig` _: object | undefined_ - required for Android devices, has following keys:
 
-#### iOS configuration
+   - `packageName` _: string_ - package name of your app you chose when you created it
+   - `certificateHashes` _: string[]_ - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
+   - `supportedAlternativeStores` _: string[] | undefined_ - If you publish on the Google Play Store and/or Huawei AppGallery, you **don't have to assign anything** there as those are supported out of the box.
 
-Create an object under `iosConfig` key with following entries:
+1. `iosConfig` _: object | undefined_ - required for iOS devices, has following keys:
+   - `appBundleId` _: string_ - Bundle ID of your app
+   - `appTeamId` _: string_ - the Apple Team ID
+1. `watcherMail` _: string_ - your mail address where you wish to receive reports. Mail has a strict form `name@domain.com` which is passed as String.
+1. `isProd` _: boolean | undefined_ - defaults to `true` when undefined. If you want to use the Dev version to disable checks described [in the chapter below](#dev-vs-release-version), set the parameter to `false`. Make sure that you have the Release version in the production (i.e. isProd set to true)!
 
-- `appBundleId` _: string_ - Bundle ID of your app
-- `appTeamId` _: string_ - the Apple Team ID
+If you are developing only for one of the platforms, you can skip the configuration part for the other one, i.e., delete the unused configuration.
 
-#### Common configuration
-
-Lastly, set up common configuration for both iOS and Android:
-
-- `watcherMail` _: string_ - your mail address where you wish to receive reports. Mail has a strict form `name@domain.com` which is passed as String.
-- `isProd` _: boolean | undefined_ - defaults to `true` when undefined. If you want to use the Dev version to disable checks described [in the chapter below](#dev-vs-release-version), set the parameter to `false`. Make sure that you have the Release version in the production (i.e. isProd set to true)!
-
-### Dev vs Release version
+#### Dev vs Release version
 
 The Dev version is used to not complicate the development process of the application, e.g. if you would implement killing of the application on the debugger callback. It disables some checks which won't be triggered during the development process:
 
@@ -151,20 +162,6 @@ freeRASP executes periodical checks when the application is running. Handle the 
 You should initialize the freeRASP in the entry point to your app, which is usually in `App.jsx` or `App.tsx`. Just copy & paste this code inside your root component / function, then setup the configuration and reactions to listeners:
 
 ```ts
-// app configuration
-const config = {
-  androidConfig: {
-    packageName: 'com.awesomeproject',
-    certificateHashes: ['your_signing_certificate_hash_base64'],
-    // supportedAlternativeStores: ['storeOne', 'storeTwo'],
-  },
-  iosConfig: {
-    appBundleId: 'com.awesomeproject',
-    appTeamId: 'your_team_ID',
-  },
-  watcherMail: 'your_email_address@example.com',
-};
-
 // reactions for detected threats
 const actions = {
   // Android & iOS

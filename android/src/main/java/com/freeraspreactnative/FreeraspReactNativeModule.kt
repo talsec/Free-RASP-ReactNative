@@ -12,7 +12,8 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
 class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext), ThreatListener.ThreatDetected, FreeraspDeviceStateListener.DeviceStateListener {
+  ReactContextBaseJavaModule(reactContext), ThreatListener.ThreatDetected,
+  FreeraspDeviceStateListener.DeviceStateListener {
 
   private val listener = ThreatListener(this, FreeraspDeviceStateListener)
 
@@ -104,7 +105,18 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
         alternativeStores.add(stores.getString(i))
       }
     }
-    return TalsecConfig(packageName, certificateHashes.toTypedArray(), watcherMail, alternativeStores.toTypedArray())
+    var isProd = true
+    if (config.hasKey("isProd")) {
+      isProd = config.getBoolean("isProd")
+    }
+
+    return TalsecConfig(
+      packageName,
+      certificateHashes.toTypedArray(),
+      watcherMail,
+      alternativeStores.toTypedArray(),
+      isProd
+    )
   }
 
   companion object {

@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/talsec/freerasp-react-native.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
-  s.ios.vendored_frameworks = "ios/Debug/TalsecRuntime.xcframework"
+  s.ios.vendored_frameworks = "ios/TalsecRuntime.xcframework"
   
   s.dependency "React-Core"
 

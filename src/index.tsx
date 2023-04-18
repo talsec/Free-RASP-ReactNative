@@ -6,32 +6,33 @@ import {
 } from 'react-native';
 
 type TalsecConfig = {
-  androidConfig: {
+  androidConfig?: {
     packageName: string;
     certificateHashes: string[];
     supportedAlternativeStores?: string[];
   };
-  iosConfig: {
+  iosConfig?: {
     appBundleId: string;
     appTeamId: string;
   };
   watcherMail: string;
+  isProd?: boolean;
 };
 
 type NativeEventEmitterActions = {
-  'privilegedAccess'?: () => any;
-  'debug'?: () => any;
-  'simulator'?: () => any;
-  'appIntegrity'?: () => any;
-  'unofficialStore'?: () => any;
-  'hooks'?: () => any;
-  'device binding'?: () => any;
-  'deviceID'?: () => any;
-  'passcodeChange'?: () => any;
-  'passcode'?: () => any;
-  'secureHardwareNotAvailable'?: () => any;
-  'started'?: () => any;
-  'initializationError'?: (reason: { message: string }) => any;
+  privilegedAccess?: () => any;
+  debug?: () => any;
+  simulator?: () => any;
+  appIntegrity?: () => any;
+  unofficialStore?: () => any;
+  hooks?: () => any;
+  deviceBinding?: () => any;
+  deviceID?: () => any;
+  passcodeChange?: () => any;
+  passcode?: () => any;
+  secureHardwareNotAvailable?: () => any;
+  started?: () => any;
+  initializationError?: (reason: { message: string }) => any;
 };
 
 const { FreeraspReactNative } = NativeModules;

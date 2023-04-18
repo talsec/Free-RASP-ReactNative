@@ -61,9 +61,13 @@ android {
 repositories {
   mavenCentral()
   google()
-  maven{url = uri("https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp")}
-  maven{url = uri("https://developer.huawei.com/repo/")}
-  maven{url = uri("https://jitpack.io")}
+}
+
+rootProject.allprojects {
+  repositories {
+    maven{url "https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp"}
+    maven{url "https://jitpack.io"}
+  }
 }
 
 def kotlin_version = getExtOrDefault("kotlinVersion")
@@ -74,8 +78,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  debugImplementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:6.0.0-dev"
-  releaseImplementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:6.0.0-release"
+  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:7.0.0"
 }
 
 if (isNewArchitectureEnabled()) {

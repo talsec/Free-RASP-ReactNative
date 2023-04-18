@@ -22,11 +22,12 @@ const App = () => {
       appTeamId: 'your_team_ID',
     },
     watcherMail: 'your_email_address@example.com',
+    isProd: true,
   };
 
   const actions = {
     // Android & iOS
-    'privilegedAccess': () => {
+    privilegedAccess: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Privileged Access'
@@ -36,7 +37,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'debug': () => {
+    debug: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Debug' ? { ...threat, status: 'nok' } : threat
@@ -44,7 +45,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'simulator': () => {
+    simulator: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Simulator' ? { ...threat, status: 'nok' } : threat
@@ -52,7 +53,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'appIntegrity': () => {
+    appIntegrity: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'App Integrity'
@@ -62,7 +63,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'unofficialStore': () => {
+    unofficialStore: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Unofficial Store'
@@ -72,7 +73,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'hooks': () => {
+    hooks: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Hooks' ? { ...threat, status: 'nok' } : threat
@@ -80,7 +81,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'device binding': () => {
+    deviceBinding: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Device Binding'
@@ -90,7 +91,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'secureHardwareNotAvailable': () => {
+    secureHardwareNotAvailable: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Secure Hardware Not Available'
@@ -100,7 +101,7 @@ const App = () => {
       );
     },
     // Android & iOS
-    'passcode': () => {
+    passcode: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Passcode' ? { ...threat, status: 'nok' } : threat
@@ -108,7 +109,7 @@ const App = () => {
       );
     },
     // iOS only
-    'deviceID': () => {
+    deviceID: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Device ID' ? { ...threat, status: 'nok' } : threat
@@ -116,7 +117,7 @@ const App = () => {
       );
     },
     // iOS only
-    'passcodeChange': () => {
+    passcodeChange: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Passcode Change'

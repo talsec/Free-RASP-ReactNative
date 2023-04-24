@@ -1,3 +1,7 @@
+# freeRASP 2.0.1
+
+- 📄 Documentation updates and improvements
+
 # freeRASP 2.0.0
 
 ## What's new?
@@ -5,8 +9,9 @@
 Most of the changes relates to accomodating a new way of choosing between the dev and release version of the SDK. There are also some breaking changes in the API, such as renaming parameters and changing types of callbacks. Android has also removed the HMS dependencies and improved the root detection capabilities.
 
 ### JS/TS interface
+
 - ❗ BREAKING API CHANGE: Renamed **'device binding'** to **deviceBinding**
-    - ❗ This allows us to remove apostrophes from other callbacks, too. E.g. **'privilegedAccess'** to **privilegedAccess**
+  - ❗ This allows us to remove apostrophes from other callbacks, too. E.g. **'privilegedAccess'** to **privilegedAccess**
 - ❗ Added **isProd** boolean parameter, which now differentiates between the release (true) and dev (false) version of the SDK. By default set to **true**
 - ❗ **androidConfig** and **iosConfig** are from now on optionals, you can omit a platform if you are not developing for it
 
@@ -20,6 +25,7 @@ Most of the changes relates to accomodating a new way of choosing between the de
 - ⚡ Fine-tuning root evaluation strategy
 
 ### iOS
+
 - ❗ Removed one of the xcframeworks
 - ❗ Removed the dependency on the symlinks choosing the proper version (release/dev)
 - ❗️ Removed pre-built script for changing the Debug and Release versions

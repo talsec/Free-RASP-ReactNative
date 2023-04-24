@@ -17,12 +17,18 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
   - [Step 2: Set up the dependencies](#step-2-set-up-the-dependencies)
   - [Step 3: Import freeRASP into the app](#step-3-import-freerasp-into-the-app)
   - [Step 4: Setup the configuration, callbacks and initialize freeRASP](#step-4-setup-the-configuration-callbacks-and-initialize-freerasp)
+    - [Configuration](#configuration)
+      - [Dev vs Release version](#dev-vs-release-version)
+    - [Callbacks](#callbacks)
+    - [Initialization](#initialization)
   - [Step 5: Additional note about obfuscation](#step-5-additional-note-about-obfuscation)
   - [Step 6: User Data Policies](#step-6-user-data-policies)
 - [Security Report](#security-report)
 - [Enterprise Services](#bar_chart-enterprise-services)
   - [Commercial version](#commercial-version)
   - [Plans Comparison](#plans-comparison)
+- [About Us](#about-us)
+- [License](#license)
 
 # Overview
 
@@ -246,7 +252,7 @@ android {
 ```
 
 ## Step 6: User Data Policies
-See the generic info about freeRASP data collection [here](https://github.com/talsec/Free-RASP-Community/tree/master#data-collection-processing-and-gdpr-compliance)
+See the generic info about freeRASP data collection [here](https://github.com/talsec/Free-RASP-Community/tree/master#data-collection-processing-and-gdpr-compliance).
 
 Google Play [requires](https://support.google.com/googleplay/android-developer/answer/10787469?hl=en) all app publishers to declare how they collect and handle user data for the apps they publish on Google Play. They should inform users properly of the data collected by the apps and how the data is shared and processed. Therefore, Google will reject the apps which do not comply with the policy.
 

@@ -73,7 +73,7 @@ in order to run freeRASP in your app:
 
 # Usage
 
-We will guide you step-by-step, but you can always check the expected result in the example.
+We will guide you step-by-step, but you can always check the expected result in the example folder.
 
 ## (Optional) Create a new React Native demo application
 
@@ -103,7 +103,7 @@ freeRASP React Native plugin uses Pods. Navigate to the `ios` folder and run:
 
 ## Step 3: Import freeRASP into the app
 
-We provide a custom hook that handles all required logic as registration of freeRASP, mounting and unmounting of listeners for you. Import the hook into your app:
+We provide a React Custom Hook that handles all required logic as registration of freeRASP, mounting and unmounting of listeners for you. Import the Hook into your app:
 
 ```ts
 import { useFreeRasp } from 'freerasp-react-native';
@@ -219,6 +219,8 @@ const actions = {
 useFreeRasp(config, actions);
 ```
 
+_Please note that useFreeRasp Hook should be called outside useEffect._
+
 When freeRASP initializes correctly, you should see `freeRASP initialized` message in logs. Otherwise, you'll see warning with description of what went wrong.
 
 _You can override this default behavior by extending the `actions` object with `started` key (to change action after successful initialization), and `initializationError` key (to set up action after unsuccessful initialization)_
@@ -272,6 +274,36 @@ If you encounter any other issues, you can see the list of solved issues [here](
 
 - In `package.json`, update `react-native` to a higher patch version and run `npm install` (or `yarn install`).
 - [See this issue to find out which patch version is relevant for you.](https://github.com/facebook/react-native/issues/35210)
+
+### `Invalid hook call. Hooks can only be called inside of the body of a function component.`
+
+**Reason:**
+The `useFreeRasp` Hook cannot be called inside useEffect.
+
+**Solution:**
+
+- If you want to initialize freeRASP inside useEffect, you have to handle the initialization on your own. Such inititialization would look like this:
+
+```ts
+import {
+  setThreatListeners,
+  talsecStart,
+  removeThreatListeners,
+} from 'freerasp-react-native';
+
+...
+
+useEffect(() => {
+  setThreatListeners(actions);
+  talsecStart(config);
+
+  return () => {
+    removeThreatListeners();
+  };
+}, []);
+```
+
+Where `actions`, `config` are objects described in previous chapters.
 
 # Security Report
 

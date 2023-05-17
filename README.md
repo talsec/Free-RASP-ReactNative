@@ -20,6 +20,7 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
       - [Dev vs Release version](#dev-vs-release-version)
     - [Callbacks](#callbacks)
     - [Initialization](#initialization)
+    - [Alternative: Initialize freeRASP in a Class component](#alternative-initialize-freerasp-in-a-class-component)
   - [Step 5: Additional note about obfuscation](#step-5-additional-note-about-obfuscation)
   - [Step 6: User Data Policies](#step-6-user-data-policies)
 - [Security Report](#security-report)
@@ -224,6 +225,40 @@ _Please note that useFreeRasp Hook should be called outside useEffect._
 When freeRASP initializes correctly, you should see `freeRASP initialized` message in logs. Otherwise, you'll see warning with description of what went wrong.
 
 _You can override this default behavior by extending the `actions` object with `started` key (to change action after successful initialization), and `initializationError` key (to set up action after unsuccessful initialization)_
+
+### Alternative: Initialize freeRASP in a Class component
+
+- import methods from the freeRASP plugin:
+
+  ```ts
+  import {
+    talsecStart,
+    setThreatListeners,
+    removeThreatListeners,
+  } from 'freerasp-react-native';
+  ```
+
+- override `constructor()` method in the entry point to your app, set listeners to threats and start freeRASP:
+
+  ```ts
+  constructor(props) {
+    super(props);
+
+    // Add these method calls
+    setThreatListeners(actions);
+    talsecStart(config);
+  }
+  ```
+
+  _In this code snippet, `actions` is object with your reactions to threats and `config` is freeRASP configuration object from previous parts of the readme._
+
+- override `componentWillUnmount()` method where you clean up the listeners:
+
+  ```ts
+  componentWillUnmount() {
+    removeThreatListeners();
+  }
+  ```
 
 ## Step 5: Additional note about obfuscation
 

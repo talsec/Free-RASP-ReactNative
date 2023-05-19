@@ -24,8 +24,7 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
   - [Step 5: Additional note about obfuscation](#step-5-additional-note-about-obfuscation)
   - [Step 6: User Data Policies](#step-6-user-data-policies)
 - [Security Report](#security-report)
-- [Enterprise Services](#bar_chart-enterprise-services)
-  - [Commercial version](#commercial-version)
+- [Commercial versions (RASP+ and more)](#bar_chart-commercial-versions-rasp-and-more)
   - [Plans Comparison](#plans-comparison)
 - [About Us](#about-us)
 - [License](#license)
@@ -350,11 +349,9 @@ To receive Security Reports, fill out the _watcherMail_ field in [config](#confi
 
 ![dashboard](https://raw.githubusercontent.com/talsec/Free-RASP-Community/master/visuals/dashboard.png)
 
-# :bar_chart: Enterprise Services
+# :bar_chart: Commercial versions (RASP+ and more)
 
 We provide app security hardening SDK: i.e. AppiCrypt®, Customer Data Encryption (local storage), End-to-end encryption, Strings protection (e.g. API keys) and Dynamic Certificate Pinning to our commercial customers as well. To get the most advanced protection compliant with PSD2 RT and eIDAS and support from our experts, contact us at [talsec.app](https://talsec.app).
-
-## Commercial version
 
 The commercial version provides a top-notch protection level, extra features, support, and maintenance. One of the most valued commercial features is [AppiCrypt®](https://www.talsec.app/appicrypt) - App Integrity Cryptogram.
 

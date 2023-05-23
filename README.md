@@ -101,6 +101,17 @@ freeRASP React Native plugin uses Pods. Navigate to the `ios` folder and run:
 
     $ pod install
 
+**IMPORTANT:** If you are upgrading from a previous version of freeRASP, please remove the old TalsecRuntime.xcframework and integration script from your project:
+
+1. Open up the **.xcworkspace** file
+1. Go to **Target -> Build Phases -> Link Binary With Libraries**
+1. Remove **TalsecRuntime.xcframework**
+1. On top bar select **Product -> Scheme -> Edit Scheme...**
+1. On the left side select **Build -> Pre-actions**
+1. Find integration script and click trash icon on the right side to remove it
+1. Update freeRASP. If you are getting any errors, check that in `node_modules/freerasp-react-native/ios`, TalsecRuntime.xcframework is a folder, not a symlink. If it is a symlink, remove it and reinstall the module.
+1. run `pod install`
+
 ## Step 3: Import freeRASP into the app
 
 We provide a React Custom Hook that handles all required logic as registration of freeRASP, mounting and unmounting of listeners for you. Import the Hook into your app:

@@ -1,3 +1,7 @@
+# freeRASP 2.0.2
+
+- 📄 Documentation updates and improvements
+
 # freeRASP 2.0.1
 
 - 📄 Documentation updates and improvements

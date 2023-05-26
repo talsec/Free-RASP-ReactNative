@@ -23,6 +23,7 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
     - [Alternative: Initialize freeRASP in a Class component](#alternative-initialize-freerasp-in-a-class-component)
   - [Step 5: Additional note about obfuscation](#step-5-additional-note-about-obfuscation)
   - [Step 6: User Data Policies](#step-6-user-data-policies)
+- [Troubleshooting](#troubleshooting)
 - [Security Report](#security-report)
 - [Commercial versions (RASP+ and more)](#bar_chart-commercial-versions-rasp-and-more)
   - [Plans Comparison](#plans-comparison)

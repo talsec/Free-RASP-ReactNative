@@ -1,3 +1,10 @@
+# freeRASP 2.0.3
+
+### iOS
+
+- ✔️ Fixed issue with metadata in iOS framework
+- 📄 Documentation updates and improvements
+
 # freeRASP 2.0.2
 
 - 📄 Documentation updates and improvements

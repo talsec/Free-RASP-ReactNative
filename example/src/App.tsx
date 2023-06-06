@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Platform } from 'react-native';
 import { useFreeRasp } from 'freerasp-react-native';
 import { DemoApp } from './DemoApp';
-import { commonChecks, iosChecks } from './checks';
+import { commonChecks, iosChecks, androidChecks } from './checks';
 
 const App = () => {
   const [appChecks, setAppChecks] = React.useState([
     ...commonChecks,
-    ...(Platform.OS === 'ios' ? iosChecks : []),
+    ...(Platform.OS === 'ios' ? iosChecks : androidChecks),
   ]);
 
   const config = {
@@ -116,8 +116,8 @@ const App = () => {
         )
       );
     },
-    // iOS only
-    passcodeChange: () => {
+    // Android only
+    obfuscationIssues: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Passcode Change'

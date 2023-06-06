@@ -79,6 +79,10 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
     sendOngoingPluginResult("deviceBinding", null)
   }
 
+  override fun onObfuscationIssuesDetected() {
+    sendOngoingPluginResult("obfuscationIssues", null)
+  }
+
   override fun deviceStateChangeDetected(threatType: String) {
     sendOngoingPluginResult(threatType, null)
   }

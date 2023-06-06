@@ -277,19 +277,18 @@ The freeRASP contains public API, so the integration process is as simple as pos
 
 ### Android
 
-The majority of Android projects support code shrinking and obfuscation without any additional need for setup. The owner of the project can define the set of rules that are usually automatically used when the application is built in the release mode. For more information, please visit the official documentation
+Some versions of React Native do not use code shrinking and obfuscation by default. However, the owner of the project can define the set of rules that are usually automatically used when the application is built in the release mode. For more information, please visit the official documentation
 
 - https://developer.android.com/studio/build/shrink-code
 - https://www.guardsquare.com/manual/configuration/usage
 
-You can make sure, that the obfuscation is enabled by checking the value of **minifyEnabled** property in your **module's build.gradle** file.
+You enable obfuscation by checking the value of **minifyEnabled** property in **android/app/build.gradle** file.
 
-```gradle
+```groovy
 android {
-    ...
-
     buildTypes {
         release {
+            ...
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -297,6 +296,8 @@ android {
     }
 }
 ```
+
+freeRASP will notify you about missing obfuscation via `obfuscationIssues` callback.
 
 ## Step 6: User Data Policies
 

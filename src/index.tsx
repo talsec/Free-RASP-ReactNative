@@ -29,7 +29,6 @@ type NativeEventEmitterActions = {
   hooks?: () => any;
   deviceBinding?: () => any;
   deviceID?: () => any;
-  passcodeChange?: () => any;
   passcode?: () => any;
   secureHardwareNotAvailable?: () => any;
   obfuscationIssues?: () => any;

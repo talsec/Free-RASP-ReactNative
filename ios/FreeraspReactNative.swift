@@ -48,15 +48,18 @@ class FreeraspReactNative: RCTEventEmitter {
 }
 
 extension SecurityThreatCenter: SecurityThreatHandler {
+
+
+    static let threatEventMap: [String: String] = [
+        "missingSecureEnclave": "secureHardwareNotAvailable",
+        "device binding": "deviceBinding",
+    ]
+    
     public func threatDetected(_ securityThreat: TalsecRuntime.SecurityThreat) {
-        // It is better to implement security reactions (e.g. killing the app) here.
-        switch securityThreat.rawValue {
-            case "missingSecureEnclave":
-                FreeraspReactNative.shared!.sendEvent(withName: "secureHardwareNotAvailable", body: "secureHardwareNotAvailable")
-            case "device binding":
-                FreeraspReactNative.shared!.sendEvent(withName: "deviceBinding", body: "deviceBinding")
-            default:
-                FreeraspReactNative.shared!.sendEvent(withName: securityThreat.rawValue, body: securityThreat.rawValue)
+        let threatName = SecurityThreatCenter.threatEventMap[securityThreat.rawValue] ?? securityThreat.rawValue
+        if (threatName == "passcodeChange") {
+            return
         }
+        FreeraspReactNative.shared!.sendEvent(withName: threatName, body: threatName)
     }
 }

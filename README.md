@@ -94,7 +94,19 @@ or
 
 ### Android
 
-_All dependencies of freeRASP for Android are resolved automatically._
+freeRASP for Android requires a minimum **SDK** level of **23**. React Native projects, by default, support even lower levels of minimum SDK. This creates an inconsistency we must solve by updating the minimum SDK level of the application:
+
+1. From the root of your project, go to **android > build.gradle**.
+1. In **buildscript**, update **minSdkVersion** to at least **23** (Android 6.0) or higher.
+
+```groovy
+buildscript {
+    ext {
+      minSdkVersion 23
+      ...
+    }
+}
+```
 
 ### iOS
 

@@ -10,7 +10,6 @@ export const commonChecks = [
   { name: 'Passcode', status: 'ok' },
 ];
 
-export const iosChecks = [
-  { name: 'Device ID', status: 'ok' },
-  { name: 'Passcode Change', status: 'ok' },
-];
+export const iosChecks = [{ name: 'Device ID', status: 'ok' }];
+
+export const androidChecks = [{ name: 'Obfuscation Issues', status: 'ok' }];

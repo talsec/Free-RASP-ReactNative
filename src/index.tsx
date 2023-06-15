@@ -3,6 +3,7 @@ import {
   EmitterSubscription,
   NativeEventEmitter,
   NativeModules,
+  Platform,
 } from 'react-native';
 
 type TalsecConfig = {
@@ -28,9 +29,9 @@ type NativeEventEmitterActions = {
   hooks?: () => any;
   deviceBinding?: () => any;
   deviceID?: () => any;
-  passcodeChange?: () => any;
   passcode?: () => any;
   secureHardwareNotAvailable?: () => any;
+  obfuscationIssues?: () => any;
   started?: () => any;
   initializationError?: (reason: { message: string }) => any;
 };
@@ -61,6 +62,9 @@ export const setThreatListeners = <T extends NativeEventEmitterActions>(
   );
 
   for (const [threat, action] of Object.entries(config)) {
+    if (threat === 'obfuscationIssues' && Platform.OS === 'ios') {
+      continue;
+    }
     activeListeners.push(eventEmitter.addListener(threat, action));
   }
 };

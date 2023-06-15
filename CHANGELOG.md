@@ -1,3 +1,17 @@
+# freeRASP 3.0.0
+
+### Android
+
+- ❗ BREAKING CHANGE: Raised minimum supported Android version to 6.0 (API level 23)
+- ✔️ Removed deprecated BouncyCastle dependency that could cause [errors in the build phase](https://github.com/talsec/Free-RASP-ReactNative/issues/13)
+- ✔️ Fixed issue that could cause NullPointerException
+- 🆕 Added new `obfuscationIssues` check, which is triggered when freeRASP doesn't detect any obfuscation of the source code
+
+### iOS
+
+- ⚠️ `passcodeChange` check has been deprecated
+- 🛠️ Refactored the code base
+
 # freeRASP 2.0.3
 
 ### iOS

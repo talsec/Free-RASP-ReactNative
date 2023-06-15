@@ -82,7 +82,7 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:7.0.0"
+  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:8.0.1"
 }
 
 if (isNewArchitectureEnabled()) {

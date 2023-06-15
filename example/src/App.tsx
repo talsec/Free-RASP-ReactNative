@@ -120,7 +120,7 @@ const App = () => {
     obfuscationIssues: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
-          threat.name === 'Passcode Change'
+          threat.name === 'Obfuscation Issues'
             ? { ...threat, status: 'nok' }
             : threat
         )

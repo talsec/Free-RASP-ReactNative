@@ -1,3 +1,11 @@
+# freeRASP 3.1.0
+### Android
+- ⚡ Fixed issue with incorrect Keystore type detection on Android 11 and above (https://github.com/talsec/Free-RASP-Flutter/issues/77)
+
+### iOS
+- ⚡ Reduced timeout period for logging from 20 sec to 5 sec
+- ⚡ Logging is now async in all calls
+
 # freeRASP 3.0.0
 
 ### Android

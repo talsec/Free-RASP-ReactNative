@@ -1,3 +1,10 @@
+# freeRASP 3.3.0
+
+### Android
+
+- ✔️ Removed PolarSSL native library
+- ✔️ Fixed issue with denied USE_BIOMETRICS permission
+
 # freeRASP 3.2.0
 
 ### Android

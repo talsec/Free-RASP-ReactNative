@@ -364,6 +364,19 @@ useEffect(() => {
 
 Where `actions`, `config` are objects described in previous chapters.
 
+### Unsupported Swift architecture
+
+**Reason:**
+The arm64 macro is not set under Rosetta.
+
+**Solution:**
+Go to `<your_project>/node_modules/freerasp-react-native/ios/TalsecRuntime.xcframework/ios-arm64/TalsecRuntime.framework/Headers/TalsecRuntime-Swift.h` and move following code (lines 4 and 5 in the file) to the top of the file:
+
+```
+#ifndef TALSECRUNTIME_SWIFT_H
+#define TALSECRUNTIME_SWIFT_H
+```
+
 # Security Report
 
 The Security Report is a weekly summary describing the application's security state and characteristics of the devices it runs on in a practical and easy-to-understand way.

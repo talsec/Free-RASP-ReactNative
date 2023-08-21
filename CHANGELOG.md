@@ -1,3 +1,9 @@
+# freeRASP 3.3.1
+
+### iOS
+
+- ⚡ Fixed issue with duplicate headers that caused `Multiple commands produce ...` error ([#11](https://github.com/talsec/Free-RASP-ReactNative/issues/11), [#26](https://github.com/talsec/Free-RASP-ReactNative/issues/26))
+
 # freeRASP 3.3.0
 
 ### Android

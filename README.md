@@ -25,7 +25,7 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
   - [Step 6: User Data Policies](#step-6-user-data-policies)
 - [Troubleshooting](#troubleshooting)
 - [Security Report](#security-report)
-- [Commercial versions (RASP+ and more)](#bar_chart-commercial-versions-rasp-and-more)
+- [Talsec Commercial Subscriptions](#money_with_wings-talsec-commercial-subscriptions)
   - [Plans Comparison](#plans-comparison)
 - [About Us](#about-us)
 - [License](#license)
@@ -391,8 +391,8 @@ To receive Security Reports, fill out the _watcherMail_ field in [config](#confi
 Talsec offers commercial plans on top of freeRASP (Business RASP+):
 * No limits of Fair Usage Policy (100K App Downloads) 
 * No Data Collection from your app
-* FinTech grade security, features and SLA (see more in [this post](https://github.com/orgs/talsec/discussions/5) )
-* Protect APIs and risk scoring by AppiCrypt(r)
+* FinTech grade security, features and SLA (see more in [this post](https://github.com/orgs/talsec/discussions/5))
+* Protect APIs and risk scoring by AppiCrypt®
 
 Learn more at [talsec.app](https://talsec.app).
 
@@ -408,7 +408,7 @@ It allows easy-to-implement API protection and App Integrity verification on the
 
 It is a unified solution that works across all mobile platforms without dependency on external web services (i.e., without extra latency, an additional point of failure, and maintenance costs).
 
-Learn more about commercial features at  [https://talsec.app](https://talsec.app/).
+Learn more about commercial features at [talsec.app](https://talsec.app).
 
 **TIP:** You can try freeRASP and then upgrade easily to an enterprise service.
 

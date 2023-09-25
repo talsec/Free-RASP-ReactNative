@@ -1,3 +1,15 @@
+# freeRASP 3.4.0
+
+- 📄 Documentation updates and improvements
+
+### Android
+
+- ✔️ updated CA bundle for logging pinning
+- ✔️ added error logging of network issues within the logging process
+- ✔️ added retry politics for logging
+- ⚡ fixed issue with DeadObjectException on Android 5 and 6 caused by excessive PackageManager.queryIntentActivities() usage
+- ⚡ improved root detection capabilities
+
 # freeRASP 3.3.1
 
 ### iOS

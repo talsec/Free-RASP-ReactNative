@@ -1,6 +1,6 @@
 ![FreeRasp](https://raw.githubusercontent.com/talsec/Free-RASP-Community/master/visuals/freeRASPforRN.png)
 
-![GitHub Repo stars](https://img.shields.io/github/stars/talsec/Free-RASP-Community?color=green) ![GitHub](https://img.shields.io/github/license/talsec/Free-RASP-Community) ![GitHub](https://img.shields.io/github/last-commit/talsec/Free-RASP-Community) ![Publisher](https://img.shields.io/pub/publisher/freerasp)
+![GitHub Repo stars](https://img.shields.io/github/stars/talsec/Free-RASP-Community?color=green) ![GitHub](https://img.shields.io/github/license/talsec/Free-RASP-Community) ![GitHub](https://img.shields.io/github/last-commit/talsec/Free-RASP-Community) ![Publisher](https://img.shields.io/pub/publisher/freerasp) [![42matters](https://42matters.com/badges/sdk-installations/freerasp)](https://42matters.com/sdks/android/freerasp)
 
 # freeRASP for React Native
 
@@ -147,7 +147,7 @@ const config = {
   androidConfig: {
     packageName: 'com.awesomeproject',
     certificateHashes: ['your_signing_certificate_hash_base64'],
-    // supportedAlternativeStores: ['storeOne', 'storeTwo'],
+    supportedAlternativeStores: ['com.sec.android.app.samsungapps'],
   },
   iosConfig: {
     appBundleId: 'com.awesomeproject',
@@ -164,7 +164,7 @@ const config = {
 
    - `packageName` _: string_ - package name of your app you chose when you created it
    - `certificateHashes` _: string[]_ - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
-   - `supportedAlternativeStores` _: string[] | undefined_ - If you publish on the Google Play Store and/or Huawei AppGallery, you **don't have to assign anything** there as those are supported out of the box.
+   - `supportedAlternativeStores` _: string[] | undefined_ - Google Play Store and Huawei AppGallery are supported out of the box, you **don't have to assign anything**. You can add other stores like the Samsung Galaxy Store in the example code (```com.sec.android.app.samsungapps```). For more information, visit the  [Detecting Unofficial Installation](https://github.com/talsec/Free-RASP-Community/wiki/Threat-detection#detecting-unofficial-installation) wiki page.
 
 1. `iosConfig` _: object | undefined_ - required for iOS devices, has following keys:
    - `appBundleId` _: string_ - Bundle ID of your app

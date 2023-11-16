@@ -3,77 +3,104 @@ import {
   EmitterSubscription,
   NativeEventEmitter,
   NativeModules,
-  Platform,
 } from 'react-native';
-
-type TalsecConfig = {
-  androidConfig?: {
-    packageName: string;
-    certificateHashes: string[];
-    supportedAlternativeStores?: string[];
-  };
-  iosConfig?: {
-    appBundleId: string;
-    appTeamId: string;
-  };
-  watcherMail: string;
-  isProd?: boolean;
-};
-
-type NativeEventEmitterActions = {
-  privilegedAccess?: () => any;
-  debug?: () => any;
-  simulator?: () => any;
-  appIntegrity?: () => any;
-  unofficialStore?: () => any;
-  hooks?: () => any;
-  deviceBinding?: () => any;
-  deviceID?: () => any;
-  passcode?: () => any;
-  secureHardwareNotAvailable?: () => any;
-  obfuscationIssues?: () => any;
-  started?: () => any;
-  initializationError?: (reason: { message: string }) => any;
-};
+import {
+  Threat,
+  type NativeEventEmitterActions,
+  TalsecConfig,
+} from './definitions';
+import { getThreatCount, itemsHaveType } from './utils';
 
 const { FreeraspReactNative } = NativeModules;
 
 const eventEmitter = new NativeEventEmitter(FreeraspReactNative);
-const activeListeners: EmitterSubscription[] = [];
+let eventsListener: EmitterSubscription;
 
-export const setThreatListeners = <T extends NativeEventEmitterActions>(
+const onInvalidCallback = (): void => {
+  FreeraspReactNative.onInvalidCallback();
+};
+
+const getThreatIdentifiers = async (): Promise<number[]> => {
+  let identifiers = await FreeraspReactNative.getThreatIdentifiers();
+  if (
+    identifiers.length !== getThreatCount() ||
+    !itemsHaveType(identifiers, 'number')
+  ) {
+    onInvalidCallback();
+  }
+  return identifiers;
+};
+
+const getThreatChannelData = async (): Promise<[string, string]> => {
+  let data = await FreeraspReactNative.getThreatChannelData();
+  if (data.length !== 2 || !itemsHaveType(data, 'string')) {
+    onInvalidCallback();
+  }
+  return data;
+};
+
+const prepareMapping = async (): Promise<void> => {
+  const newValues = await getThreatIdentifiers();
+  const threats = Threat.getValues();
+
+  threats.map((threat, index) => {
+    threat.value = newValues[index]!;
+  });
+};
+
+export const setThreatListeners = async <T extends NativeEventEmitterActions>(
   config: T & Record<Exclude<keyof T, keyof NativeEventEmitterActions>, []>
 ) => {
-  activeListeners.push(
-    eventEmitter.addListener('started', () => {
-      console.log('Talsec initialized.');
-    })
-  );
+  const [channel, key] = await getThreatChannelData();
+  await prepareMapping();
 
-  activeListeners.push(
-    eventEmitter.addListener(
-      'initializationError',
-      (e: { message: string }) => {
-        console.warn(
-          `Error during Talsec Native plugin initialization - ${e.message}`
-        );
-      }
-    )
-  );
-
-  for (const [threat, action] of Object.entries(config)) {
-    if (threat === 'obfuscationIssues' && Platform.OS === 'ios') {
-      continue;
+  eventsListener = eventEmitter.addListener(channel, (event) => {
+    if (event[key] === undefined) {
+      onInvalidCallback();
     }
-    activeListeners.push(eventEmitter.addListener(threat, action));
-  }
+    switch (event[key]) {
+      case Threat.PrivilegedAccess.value:
+        config.privilegedAccess?.();
+        break;
+      case Threat.Debug.value:
+        config.debug?.();
+        break;
+      case Threat.Simulator.value:
+        config.simulator?.();
+        break;
+      case Threat.AppIntegrity.value:
+        config.appIntegrity?.();
+        break;
+      case Threat.UnofficialStore.value:
+        config.unofficialStore?.();
+        break;
+      case Threat.Hooks.value:
+        config.hooks?.();
+        break;
+      case Threat.DeviceBinding.value:
+        config.deviceBinding?.();
+        break;
+      case Threat.Passcode.value:
+        config.passcode?.();
+        break;
+      case Threat.SecureHardwareNotAvailable.value:
+        config.secureHardwareNotAvailable?.();
+        break;
+      case Threat.ObfuscationIssues.value:
+        config.obfuscationIssues?.();
+        break;
+      default:
+        onInvalidCallback();
+        break;
+    }
+  });
 };
 
-export const removeThreatListeners = () => {
-  activeListeners.forEach((listener) => listener.remove());
+export const removeThreatListeners = (): void => {
+  eventsListener.remove();
 };
 
-export const talsecStart = (options: TalsecConfig): void => {
+export const talsecStart = async (options: TalsecConfig): Promise<string> => {
   return FreeraspReactNative.talsecStart(options);
 };
 
@@ -82,12 +109,18 @@ export const useFreeRasp = <T extends NativeEventEmitterActions>(
   actions: T & Record<Exclude<keyof T, keyof NativeEventEmitterActions>, []>
 ) => {
   useEffect(() => {
-    setThreatListeners(actions);
-    talsecStart(config);
+    (async () => {
+      await setThreatListeners(actions);
+      let response = await talsecStart(config);
+      if (response !== 'freeRASP started') {
+        onInvalidCallback();
+      }
+      console.log(response);
 
-    return () => {
-      removeThreatListeners();
-    };
+      return () => {
+        removeThreatListeners();
+      };
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

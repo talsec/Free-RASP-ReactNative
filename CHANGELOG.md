@@ -1,3 +1,9 @@
+# freeRASP 3.5.0
+
+- ⚠️ Updated the `talsecStart()` method to return `Promise<string>`. If freeRASP starts successfuly, the method will return `freeRASP started` string. There are not any changes of the interface if you are using the provided `useFreeRasp` hook.
+- ⚡ Improved the message passing between native iOS/Android and React Native sides
+- ✔️ Restricted message passing to valid callbacks only. If an invalid callback is received, the SDK will kill the app
+
 # freeRASP 3.4.0
 
 - 📄 Documentation updates and improvements

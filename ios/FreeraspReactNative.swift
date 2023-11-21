@@ -5,22 +5,26 @@ import TalsecRuntime
 class FreeraspReactNative: RCTEventEmitter {
 
     public static var shared:FreeraspReactNative?
+    
+    let threatChannelKey = String(Int.random(in: 100_000..<999_999_999)) // key of the argument map under which threats are expected
+    let threatChannelName = String(Int.random(in: 100_000..<999_999_999)) // name of the channel over which threat callbacks are sent
+    let threatIdentifierList = (1...12).map { _ in Int.random(in: 100_000..<999_999_999) }
 
     override init() {
         super.init()
         FreeraspReactNative.shared = self
     }
 
-    @objc(talsecStart:)
-    func talsecStart(options: NSDictionary) -> Void {
+    @objc(talsecStart:withResolver:withRejecter:)
+    func talsecStart(options: NSDictionary, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         do {
             try initializeTalsec(talsecConfig: options)
         }
         catch let error as NSError {
-            self.sendEvent(withName: "initializationError", body: error.localizedDescription)
+            reject("initialization_error", "Could not initialize freeRASP", error)
             return
         }
-        self.sendEvent(withName: "started", body: "started")
+        resolve("freeRASP started")
     }
 
     func initializeTalsec(talsecConfig: NSDictionary) throws {
@@ -41,25 +45,90 @@ class FreeraspReactNative: RCTEventEmitter {
         let config = TalsecConfig(appBundleIds: [appBundleIds], appTeamId: appTeamId, watcherMailAddress: watcherMailAddress, isProd: isProd)
         Talsec.start(config: config)
     }
+    
+    /**
+     * Method to setup the message passing between native and React Native
+     */
+    @objc(getThreatChannelData:withRejecter:)
+    private func getThreatChannelData(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        resolve([threatChannelName, threatChannelKey])
+    }
+    
+    func dispatchEvent(securityThreat: SecurityThreat) -> Void {
+        FreeraspReactNative.shared!.sendEvent(withName: threatChannelName, body: [threatChannelKey: securityThreat.callbackIdentifier])
+    }
+    
+    /**
+     * Method to get the random identifiers of callbacks
+     */
+    @objc(getThreatIdentifiers:withRejecter:)
+    private func getThreatIdentifiers(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        resolve(getThreatIdentifiers())
+    }
+    
+    /**
+     * We never send an invalid callback over our channel.
+     * Therefore, if this happens, we want to kill the app.
+     */
+    @objc(onInvalidCallback)
+    private func onInvalidCallback() -> Void {
+        abort()
+    }
+    
+    private func getThreatIdentifiers() -> [Int] {
+        return SecurityThreat.allCases
+            .filter {
+                threat in threat.rawValue != "passcodeChange"
+            }
+            .map {
+                threat in threat.callbackIdentifier
+            }
+    }
 
     override func supportedEvents() -> [String]! {
-        return ["initializationError", "started", "privilegedAccess", "debug", "simulator", "appIntegrity", "unofficialStore", "hooks", "deviceBinding", "deviceID", "secureHardwareNotAvailable", "passcodeChange", "passcode"]
+        return [threatChannelName]
+    }
+}
+
+/// An extension to unify callback names with RN ones.
+extension SecurityThreat {
+
+    var callbackIdentifier: Int {
+        switch self {
+            case .signature:
+            return FreeraspReactNative.shared!.threatIdentifierList[0]
+            case .jailbreak:
+                return FreeraspReactNative.shared!.threatIdentifierList[1]
+            case .debugger:
+                return FreeraspReactNative.shared!.threatIdentifierList[2]
+            case .runtimeManipulation:
+                return FreeraspReactNative.shared!.threatIdentifierList[3]
+            case .passcode:
+                return FreeraspReactNative.shared!.threatIdentifierList[4]
+            case .passcodeChange:
+                return FreeraspReactNative.shared!.threatIdentifierList[5]
+            case .simulator:
+                return FreeraspReactNative.shared!.threatIdentifierList[6]
+            case .missingSecureEnclave:
+                return FreeraspReactNative.shared!.threatIdentifierList[7]
+            case .deviceChange:
+                return FreeraspReactNative.shared!.threatIdentifierList[8]
+            case .deviceID:
+                return FreeraspReactNative.shared!.threatIdentifierList[9]
+            case .unofficialStore:
+            return FreeraspReactNative.shared!.threatIdentifierList[10]
+            @unknown default:
+                abort()
+        }
     }
 }
 
 extension SecurityThreatCenter: SecurityThreatHandler {
-
-
-    static let threatEventMap: [String: String] = [
-        "missingSecureEnclave": "secureHardwareNotAvailable",
-        "device binding": "deviceBinding",
-    ]
     
     public func threatDetected(_ securityThreat: TalsecRuntime.SecurityThreat) {
-        let threatName = SecurityThreatCenter.threatEventMap[securityThreat.rawValue] ?? securityThreat.rawValue
-        if (threatName == "passcodeChange") {
+        if (securityThreat.rawValue == "passcodeChange") {
             return
         }
-        FreeraspReactNative.shared!.sendEvent(withName: threatName, body: threatName)
+        FreeraspReactNative.shared!.dispatchEvent(securityThreat: securityThreat)
     }
 }

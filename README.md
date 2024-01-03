@@ -9,7 +9,6 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
 # :notebook_with_decorative_cover: Table of contents
 
 - [Overview](#overview)
-- [Requirements](#requirements)
 - [Usage](#usage)
   - [(Optional) Create a new React Native demo application](#optional-create-a-new-react-native-demo-application)
   - [Step 1: Install the plugin](#step-1-install-the-plugin)
@@ -64,13 +63,6 @@ It is a unified solution that works across all mobile platforms without dependen
 Learn more about commercial features at [https://talsec.app](https://talsec.app).
 
 Learn more about freemium freeRASP features at [GitHub main repository](https://github.com/talsec/Free-RASP-Community).
-
-# Requirements
-
-Following minimal version requirements have to be met
-in order to run freeRASP in your app:
-
-- `react-native` >= `0.65.3`
 
 # Usage
 
@@ -164,7 +156,7 @@ const config = {
 
    - `packageName` _: string_ - package name of your app you chose when you created it
    - `certificateHashes` _: string[]_ - hash of the certificate of the key which was used to sign the application. **Hash which is passed here must be encoded in Base64 form.** If you are not sure how to get your certificate hash, you can check out the guide on our [Github wiki](https://github.com/talsec/Free-RASP-Community/wiki/Getting-your-signing-certificate-hash-of-app). Multiple hashes are supported, e.g. if you are using a different one for the Huawei App Gallery.
-   - `supportedAlternativeStores` _: string[] | undefined_ - Google Play Store and Huawei AppGallery are supported out of the box, you **don't have to assign anything**. You can add other stores like the Samsung Galaxy Store in the example code (```com.sec.android.app.samsungapps```). For more information, visit the  [Detecting Unofficial Installation](https://github.com/talsec/Free-RASP-Community/wiki/Threat-detection#detecting-unofficial-installation) wiki page.
+   - `supportedAlternativeStores` _: string[] | undefined_ - Google Play Store and Huawei AppGallery are supported out of the box, you **don't have to assign anything**. You can add other stores like the Samsung Galaxy Store in the example code (`com.sec.android.app.samsungapps`). For more information, visit the [Detecting Unofficial Installation](https://github.com/talsec/Free-RASP-Community/wiki/Threat-detection#detecting-unofficial-installation) wiki page.
 
 1. `iosConfig` _: object | undefined_ - required for iOS devices, has following keys:
    - `appBundleId` _: string_ - Bundle ID of your app
@@ -387,12 +379,14 @@ To receive Security Reports, fill out the _watcherMail_ field in [config](#confi
 
 ![dashboard](https://raw.githubusercontent.com/talsec/Free-RASP-Community/master/visuals/dashboard.png)
 
-# :money_with_wings: Talsec Commercial Subscriptions 
+# :money_with_wings: Talsec Commercial Subscriptions
+
 Talsec offers commercial plans on top of freeRASP (Business RASP+):
-* No limits of Fair Usage Policy (100K App Downloads) 
-* No Data Collection from your app
-* FinTech grade security, features and SLA (see more in [this post](https://github.com/orgs/talsec/discussions/5))
-* Protect APIs and risk scoring by AppiCrypt®
+
+- No limits of Fair Usage Policy (100K App Downloads)
+- No Data Collection from your app
+- FinTech grade security, features and SLA (see more in [this post](https://github.com/orgs/talsec/discussions/5))
+- Protect APIs and risk scoring by AppiCrypt®
 
 Learn more at [talsec.app](https://talsec.app).
 
@@ -400,11 +394,11 @@ Not to overlook, the one of the most valued commercial features is [AppiCrypt®]
 
 It allows easy-to-implement API protection and App Integrity verification on the backend to prevent API abuse:
 
--   Bruteforce attacks
--   Botnets
--   API abuse by App impersonation
--   Session-hijacking
--   DDoS
+- Bruteforce attacks
+- Botnets
+- API abuse by App impersonation
+- Session-hijacking
+- DDoS
 
 It is a unified solution that works across all mobile platforms without dependency on external web services (i.e., without extra latency, an additional point of failure, and maintenance costs).
 

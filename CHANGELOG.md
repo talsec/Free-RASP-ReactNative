@@ -1,3 +1,18 @@
+# freeRASP 3.6.0
+
+- ⚡ Improved reaction obfuscation
+- 📄 Documentation updates
+
+### Android
+
+- ⚡ Fixed ProviderException which could be occassionally triggered
+- ⚡ Fixed bug causing incompatibility with some versions of React Native ([#38](https://github.com/talsec/Free-RASP-ReactNative/issues/38))
+
+### iOS
+
+- ❗ Raised supported Xcode version to 14.3.1
+- ⚡ Improved SDK obfuscation
+
 # freeRASP 3.5.0
 
 - ⚠️ Updated the `talsecStart()` method to return `Promise<string>`. If freeRASP starts successfuly, the method will return `freeRASP started` string. There are not any changes of the interface if you are using the provided `useFreeRasp` hook.

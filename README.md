@@ -106,7 +106,7 @@ freeRASP React Native plugin uses Pods. Navigate to the `ios` folder and run:
 
     $ pod install
 
-**IMPORTANT:** If you are upgrading from a previous version of freeRASP, please remove the old TalsecRuntime.xcframework and integration script from your project:
+**IMPORTANT:** If you are upgrading from version 1.x.x, please remove the old TalsecRuntime.xcframework and integration script from your project:
 
 1. Open up the **.xcworkspace** file
 1. Go to **Target -> Build Phases -> Link Binary With Libraries**

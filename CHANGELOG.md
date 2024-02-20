@@ -1,3 +1,11 @@
+# freeRASP 3.6.1
+
+- 📄 Documentation updates
+
+### iOS
+
+- ⚡ Fixed bug that caused app being killed in specific situations ([#42](https://github.com/talsec/Free-RASP-ReactNative/issues/42))
+
 # freeRASP 3.6.0
 
 - ⚡ Improved reaction obfuscation

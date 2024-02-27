@@ -369,6 +369,11 @@ Go to `<your_project>/node_modules/freerasp-react-native/ios/TalsecRuntime.xcfra
 #define TALSECRUNTIME_SWIFT_H
 ```
 
+### Increase minSdkVersion when using Expo
+
+**Solution:**
+This can be done with `expo-build-properties` plugin, which updates the property in the prebuild phase. [Read more in the Expo docs](https://docs.expo.dev/versions/latest/sdk/build-properties/).
+
 # Security Report
 
 The Security Report is a weekly summary describing the application's security state and characteristics of the devices it runs on in a practical and easy-to-understand way.

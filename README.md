@@ -22,6 +22,7 @@ freeRASP for React Native is a mobile in-app protection and security monitoring 
     - [Alternative: Initialize freeRASP in a Class component](#alternative-initialize-freerasp-in-a-class-component)
   - [Step 5: Additional note about obfuscation](#step-5-additional-note-about-obfuscation)
   - [Step 6: User Data Policies](#step-6-user-data-policies)
+- [Using Expo SDK](#using-expo-sdk)
 - [Troubleshooting](#troubleshooting)
 - [Security Report](#security-report)
 - [Talsec Commercial Subscriptions](#money_with_wings-talsec-commercial-subscriptions)
@@ -317,6 +318,22 @@ And you're done 🎉!
 
 If you encounter any other issues, you can see the list of solved issues [here](https://github.com/talsec/Free-RASP-ReactNative/issues?q=is%3Aissue+is%3Aclosed), or open up a [new one](https://github.com/talsec/Free-RASP-ReactNative/issues?q=is%3Aissue+is%3Aopen).
 
+# Using Expo SDK
+freeRASP for React Native is bare React Native plugin. When installing freeRASP into a project that uses Expo SDK, there may be extra configuration needed:
+
+### 1. Increase minSdkVersion
+
+This can be done in two ways:
+-  update the `minSdkVersion` property directly in __android/build.gradle__, or
+- use `expo-build-properties` plugin, which updates the property in the prebuild phase. [Read more in the Expo docs](https://docs.expo.dev/versions/latest/sdk/build-properties/).
+
+### 2. Add maven dependency
+- open __android/build.gradle__ _(if you don't see the android folder, run `npx expo prebuild -p android` in terminal to create it)_
+- add following dependency under __allprojects > repositories__:
+`maven { url "https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp" }`
+- if not already configured, add also
+`maven { url 'https://www.jitpack.io' }`
+
 # Troubleshooting
 
 ### Could not determine the dependencies of task `':freerasp-react-native:compileDebugAidl'`
@@ -368,11 +385,6 @@ Go to `<your_project>/node_modules/freerasp-react-native/ios/TalsecRuntime.xcfra
 #ifndef TALSECRUNTIME_SWIFT_H
 #define TALSECRUNTIME_SWIFT_H
 ```
-
-### Increase minSdkVersion when using Expo
-
-**Solution:**
-This can be done with `expo-build-properties` plugin, which updates the property in the prebuild phase. [Read more in the Expo docs](https://docs.expo.dev/versions/latest/sdk/build-properties/).
 
 # Security Report
 

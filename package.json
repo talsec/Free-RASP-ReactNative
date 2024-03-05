@@ -67,10 +67,12 @@
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/react": "17.0.21",
     "@types/react-native": "0.70.0",
+    "@tsconfig/node-lts": "^20.1.1",
     "del-cli": "^5.0.0",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "expo": "^50.0.8",
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
     "react": "18.1.0",
@@ -83,8 +85,14 @@
     "@types/react": "17.0.21"
   },
   "peerDependencies": {
-    "react": "^18.1.0",
-    "react-native": "*"
+    "react": "*",
+    "react-native": "*",
+    "expo": ">=47.0.0"
+  },
+  "peerDependenciesMeta": {
+    "expo": {
+      "optional": true
+    }
   },
   "engines": {
     "node": ">= 16.0.0"
@@ -110,7 +118,7 @@
     },
     "plugins": {
       "@release-it/conventional-changelog": {
-        "preset": "angular"
+        "preset": "react"
       }
     }
   },

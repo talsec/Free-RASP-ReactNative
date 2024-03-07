@@ -6,6 +6,7 @@ import {
   withProjectBuildGradle,
 } from '@expo/config-plugins';
 
+// @ts-ignore
 import { PluginConfigType } from './pluginConfig';
 
 const { createBuildGradlePropsConfigPlugin } = AndroidConfig.BuildProperties;
@@ -74,6 +75,12 @@ const withRnTalsecApp: ConfigPlugin<PluginConfigType> = (config, props) => {
   return config;
 };
 
-const pkg = require('freerasp-react-native/package.json');
+let pkg: { name: string; version?: string } = {
+  name: 'freerasp-react-native',
+};
+try {
+  const freeraspPkg = require('freerasp-react-native/package.json');
+  pkg = freeraspPkg;
+} catch {}
 
 export default createRunOncePlugin(withRnTalsecApp, pkg.name, pkg.version);

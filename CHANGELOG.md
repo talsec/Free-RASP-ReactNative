@@ -1,3 +1,25 @@
+# freeRASP 3.7.0
+
+- ⚡ Added support for apps built with Expo SDK
+- 📄 Documentation updates
+
+### Android
+
+- ⚡ Shortened duration of threat evaluation
+- ⚡ Fixed a native crash bug during one of the native root checks (detected after NDK upgrade)
+- ⚡ Improved _appIntegrity_ check and its logging
+- ✔️ Updated `CURL` to `8.5.0` and `OpenSSL` to `1.1.1w`
+
+### iOS
+
+- ⚡ Improved obfuscation of Swift and C strings
+- ⚡ Added Privacy Manifest
+- ⚡ Fixed memory leak ([freeRASP iOS issue #13](https://github.com/talsec/Free-RASP-iOS/issues/13))
+- ✔️ Added codesigning for the SDK, it is signed by:
+  - _Team ID_: `ASQC376HCN`
+  - _Team Name_: `AHEAD iTec, s.r.o.`
+- ✔️ Updated `CURL` to `8.5.0` and `OpenSSL` to `1.1.1w`
+
 # freeRASP 3.6.1
 
 - 📄 Documentation updates

@@ -319,8 +319,25 @@ And you're done 🎉!
 If you encounter any other issues, you can see the list of solved issues [here](https://github.com/talsec/Free-RASP-ReactNative/issues?q=is%3Aissue+is%3Aclosed), or open up a [new one](https://github.com/talsec/Free-RASP-ReactNative/issues?q=is%3Aissue+is%3Aopen).
 
 # Using Expo SDK
-freeRASP for React Native is bare React Native plugin. When installing freeRASP into a project that uses Expo SDK, there may be extra configuration needed:
+freeRASP for React Native is bare React Native plugin. When installing freeRASP into a project that uses Expo SDK, there may be extra configuration needed. We provide plugin config that sets the dependencies automatically. It is recommended to use the plugin config. However, manual setup is also possible.
 
+## Plugin config setup
+Add the plugin config into your `app.json` and specify the `minSdkVersion` (use at least 23):
+```json
+"plugins": [
+      [
+        "freerasp-react-native/app.plugin.js",
+        {
+          "android": {
+            "minSdkVersion": "23"
+          }
+        }
+      ]
+    ],
+```
+
+
+## Manual setup
 ### 1. Increase minSdkVersion
 
 This can be done in two ways:

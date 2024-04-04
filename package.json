@@ -16,7 +16,6 @@
     "bootstrap": "yarn example && yarn install && yarn example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
     "build:plugin": "tsc --build plugin"
-
   },
   "keywords": [
     "react-native",
@@ -80,7 +79,6 @@
   "engines": {
     "node": ">= 16.0.0"
   },
-  "packageManager": "^yarn@1.22.15",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [

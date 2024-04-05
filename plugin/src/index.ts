@@ -42,8 +42,8 @@ export const setBuildscriptDependency = (buildGradle: string) => {
 /**
  * Update `<project>/build.gradle` by adding nexus dependency to buildscript
  */
-export const withBuildscriptDependency: ConfigPlugin = (config) => {
-  return withProjectBuildGradle(config, (config) => {
+export const withBuildscriptDependency: ConfigPlugin = (expoConfig) => {
+  return withProjectBuildGradle(expoConfig, (config) => {
     if (config.modResults.language === 'groovy') {
       config.modResults.contents = setBuildscriptDependency(
         config.modResults.contents

@@ -21,7 +21,12 @@ jobs:
         run: yarn lint
 
       - name: Typecheck files
-        run: yarn typecheck
+        run: |
+          yarn typecheck
+
+      - name: Typecheck Expo files
+        run: |
+          yarn expo:typecheck
 
   # no tests yet 😥
   # test:
@@ -129,5 +134,6 @@ jobs:
           NO_FLIPPER: 1
 
       - name: Build example for iOS
+        working-directory: ./example
         run: |
           yarn build:ios

@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import {
-  EmitterSubscription,
   NativeEventEmitter,
   NativeModules,
+  type EmitterSubscription,
 } from 'react-native';
 import {
   Threat,
   type NativeEventEmitterActions,
-  TalsecConfig,
+  type TalsecConfig,
 } from './definitions';
 import { getThreatCount, itemsHaveType } from './utils';
 

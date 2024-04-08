@@ -11,17 +11,17 @@ import { PluginConfigType } from './pluginConfig';
 
 const { createBuildGradlePropsConfigPlugin } = AndroidConfig.BuildProperties;
 
-const urlNexus =
-  'https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp';
+const urlFreerasp =
+  'https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp';
 const urlJitpack = 'https://www.jitpack.io';
 
 export const setBuildscriptDependency = (buildGradle: string) => {
   // This enables users in bare workflow to comment out the line to prevent freerasp from adding it back.
 
-  const mavenNexus = buildGradle.includes(urlNexus)
+  const mavenFreerasp = buildGradle.includes(urlFreerasp)
     ? ''
-    : `maven { url "${urlNexus}" }`;
-  const mavenJitpack = buildGradle.includes(urlNexus)
+    : `maven { url "${urlFreerasp}" }`;
+  const mavenJitpack = buildGradle.includes(urlJitpack)
     ? ''
     : `maven { url "${urlJitpack}" }`;
 
@@ -30,7 +30,7 @@ export const setBuildscriptDependency = (buildGradle: string) => {
   const combinedGradleMaven = `
     allprojects {
       repositories {
-        ${mavenNexus}
+        ${mavenFreerasp}
         ${mavenJitpack}
       }
     }

@@ -347,7 +347,7 @@ This can be done in two ways:
 ### 2. Add maven dependency
 - open __android/build.gradle__ _(if you don't see the android folder, run `npx expo prebuild -p android` in terminal to create it)_
 - add following dependency under __allprojects > repositories__:
-`maven { url "https://nexus3-public.monetplus.cz/repository/ahead-talsec-free-rasp" }`
+`maven { url "https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp" }`
 - if not already configured, add also
 `maven { url 'https://www.jitpack.io' }`
 

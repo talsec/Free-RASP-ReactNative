@@ -1,3 +1,10 @@
+# freeRASP 3.7.1
+
+### Android
+
+- ⚡ Updated freeRASP SDK artifact hosting ensuring better stability and availibility
+- ⚡ Fixed compatibility issues with RN < 0.63
+
 # freeRASP 3.7.0
 
 - ⚡ Added support for apps built with Expo SDK

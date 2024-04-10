@@ -91,14 +91,22 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
     val certificateHashes = mutableListOf<String>()
     val hashes = androidConfig.getArray("certificateHashes")!!
     for (i in 0 until hashes.size()) {
-      certificateHashes.add(hashes.getString(i))
+      // in RN versions < 0.63, getString is nullable
+      @Suppress("UNNECESSARY_SAFE_CALL")
+      hashes.getString(i)?.let {
+        certificateHashes.add(it)
+      }
     }
     val watcherMail = config.getString("watcherMail")
     val alternativeStores = mutableListOf<String>()
     if (androidConfig.hasKey("supportedAlternativeStores")) {
       val stores = androidConfig.getArray("supportedAlternativeStores")!!
       for (i in 0 until stores.size()) {
-        alternativeStores.add(stores.getString(i))
+        // in RN versions < 0.63, getString is nullable
+        @Suppress("UNNECESSARY_SAFE_CALL")
+        stores.getString(i)?.let {
+          alternativeStores.add(it)
+        }
       }
     }
     var isProd = true

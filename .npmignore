@@ -2,7 +2,7 @@ config.json
 config.example.json
 *.zip
 *.tgz
-
+scripts/
 plugin/src
 
 # OSX

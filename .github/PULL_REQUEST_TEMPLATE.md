@@ -14,6 +14,7 @@ _Describe the PR shortly_
 
 - [ ] `CHANGELOG.md` is updated
 - [ ] `package.json` version is increased
+- [ ] `release` label is applied on PR
 
 ### To be checked by maintainers:
 

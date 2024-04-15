@@ -17,9 +17,9 @@
     "react-native-svg": "^13.8.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.24.4",
     "@babel/runtime": "^7.24.1",
-    "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-module-resolver": "^5.0.0",
     "metro-react-native-babel-preset": "0.72.3",
     "react-native-svg-transformer": "^1.0.0"
   }

@@ -403,6 +403,15 @@ Go to `<your_project>/node_modules/freerasp-react-native/ios/TalsecRuntime.xcfra
 #define TALSECRUNTIME_SWIFT_H
 ```
 
+### Execution failed for task ':freerasp-react-native:minifyReleaseWithR8'.
+`Sealed classes are not supported as program classes when generating class files.`
+
+**Reason:**
+Kotlin sealed classes are not supported in AGP 8.1 used by some versions of RN (currently 0.73.x)
+
+**Solution:**
+Follow [this comment on Google Issue Tracker](https://issuetracker.google.com/issues/227160052#comment37), which contains also additional information about the issue.
+
 # Security Report
 
 The Security Report is a weekly summary describing the application's security state and characteristics of the devices it runs on in a practical and easy-to-understand way.

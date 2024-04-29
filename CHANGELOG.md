@@ -1,3 +1,7 @@
+# freeRASP 3.7.2
+
+- ⚡ Update expo config plugin to fix release build issue in RN 0.73
+
 # freeRASP 3.7.1
 
 ### Android

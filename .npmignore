@@ -18,7 +18,7 @@ jsconfig.json
 
 # Xcode
 #
-build/
+**/ios/**/build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -46,6 +46,7 @@ project.xcworkspace
 .settings
 local.properties
 android.iml
+**/android/**/build
 
 # Cocoapods
 #

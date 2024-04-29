@@ -322,14 +322,16 @@ If you encounter any other issues, you can see the list of solved issues [here](
 freeRASP for React Native is bare React Native plugin. When installing freeRASP into a project that uses Expo SDK, there may be extra configuration needed. We provide plugin config that sets the dependencies automatically. It is recommended to use the plugin config. However, manual setup is also possible.
 
 ## Plugin config setup
-Add the plugin config into your `app.json` and specify the `minSdkVersion` (use at least 23):
+Add the plugin config into your `app.json` and specify the `minSdkVersion` (use at least 23).
+Additionally, if you are using Expo 50, increase version of R8 above 8.2 with the `R8Version` property [(to support sealed classes on Android)](https://github.com/talsec/Free-RASP-ReactNative/issues/60).
 ```json
 "plugins": [
       [
         "freerasp-react-native/app.plugin.js",
         {
           "android": {
-            "minSdkVersion": "23"
+            "minSdkVersion": "23",
+            "R8Version": "8.3.37" // optional for Expo 50
           }
         }
       ]

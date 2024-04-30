@@ -5,9 +5,8 @@ import {
   createRunOncePlugin,
   withProjectBuildGradle,
 } from '@expo/config-plugins';
-
-// @ts-ignore
-import { PluginConfigType } from './pluginConfig';
+import { type ExpoConfig } from '@expo/config-types';
+import { type PluginConfigType } from './pluginConfig';
 
 const { createBuildGradlePropsConfigPlugin } = AndroidConfig.BuildProperties;
 
@@ -15,7 +14,7 @@ const urlFreerasp =
   'https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp';
 const urlJitpack = 'https://www.jitpack.io';
 
-export const setBuildscriptDependency = (buildGradle: string) => {
+const setBuildscriptDependency = (buildGradle: string) => {
   // This enables users in bare workflow to comment out the line to prevent freerasp from adding it back.
 
   const mavenFreerasp = buildGradle.includes(urlFreerasp)
@@ -39,11 +38,23 @@ export const setBuildscriptDependency = (buildGradle: string) => {
   return buildGradle + `\n${combinedGradleMaven}\n`;
 };
 
+const setAndroidR8 = (buildGradle: string, version: string) => {
+  const combinedGradleMaven = `
+    buildscript {
+      dependencies {
+          classpath("com.android.tools:r8:${version}")
+      }
+    }
+  `;
+
+  return buildGradle + `\n${combinedGradleMaven}\n`;
+};
+
 /**
  * Update `<project>/build.gradle` by adding nexus dependency to buildscript
  */
-export const withBuildscriptDependency: ConfigPlugin = (config) => {
-  return withProjectBuildGradle(config, (config) => {
+const withBuildscriptDependency: ConfigPlugin = (expoConfig) => {
+  return withProjectBuildGradle(expoConfig, (config) => {
     if (config.modResults.language === 'groovy') {
       config.modResults.contents = setBuildscriptDependency(
         config.modResults.contents
@@ -58,7 +69,7 @@ export const withBuildscriptDependency: ConfigPlugin = (config) => {
   });
 };
 
-export const withAndroidMinSdkVersion =
+const withAndroidMinSdkVersion =
   createBuildGradlePropsConfigPlugin<PluginConfigType>(
     [
       {
@@ -69,9 +80,36 @@ export const withAndroidMinSdkVersion =
     'withAndroidMinSdkVersion'
   );
 
+/**
+ * Update `<project>/build.gradle` by updating the R8 version
+ */
+const withAndroidR8Version: ConfigPlugin<PluginConfigType> = (
+  expoConfig: ExpoConfig,
+  props: PluginConfigType
+) => {
+  if (!props.android?.R8Version) {
+    return expoConfig;
+  }
+  return withProjectBuildGradle(expoConfig, (config) => {
+    if (config.modResults.language === 'groovy') {
+      config.modResults.contents = setAndroidR8(
+        config.modResults.contents,
+        props.android?.R8Version ?? '+'
+      );
+    } else {
+      WarningAggregator.addWarningAndroid(
+        'freerasp-react-native',
+        `Cannot automatically configure project build.gradle, because it's not groovy`
+      );
+    }
+    return config;
+  });
+};
+
 const withRnTalsecApp: ConfigPlugin<PluginConfigType> = (config, props) => {
   config = withBuildscriptDependency(config);
   config = withAndroidMinSdkVersion(config, props);
+  config = withAndroidR8Version(config, props);
   return config;
 };
 

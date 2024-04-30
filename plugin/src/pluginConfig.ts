@@ -18,4 +18,5 @@ export interface PluginConfigTypeAndroid {
    * Override the default `minSdkVersion` version number in **build.gradle**.
    * */
   minSdkVersion?: number;
+  R8Version?: string;
 }

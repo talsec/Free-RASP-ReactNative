@@ -1,9 +1,9 @@
 import {
   AndroidConfig,
-  ConfigPlugin,
   WarningAggregator,
   createRunOncePlugin,
   withProjectBuildGradle,
+  type ConfigPlugin,
 } from '@expo/config-plugins';
 import { type ExpoConfig } from '@expo/config-types';
 import { type PluginConfigType } from './pluginConfig';

@@ -73,8 +73,7 @@ jobs:
         shell: bash
 
       - name: Build Expo plugin
-        working-directory: ./plugin
-        run: tsc
+        run: yarn build:plugin
         shell: bash
 
       - name: Configure git

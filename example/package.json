@@ -22,5 +22,8 @@
     "babel-plugin-module-resolver": "^5.0.0",
     "metro-react-native-babel-preset": "0.72.3",
     "react-native-svg-transformer": "^1.0.0"
+  },
+  "resolutions": {
+    "react-devtools-core": "^4.28.4"
   }
 }

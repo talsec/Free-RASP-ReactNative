@@ -12,7 +12,6 @@
     "expo:typecheck": "cd plugin && tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepack": "bob build && yarn build:plugin",
-    "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install && yarn example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
@@ -64,7 +63,8 @@
     "typescript": "^5.4.4"
   },
   "resolutions": {
-    "@types/react": "17.0.21"
+    "@types/react": "17.0.21",
+    "semver": "^7.5.3"
   },
   "peerDependencies": {
     "expo": ">=47.0.0",
@@ -87,16 +87,6 @@
     ]
   },
   "release-it": {
-    "git": {
-      "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
-    },
-    "npm": {
-      "publish": true
-    },
-    "github": {
-      "release": true
-    },
     "plugins": {
       "@release-it/conventional-changelog": {
         "preset": "react"

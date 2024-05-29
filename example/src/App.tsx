@@ -101,6 +101,14 @@ const App = () => {
       );
     },
     // Android & iOS
+    systemVPN: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'System VPN' ? { ...threat, status: 'nok' } : threat
+        )
+      );
+    },
+    // Android & iOS
     passcode: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
@@ -121,6 +129,16 @@ const App = () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Obfuscation Issues'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
+    // Android only
+    devMode: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Developer Mode'
             ? { ...threat, status: 'nok' }
             : threat
         )

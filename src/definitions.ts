@@ -26,6 +26,8 @@ export type NativeEventEmitterActions = {
   passcode?: () => any;
   secureHardwareNotAvailable?: () => any;
   obfuscationIssues?: () => any;
+  devMode?: () => any;
+  systemVPN?: () => any;
 };
 
 export class Threat {
@@ -38,10 +40,12 @@ export class Threat {
   static Passcode = new Threat(0);
   static Simulator = new Threat(0);
   static SecureHardwareNotAvailable = new Threat(0);
+  static SystemVPN = new Threat(0);
   static DeviceBinding = new Threat(0);
   static DeviceID = new Threat(0);
   static UnofficialStore = new Threat(0);
   static ObfuscationIssues = new Threat(0);
+  static DevMode = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -57,9 +61,11 @@ export class Threat {
           this.Passcode,
           this.Simulator,
           this.SecureHardwareNotAvailable,
+          this.SystemVPN,
           this.DeviceBinding,
           this.UnofficialStore,
           this.ObfuscationIssues,
+          this.DevMode,
         ]
       : [
           this.AppIntegrity,
@@ -69,6 +75,7 @@ export class Threat {
           this.Passcode,
           this.Simulator,
           this.SecureHardwareNotAvailable,
+          this.SystemVPN,
           this.DeviceBinding,
           this.DeviceID,
           this.UnofficialStore,

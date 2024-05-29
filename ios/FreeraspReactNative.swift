@@ -5,10 +5,9 @@ import TalsecRuntime
 class FreeraspReactNative: RCTEventEmitter {
 
     public static var shared:FreeraspReactNative?
-    
+
     let threatChannelKey = String(Int.random(in: 100_000..<999_999_999)) // key of the argument map under which threats are expected
     let threatChannelName = String(Int.random(in: 100_000..<999_999_999)) // name of the channel over which threat callbacks are sent
-    let threatIdentifierList = (1...12).map { _ in Int.random(in: 100_000..<999_999_999) }
 
     override init() {
         super.init()
@@ -45,7 +44,7 @@ class FreeraspReactNative: RCTEventEmitter {
         let config = TalsecConfig(appBundleIds: [appBundleIds], appTeamId: appTeamId, watcherMailAddress: watcherMailAddress, isProd: isProd)
         Talsec.start(config: config)
     }
-    
+
     /**
      * Method to setup the message passing between native and React Native
      */
@@ -53,11 +52,11 @@ class FreeraspReactNative: RCTEventEmitter {
     private func getThreatChannelData(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         resolve([threatChannelName, threatChannelKey])
     }
-    
+
     func dispatchEvent(securityThreat: SecurityThreat) -> Void {
         FreeraspReactNative.shared!.sendEvent(withName: threatChannelName, body: [threatChannelKey: securityThreat.callbackIdentifier])
     }
-    
+
     /**
      * Method to get the random identifiers of callbacks
      */
@@ -65,7 +64,7 @@ class FreeraspReactNative: RCTEventEmitter {
     private func getThreatIdentifiers(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         resolve(getThreatIdentifiers())
     }
-    
+
     /**
      * We never send an invalid callback over our channel.
      * Therefore, if this happens, we want to kill the app.
@@ -74,7 +73,7 @@ class FreeraspReactNative: RCTEventEmitter {
     private func onInvalidCallback() -> Void {
         abort()
     }
-    
+
     private func getThreatIdentifiers() -> [Int] {
         return SecurityThreat.allCases
             .filter {
@@ -90,33 +89,39 @@ class FreeraspReactNative: RCTEventEmitter {
     }
 }
 
+struct ThreatIdentifiers {
+    static let threatIdentifierList: [Int] = (1...12).map { _ in Int.random(in: 100_000..<999_999_999) }
+}
+
 /// An extension to unify callback names with RN ones.
 extension SecurityThreat {
 
     var callbackIdentifier: Int {
         switch self {
             case .signature:
-            return FreeraspReactNative.shared!.threatIdentifierList[0]
+                return ThreatIdentifiers.threatIdentifierList[0]
             case .jailbreak:
-                return FreeraspReactNative.shared!.threatIdentifierList[1]
+                return ThreatIdentifiers.threatIdentifierList[1]
             case .debugger:
-                return FreeraspReactNative.shared!.threatIdentifierList[2]
+                return ThreatIdentifiers.threatIdentifierList[2]
             case .runtimeManipulation:
-                return FreeraspReactNative.shared!.threatIdentifierList[3]
+                return ThreatIdentifiers.threatIdentifierList[3]
             case .passcode:
-                return FreeraspReactNative.shared!.threatIdentifierList[4]
+                return ThreatIdentifiers.threatIdentifierList[4]
             case .passcodeChange:
-                return FreeraspReactNative.shared!.threatIdentifierList[5]
+                return ThreatIdentifiers.threatIdentifierList[5]
             case .simulator:
-                return FreeraspReactNative.shared!.threatIdentifierList[6]
+                return ThreatIdentifiers.threatIdentifierList[6]
             case .missingSecureEnclave:
-                return FreeraspReactNative.shared!.threatIdentifierList[7]
+                return ThreatIdentifiers.threatIdentifierList[7]
+            case .systemVPN:
+                return ThreatIdentifiers.threatIdentifierList[8]
             case .deviceChange:
-                return FreeraspReactNative.shared!.threatIdentifierList[8]
+                return ThreatIdentifiers.threatIdentifierList[9]
             case .deviceID:
-                return FreeraspReactNative.shared!.threatIdentifierList[9]
+                return ThreatIdentifiers.threatIdentifierList[10]
             case .unofficialStore:
-            return FreeraspReactNative.shared!.threatIdentifierList[10]
+                return ThreatIdentifiers.threatIdentifierList[11]
             @unknown default:
                 abort()
         }

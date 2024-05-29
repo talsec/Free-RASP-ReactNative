@@ -281,7 +281,7 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 
 #if defined(__OBJC__)
 
-SWIFT_EXTERN void __pzeFkLZXYzJqCjNEZXxLjmz(void);
+SWIFT_EXTERN void __XNgzBIgNuEcWxKFwoXGoImx(void);
 
 #endif
 #if defined(__cplusplus)

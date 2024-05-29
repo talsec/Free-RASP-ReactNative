@@ -1,3 +1,22 @@
+# freeRASP 3.8.0
+
+- ⚡ Added new threat `systemVPN` for VPN detection
+- 📄 Documentation updates
+
+### Android
+
+- ⚡ Added new threat `devMode` for Developer mode detection
+- ⚡ Enhanced and accelerated the data collection logic
+- ⚡ Fixed proguard warning in specific versions of RN
+- ⚡ Fixed issue with Arabic alphabet in logs caused by the device’s default system locale
+- ✔️ Increased the version of the GMS dependency
+- ✔️ Updated CA bundle
+
+### iOS
+- ⚡ Fixed issue with Arabic alphabet in logs caused by the device’s default system locale
+- ⚡ Passcode check is now periodical
+- ✔️ Updated CA bundle
+
 # freeRASP 3.7.2
 
 - ⚡ Update expo config plugin to fix release build issue in RN 0.73

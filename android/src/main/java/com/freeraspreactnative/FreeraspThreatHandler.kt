@@ -46,6 +46,14 @@ internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatLis
     listener?.threatDetected(Threat.SecureHardwareNotAvailable)
   }
 
+  override fun onDeveloperModeDetected() {
+    listener?.threatDetected(Threat.DevMode)
+  }
+
+  override fun onSystemVPNDetected() {
+    listener?.threatDetected(Threat.SystemVPN)
+  }
+
   internal interface TalsecReactNative {
     fun threatDetected(threatType: Threat)
   }

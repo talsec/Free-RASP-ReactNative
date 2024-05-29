@@ -92,6 +92,12 @@ export const setThreatListeners = async <T extends NativeEventEmitterActions>(
       case Threat.DeviceID.value:
         config.deviceID?.();
         break;
+      case Threat.DevMode.value:
+        config.devMode?.();
+        break;
+      case Threat.SystemVPN.value:
+        config.systemVPN?.();
+        break;
       default:
         onInvalidCallback();
         break;

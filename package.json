@@ -4,7 +4,7 @@
   "description": "React Native plugin for improving app security and threat monitoring on Android and iOS mobile devices.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
-  "types": "lib/typescript/index.d.ts",
+  "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
   "scripts": {

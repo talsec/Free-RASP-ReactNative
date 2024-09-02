@@ -1,6 +1,6 @@
 {
   "name": "freerasp-react-native",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "description": "React Native plugin for improving app security and threat monitoring on Android and iOS mobile devices.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

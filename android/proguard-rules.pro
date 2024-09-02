@@ -1,1 +1,2 @@
 -dontwarn java.lang.invoke.StringConcatFactory
+-keep class com.freeraspreactnative.FreeraspReactNativePackage { public *; }

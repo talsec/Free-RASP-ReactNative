@@ -24,7 +24,7 @@ freeRASP plugin is designed to combat
 
 Key features are the detection and prevention of
 
-- Root/Jailbreak (e.g., unc0ver, check1rain)
+- Root/Jailbreak (e.g., su, Magisk, unc0ver, check1rain, Dopamine)
 - Hooking framework (e.g., Frida, Shadow)
 - Untrusted installation method
 - App/Device (un)binding

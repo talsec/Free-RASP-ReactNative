@@ -36,7 +36,7 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
       val config = buildTalsecConfig(options)
       FreeraspThreatHandler.listener = ThreatListener
       listener.registerListener(reactContext)
-      runOnUiThread { // Your code to run on a different thread or UI thread
+      runOnUiThread {
         Talsec.start(reactContext, config)
       }
 

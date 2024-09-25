@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 2024-09-25
+
+- Android SDK version: 11.1.0
+- iOS SDK version: 6.6.0
+
+### React Native
+
+#### Fixed
+
+- Fixed incorrect path to types
+
+### Android
+
+#### Fixed
+
+- Fixed native crashes (SEGFAULT errors) in `ifpip` method
+- Fixed collision for command line tools (like ping) invoked without absolute path
+
+#### Changed
+
+- ❗️Breaking: Changed the way TalsecConfig is created, we introduced a Builder pattern to make the process more streamlined and readable
+- Updated OpenSSL to version 3.0.14
+- Updated CURL to version 8.8.0
+- Refactored fetching the list of installed applications for root and hook detection.
+
+### iOS
+
+#### Added 
+
+- [Dopamine](https://github.com/opa334/Dopamine) jailbreak detection.
+
+#### Changed
+
+- Updated OpenSSL to version 3.0.14
+- Updated CURL to version 8.8.0
+
 ## [3.8.2] - 2024-09-02
 
 ### React Native

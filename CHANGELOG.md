@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### React Native
 
+#### Added
+
+- Added the auditing of the internal execution for the future check optimization and overall security improvements.
+
 #### Fixed
 
 - Fixed incorrect path to types

@@ -9,6 +9,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
+import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.modules.core.DeviceEventManagerModule
 
@@ -32,17 +33,18 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
   ) {
 
     try {
-      val config = parseTalsecConfig(options)
+      val config = buildTalsecConfig(options)
       FreeraspThreatHandler.listener = ThreatListener
       listener.registerListener(reactContext)
-      Talsec.start(reactContext, config)
+      runOnUiThread { // Your code to run on a different thread or UI thread
+        Talsec.start(reactContext, config)
+      }
+
       promise.resolve("freeRASP started")
 
-    } catch (e: Exception) {
-      val params = Arguments.createMap().apply {
-        putString("message", e.message)
-      }
-      promise.reject("initializationError", params)
+    }
+    catch (e: Exception) {
+      promise.reject("TalsecInitializationError", e.message, e)
     }
   }
 
@@ -85,42 +87,17 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
     // Remove upstream listeners, stop unnecessary background tasks
   }
 
-  private fun parseTalsecConfig(config: ReadableMap): TalsecConfig {
-    val androidConfig = config.getMap("androidConfig")!!
-    val packageName = androidConfig.getString("packageName")!!
-    val certificateHashes = mutableListOf<String>()
-    val hashes = androidConfig.getArray("certificateHashes")!!
-    for (i in 0 until hashes.size()) {
-      // in RN versions < 0.63, getString is nullable
-      @Suppress("UNNECESSARY_SAFE_CALL")
-      hashes.getString(i)?.let {
-        certificateHashes.add(it)
-      }
-    }
-    val watcherMail = config.getString("watcherMail")
-    val alternativeStores = mutableListOf<String>()
-    if (androidConfig.hasKey("supportedAlternativeStores")) {
-      val stores = androidConfig.getArray("supportedAlternativeStores")!!
-      for (i in 0 until stores.size()) {
-        // in RN versions < 0.63, getString is nullable
-        @Suppress("UNNECESSARY_SAFE_CALL")
-        stores.getString(i)?.let {
-          alternativeStores.add(it)
-        }
-      }
-    }
-    var isProd = true
-    if (config.hasKey("isProd")) {
-      isProd = config.getBoolean("isProd")
-    }
+  private fun buildTalsecConfig(config: ReadableMap): TalsecConfig {
+    val androidConfig = config.getMapThrowing("androidConfig")
+    val packageName = androidConfig.getStringThrowing("packageName")
+    val certificateHashes = androidConfig.getArraySafe("certificateHashes")
 
-    return TalsecConfig(
-      packageName,
-      certificateHashes.toTypedArray(),
-      watcherMail,
-      alternativeStores.toTypedArray(),
-      isProd
-    )
+    val talsecBuilder = TalsecConfig.Builder(packageName, certificateHashes)
+      .watcherMail(config.getString("watcherMail"))
+      .supportedAlternativeStores(androidConfig.getArraySafe("supportedAlternativeStores"))
+      .prod(config.getBooleanSafe("isProd"))
+
+    return talsecBuilder.build()
   }
 
   companion object {

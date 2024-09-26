@@ -120,11 +120,15 @@ export const useFreeRasp = <T extends NativeEventEmitterActions>(
   useEffect(() => {
     (async () => {
       await setThreatListeners(actions);
-      let response = await talsecStart(config);
-      if (response !== 'freeRASP started') {
-        onInvalidCallback();
+      try {
+        let response = await talsecStart(config);
+        if (response !== 'freeRASP started') {
+          onInvalidCallback();
+        }
+        console.log(response);
+      } catch (e: any) {
+        console.error(`${e.code}: ${e.message}`);
       }
-      console.log(response);
 
       return () => {
         removeThreatListeners();

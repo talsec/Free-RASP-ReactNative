@@ -1,5 +1,6 @@
 package com.freeraspreactnative
 
+import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.ThreatListener
 
 internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatListener.DeviceState {
@@ -37,6 +38,8 @@ internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatLis
   override fun onObfuscationIssuesDetected() {
     listener?.threatDetected(Threat.ObfuscationIssues)
   }
+
+  override fun onMalwareDetected(p0: MutableList<SuspiciousAppInfo>?) {}
 
   override fun onUnlockedDeviceDetected() {
     listener?.threatDetected(Threat.Passcode)

@@ -69,13 +69,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Android
 
 - ⚡ Added new threat `devMode` for Developer mode detection
-- ⚡ Enhanced and accelerated the data collection logic
 - ⚡ Fixed proguard warning in specific versions of RN
 - ⚡ Fixed issue with Arabic alphabet in logs caused by the device’s default system locale
 - ✔️ Increased the version of the GMS dependency
 - ✔️ Updated CA bundle
 
 ### iOS
+- ⚡ Enhanced and accelerated the data collection logic
 - ⚡ Fixed issue with Arabic alphabet in logs caused by the device’s default system locale
 - ⚡ Passcode check is now periodical
 - ✔️ Updated CA bundle

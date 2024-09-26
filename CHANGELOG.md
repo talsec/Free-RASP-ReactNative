@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed incorrect path to types
 
+#### Changed
+
+- Improved error messages when validation of the freeRASP configuration fails
+
 ### Android
 
 #### Fixed

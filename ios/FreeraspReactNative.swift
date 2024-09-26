@@ -20,7 +20,7 @@ class FreeraspReactNative: RCTEventEmitter {
             try initializeTalsec(talsecConfig: options)
         }
         catch let error as NSError {
-            reject("initialization_error", "Could not initialize freeRASP", error)
+            reject("TalsecInitializationError", "Could not initialize freeRASP: \(error.domain)", error)
             return
         }
         resolve("freeRASP started")

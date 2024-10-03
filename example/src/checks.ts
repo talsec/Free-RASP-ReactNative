@@ -16,4 +16,5 @@ export const iosChecks = [{ name: 'Device ID', status: 'ok' }];
 export const androidChecks = [
   { name: 'Obfuscation Issues', status: 'ok' },
   { name: 'Developer Mode', status: 'ok' },
+  { name: 'Malware', status: 'ok' },
 ];

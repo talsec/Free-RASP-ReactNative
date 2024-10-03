@@ -2,14 +2,18 @@ import { useEffect } from 'react';
 import {
   NativeEventEmitter,
   NativeModules,
+  Platform,
   type EmitterSubscription,
 } from 'react-native';
 import {
   Threat,
   type NativeEventEmitterActions,
+  type PackageInfo,
+  type SuspiciousAppInfo,
   type TalsecConfig,
 } from './definitions';
 import { getThreatCount, itemsHaveType } from './utils';
+import { decode } from 'base-64';
 
 const { FreeraspReactNative } = NativeModules;
 
@@ -31,9 +35,10 @@ const getThreatIdentifiers = async (): Promise<number[]> => {
   return identifiers;
 };
 
-const getThreatChannelData = async (): Promise<[string, string]> => {
+const getThreatChannelData = async (): Promise<[string, string, string]> => {
+  const dataLength = Platform.OS === 'ios' ? 2 : 3;
   let data = await FreeraspReactNative.getThreatChannelData();
-  if (data.length !== 2 || !itemsHaveType(data, 'string')) {
+  if (data.length !== dataLength || !itemsHaveType(data, 'string')) {
     onInvalidCallback();
   }
   return data;
@@ -48,10 +53,25 @@ const prepareMapping = async (): Promise<void> => {
   });
 };
 
+// parses base64-encoded malware data to SuspiciousAppInfo[]
+const parseMalwareData = (data: string[]): SuspiciousAppInfo[] => {
+  const result: SuspiciousAppInfo[] = [];
+  data.forEach((entry) => {
+    result.push(toSuspiciousAppInfo(entry));
+  });
+  return result;
+};
+
+const toSuspiciousAppInfo = (base64Value: string): SuspiciousAppInfo => {
+  const data = JSON.parse(decode(base64Value));
+  const packageInfo = data.packageInfo as PackageInfo;
+  return { packageInfo, reason: data.reason } as SuspiciousAppInfo;
+};
+
 export const setThreatListeners = async <T extends NativeEventEmitterActions>(
   config: T & Record<Exclude<keyof T, keyof NativeEventEmitterActions>, []>
 ) => {
-  const [channel, key] = await getThreatChannelData();
+  const [channel, key, malwareKey] = await getThreatChannelData();
   await prepareMapping();
 
   eventsListener = eventEmitter.addListener(channel, (event) => {
@@ -98,6 +118,9 @@ export const setThreatListeners = async <T extends NativeEventEmitterActions>(
       case Threat.SystemVPN.value:
         config.systemVPN?.();
         break;
+      case Threat.Malware.value:
+        config.malware?.(parseMalwareData(event[malwareKey]));
+        break;
       default:
         onInvalidCallback();
         break;
@@ -138,4 +161,12 @@ export const useFreeRasp = <T extends NativeEventEmitterActions>(
   }, []);
 };
 
+export const addToWhitelist = async (packageName: string): Promise<boolean> => {
+  if (Platform.OS === 'ios') {
+    return Promise.reject('Malware detection not available on iOS');
+  }
+  return FreeraspReactNative.addToWhitelist(packageName);
+};
+
+export * from './definitions';
 export default FreeraspReactNative;

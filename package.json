@@ -1,6 +1,6 @@
 {
   "name": "freerasp-react-native",
-  "version": "3.9.2",
+  "version": "3.10.0",
   "description": "React Native plugin for improving app security and threat monitoring on Android and iOS mobile devices.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -12,6 +12,7 @@
     "expo:typecheck": "cd plugin && tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepack": "bob build && yarn build:plugin",
+    "build": "bob build",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install && yarn example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",
@@ -43,12 +44,16 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "dependencies": {
+    "base-64": "^1.0.0"
+  },
   "devDependencies": {
     "@react-native-community/eslint-config": "^3.0.2",
     "@release-it/conventional-changelog": "^5.0.0",
     "@tsconfig/node-lts": "^20.1.1",
     "@types/react": "17.0.21",
     "@types/react-native": "0.70.0",
+    "@types/base-64": "^1.0.2",
     "del-cli": "^5.0.0",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.5.0",

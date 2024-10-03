@@ -23,6 +23,7 @@ internal sealed class Threat(val value: Int) {
   object ObfuscationIssues : Threat((10000..999999999).random())
   object SystemVPN : Threat((10000..999999999).random())
   object DevMode : Threat((10000..999999999).random())
+  object Malware : Threat((10000..999999999).random())
 
   companion object {
     internal fun getThreatValues(): WritableArray {
@@ -39,7 +40,8 @@ internal sealed class Threat(val value: Int) {
           DeviceBinding.value,
           UnofficialStore.value,
           ObfuscationIssues.value,
-          DevMode.value
+          DevMode.value,
+          Malware.value
         )
       )
     }

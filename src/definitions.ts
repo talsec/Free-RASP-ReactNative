@@ -1,17 +1,42 @@
 import { Platform } from 'react-native';
 
 export type TalsecConfig = {
-  androidConfig?: {
-    packageName: string;
-    certificateHashes: string[];
-    supportedAlternativeStores?: string[];
-  };
-  iosConfig?: {
-    appBundleId: string;
-    appTeamId: string;
-  };
+  androidConfig?: TalsecAndroidConfig;
+  iosConfig?: TalsecIosConfig;
   watcherMail: string;
   isProd?: boolean;
+};
+
+export type TalsecAndroidConfig = {
+  packageName: string;
+  certificateHashes: string[];
+  supportedAlternativeStores?: string[];
+  malware?: TalsecMalwareConfig;
+};
+
+export type TalsecIosConfig = {
+  appBundleId: string;
+  appTeamId: string;
+};
+
+export type TalsecMalwareConfig = {
+  blocklistedHashes?: string[];
+  blocklistedPackageNames?: string[];
+  blocklistedPermissions?: string[][];
+  whitelistedInstallationSources?: string[];
+};
+
+export type SuspiciousAppInfo = {
+  packageInfo: PackageInfo;
+  reason: string;
+};
+
+export type PackageInfo = {
+  packageName: string;
+  appName?: string;
+  version?: string;
+  appIcon?: string;
+  installerStore?: string;
 };
 
 export type NativeEventEmitterActions = {
@@ -28,6 +53,7 @@ export type NativeEventEmitterActions = {
   obfuscationIssues?: () => any;
   devMode?: () => any;
   systemVPN?: () => any;
+  malware?: (suspiciousApps: SuspiciousAppInfo[]) => any;
 };
 
 export class Threat {
@@ -46,6 +72,7 @@ export class Threat {
   static UnofficialStore = new Threat(0);
   static ObfuscationIssues = new Threat(0);
   static DevMode = new Threat(0);
+  static Malware = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -66,6 +93,7 @@ export class Threat {
           this.UnofficialStore,
           this.ObfuscationIssues,
           this.DevMode,
+          this.Malware,
         ]
       : [
           this.AppIntegrity,

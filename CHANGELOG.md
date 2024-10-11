@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 2024-10-24
+
+-   Android SDK version: 11.1.1
+-   iOS SDK version: 6.6.0
+
+### Android
+
+-   A whole new **feature**, malware detection capability. All the necessary information about which can be found in the documentation
+
 ## [3.9.2] - 2024-10-18
 
 ### Android
@@ -40,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Android
 
-#### Added 
+#### Added
 
 - Added the auditing of the internal execution for the future check optimization and overall security improvements.
 
@@ -58,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### iOS
 
-#### Added 
+#### Added
 
 - [Dopamine](https://github.com/opa334/Dopamine) jailbreak detection.
 

@@ -13,7 +13,7 @@ import {
   type TalsecConfig,
 } from './definitions';
 import { getThreatCount, itemsHaveType } from './utils';
-import { decode } from 'base-64';
+import { Buffer } from 'buffer';
 
 const { FreeraspReactNative } = NativeModules;
 
@@ -55,15 +55,11 @@ const prepareMapping = async (): Promise<void> => {
 
 // parses base64-encoded malware data to SuspiciousAppInfo[]
 const parseMalwareData = (data: string[]): SuspiciousAppInfo[] => {
-  const result: SuspiciousAppInfo[] = [];
-  data.forEach((entry) => {
-    result.push(toSuspiciousAppInfo(entry));
-  });
-  return result;
+  return data.map((entry) => toSuspiciousAppInfo(entry));
 };
 
 const toSuspiciousAppInfo = (base64Value: string): SuspiciousAppInfo => {
-  const data = JSON.parse(decode(base64Value));
+  const data = JSON.parse(Buffer.from(base64Value, 'base64').toString('utf8'));
   const packageInfo = data.packageInfo as PackageInfo;
   return { packageInfo, reason: data.reason } as SuspiciousAppInfo;
 };

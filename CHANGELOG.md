@@ -7,12 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.10.0] - 2024-10-24
 
--   Android SDK version: 11.1.1
+-   Android SDK version: 11.1.3
 -   iOS SDK version: 6.6.0
+
+### React Native
+
+#### Added
+
+-  Added configuration fields for malware detection 
 
 ### Android
 
--   A whole new **feature**, malware detection capability. All the necessary information about which can be found in the documentation
+#### Added
+
+-   New feature: **malware detection** as a new callback for enhanced app security
 
 ## [3.9.3] - 2024-10-28
 - Android SDK version: 11.1.3
@@ -26,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.9.2] - 2024-10-18
 - Android SDK version: 11.1.3
 - iOS SDK version: 6.6.0
+
+-   Android SDK version: 11.1.3
+-   iOS SDK version: 6.6.0
 
 ### Android
 

@@ -34,8 +34,11 @@ const App = () => {
         blocklistedHashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
         blocklistedPackageNames: ['com.wultra.app.screenlogger'],
         blocklistedPermissions: [
-          ['android.permission.BLUETOOTH', 'android.permission.INTERNET'],
-          ['android.permission.INTERNET'],
+          [
+            'android.permission.INTERNET',
+            'android.permission.ACCESS_COARSE_LOCATION',
+          ],
+          ['android.permission.BLUETOOTH'],
           ['android.permission.BATTERY_STATS'],
         ],
         whitelistedInstallationSources: ['com.apkpure.aegon'],
@@ -184,16 +187,18 @@ const App = () => {
       'com.talsecreactnativesecuritypluginexample',
       'com.example.myApp',
     ];
-    appsToWhitelist.forEach(async (app) => {
-      try {
-        const whitelistResponse = await addToWhitelist(app);
-        console.info(
-          `Malware Whitelist response for ${app}: ${whitelistResponse}`
-        );
-      } catch (error: any) {
-        console.info('Error while adding app to malware whitelist: ', error);
-      }
-    });
+    await Promise.all(
+      appsToWhitelist.map(async (app) => {
+        try {
+          const whitelistResponse = await addToWhitelist(app);
+          console.info(
+            `${app} stored to Malware Whitelist: ${whitelistResponse}`
+          );
+        } catch (error) {
+          console.info('Malware whitelist failed: ', error);
+        }
+      })
+    );
   };
 
   useFreeRasp(config, actions);

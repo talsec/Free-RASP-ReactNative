@@ -30,7 +30,7 @@ const App = () => {
       packageName: 'com.freeraspreactnativeexample',
       certificateHashes: ['AKoRuyLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0='],
       // supportedAlternativeStores: ['storeOne', 'storeTwo'],
-      malware: {
+      malwareConfig: {
         blocklistedHashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
         blocklistedPackageNames: ['com.wultra.app.screenlogger'],
         blocklistedPermissions: [

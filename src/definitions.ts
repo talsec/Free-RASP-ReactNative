@@ -11,7 +11,7 @@ export type TalsecAndroidConfig = {
   packageName: string;
   certificateHashes: string[];
   supportedAlternativeStores?: string[];
-  malware?: TalsecMalwareConfig;
+  malwareConfig?: TalsecMalwareConfig;
 };
 
 export type TalsecIosConfig = {

@@ -5,15 +5,15 @@ import {
   Platform,
   type EmitterSubscription,
 } from 'react-native';
-import {
-  Threat,
-  type NativeEventEmitterActions,
-  type PackageInfo,
-  type SuspiciousAppInfo,
-  type TalsecConfig,
-} from './definitions';
+import type {
+  NativeEventEmitterActions,
+  PackageInfo,
+  SuspiciousAppInfo,
+  TalsecConfig,
+} from './types';
 import { getThreatCount, itemsHaveType } from './utils';
 import { Buffer } from 'buffer';
+import { Threat } from './threat';
 
 const { FreeraspReactNative } = NativeModules;
 
@@ -164,5 +164,5 @@ export const addToWhitelist = async (packageName: string): Promise<boolean> => {
   return FreeraspReactNative.addToWhitelist(packageName);
 };
 
-export * from './definitions';
+export * from './types';
 export default FreeraspReactNative;

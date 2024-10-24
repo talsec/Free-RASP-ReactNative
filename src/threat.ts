@@ -1,35 +1,5 @@
 import { Platform } from 'react-native';
 
-export type TalsecConfig = {
-  androidConfig?: {
-    packageName: string;
-    certificateHashes: string[];
-    supportedAlternativeStores?: string[];
-  };
-  iosConfig?: {
-    appBundleId: string;
-    appTeamId: string;
-  };
-  watcherMail: string;
-  isProd?: boolean;
-};
-
-export type NativeEventEmitterActions = {
-  privilegedAccess?: () => any;
-  debug?: () => any;
-  simulator?: () => any;
-  appIntegrity?: () => any;
-  unofficialStore?: () => any;
-  hooks?: () => any;
-  deviceBinding?: () => any;
-  deviceID?: () => any;
-  passcode?: () => any;
-  secureHardwareNotAvailable?: () => any;
-  obfuscationIssues?: () => any;
-  devMode?: () => any;
-  systemVPN?: () => any;
-};
-
 export class Threat {
   value: number;
 
@@ -46,6 +16,7 @@ export class Threat {
   static UnofficialStore = new Threat(0);
   static ObfuscationIssues = new Threat(0);
   static DevMode = new Threat(0);
+  static Malware = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -66,6 +37,7 @@ export class Threat {
           this.UnofficialStore,
           this.ObfuscationIssues,
           this.DevMode,
+          this.Malware,
         ]
       : [
           this.AppIntegrity,

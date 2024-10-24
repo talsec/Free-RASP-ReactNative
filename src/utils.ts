@@ -1,4 +1,4 @@
-import { Threat } from './definitions';
+import { Threat } from './threat';
 
 export const getThreatCount = (): number => {
   return Threat.getValues().length;

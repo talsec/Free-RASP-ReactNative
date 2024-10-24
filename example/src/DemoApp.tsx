@@ -6,8 +6,16 @@ import CloseCircle from '../assets/close-circle-outline.png';
 import TalsecLogo from '../assets/talsec-logo.png';
 import { Image } from 'react-native';
 import { Colors } from './styles';
+import { MalwareModal } from './MalwareModal';
+import type { SuspiciousAppInfo } from 'freerasp-react-native';
 
-export const DemoApp = (props: any) => {
+export const DemoApp: React.FC<{
+  checks: {
+    name: string;
+    status: string;
+  }[];
+  suspiciousApps: SuspiciousAppInfo[];
+}> = ({ checks, suspiciousApps }) => {
   return (
     <>
       <Flex
@@ -30,7 +38,7 @@ export const DemoApp = (props: any) => {
           >
             freeRASP checks:
           </Text>
-          {props.checks.map((check: any, idx: number) => (
+          {checks.map((check: any, idx: number) => (
             <Box
               key={idx}
               style={{
@@ -60,6 +68,12 @@ export const DemoApp = (props: any) => {
                 >
                   {check.name}
                 </Text>
+                {check.name === 'Malware' && (
+                  <MalwareModal
+                    isDisabled={check.status === 'ok'}
+                    suspiciousApps={suspiciousApps}
+                  />
+                )}
                 {check.status === 'ok' ? (
                   <Image
                     source={CheckmarkCircle}

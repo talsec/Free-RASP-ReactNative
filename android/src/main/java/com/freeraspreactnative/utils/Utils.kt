@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.util.Base64
+import android.util.Log
 import com.facebook.react.bridge.ReactContext
 import java.io.ByteArrayOutputStream
 
@@ -54,6 +55,7 @@ internal object Utils {
       }
       return null
     } catch (e: Exception) {
+      Log.e("Talsec", "Could not retrieve app icon for ${packageName}: ${e.message}")
       return null
     }
   }
@@ -73,6 +75,7 @@ internal object Utils {
         context.packageManager.getInstallerPackageName(packageName)
       }
     } catch (e: Exception) {
+      Log.e("Talsec", "Could not retrieve app installation source for ${packageName}: ${e.message}")
       null
     }
   }

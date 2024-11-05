@@ -14,6 +14,7 @@ import com.freeraspreactnative.models.RNPackageInfo
 import com.freeraspreactnative.models.RNSuspiciousAppInfo
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.json.JSONException
 
 
 internal fun ReadableMap.getMapThrowing(key: String): ReadableMap {
@@ -31,14 +32,18 @@ internal fun ReadableMap.getBooleanSafe(key: String, defaultValue: Boolean = tru
   return defaultValue
 }
 
-internal fun ReadableArray.toArray(): Array<String> {
-  val output = mutableListOf<String>()
+private inline fun <reified T> ReadableArray.toPrimitiveArray(): Array<T> {
+  val output = mutableListOf<T>()
+
   for (i in 0 until this.size()) {
-    // in RN versions < 0.63, getString is nullable
-    @Suppress("UNNECESSARY_SAFE_CALL")
-    this.getString(i)?.let {
-      output.add(it)
+    val element: T? = when (T::class) {
+      String::class -> this.getString(i) as T?
+      Int::class -> this.getInt(i) as T?
+      Double::class -> this.getDouble(i) as T?
+      Boolean::class -> this.getBoolean(i) as T?
+      else -> throw JSONException("Cannot parse JSON array - unsupported type")
     }
+    element?.let(output::add)
   }
   return output.toTypedArray()
 }
@@ -46,7 +51,7 @@ internal fun ReadableArray.toArray(): Array<String> {
 internal fun ReadableMap.getArraySafe(key: String): Array<String> {
   if (this.hasKey(key)) {
     val inputArray = this.getArray(key)!!
-    return inputArray.toArray()
+    return inputArray.toPrimitiveArray()
   }
   return arrayOf()
 }
@@ -56,7 +61,7 @@ internal fun ReadableMap.getNestedArraySafe(key: String): Array<Array<String>> {
   if (this.hasKey(key)) {
     val inputArray = this.getArray(key)!!
     for (i in 0 until inputArray.size()) {
-      outArray.add(inputArray.getArray(i).toArray())
+      outArray.add(inputArray.getArray(i).toPrimitiveArray())
     }
   }
   return outArray.toTypedArray()

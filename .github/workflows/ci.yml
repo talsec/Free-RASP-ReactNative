@@ -18,7 +18,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Lint files
-        run: yarn lint
+        run: yarn lint --max-warnings=0
 
       - name: Typecheck files
         run: |
@@ -27,6 +27,9 @@ jobs:
       - name: Typecheck Expo files
         run: |
           yarn expo:typecheck
+
+      - name: Format check
+        run: yarn prettier --check
 
   # no tests yet 😥
   # test:

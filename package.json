@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "expo:typecheck": "cd plugin && tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "prettier": "prettier \"**/*.{ts,js}\"",
     "prepack": "bob build && yarn build:plugin",
     "build": "bob build",
     "example": "yarn --cwd example",
@@ -94,29 +95,6 @@
       }
     }
   },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@react-native-community",
-      "prettier"
-    ],
-    "rules": {
-      "prettier/prettier": [
-        "error",
-        {
-          "quoteProps": "consistent",
-          "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "es5",
-          "useTabs": false
-        }
-      ]
-    }
-  },
-  "eslintIgnore": [
-    "node_modules/",
-    "lib/"
-  ],
   "prettier": {
     "quoteProps": "consistent",
     "singleQuote": true,

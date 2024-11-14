@@ -116,9 +116,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     if (androidConfig.hasKey("malwareConfig")) {
       val malwareConfig = androidConfig.getMapThrowing("malwareConfig")
       talsecBuilder.whitelistedInstallationSources(malwareConfig.getArraySafe("whitelistedInstallationSources"))
-      talsecBuilder.blocklistedHashes(malwareConfig.getArraySafe("blocklistedHashes"))
-      talsecBuilder.blocklistedPermissions(malwareConfig.getNestedArraySafe("blocklistedPermissions"))
-      talsecBuilder.blocklistedPackageNames(malwareConfig.getArraySafe("blocklistedPackageNames"))
+      talsecBuilder.blacklistedHashes(malwareConfig.getArraySafe("blacklistedHashes"))
+      talsecBuilder.blacklistedPackageNames(malwareConfig.getArraySafe("blacklistedPackageNames"))
+      talsecBuilder.suspiciousPermissions(malwareConfig.getNestedArraySafe("suspiciousPermissions"))
     }
 
     return talsecBuilder.build()

@@ -31,9 +31,9 @@ const App = () => {
       certificateHashes: ['AKoRuyLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0='],
       // supportedAlternativeStores: ['storeOne', 'storeTwo'],
       malwareConfig: {
-        blocklistedHashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
-        blocklistedPackageNames: ['com.wultra.app.screenlogger'],
-        blocklistedPermissions: [
+        blacklistedHashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
+        blacklistedPackageNames: ['com.wultra.app.screenlogger'],
+        suspiciousPermissions: [
           [
             'android.permission.INTERNET',
             'android.permission.ACCESS_COARSE_LOCATION',

@@ -18,7 +18,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Lint files
-        run: yarn lint
+        run: yarn lint --max-warnings=0
 
       - name: Typecheck files
         run: |
@@ -27,6 +27,9 @@ jobs:
       - name: Typecheck Expo files
         run: |
           yarn expo:typecheck
+
+      - name: Format check
+        run: yarn prettier --check
 
   # no tests yet 😥
   # test:
@@ -91,29 +94,31 @@ jobs:
         run: |
           yarn build:android
 
-  build-ios:
-    runs-on: macos-14
-    needs: build-library
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+# !! Currently build iOS is not working due to issues with XCode version
+  # build-ios:
+  #   runs-on: macos-14
+  #   needs: build-library
 
-      - name: Setup Xcode version
-        uses: maxim-lobanov/setup-xcode@v1.6.0
-        with:
-          xcode-version: '14.3.1'
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+
+  #     - name: Setup Xcode version
+  #       uses: maxim-lobanov/setup-xcode@v1.6.0
+  #       with:
+  #         xcode-version: '15.4.0'
 
             
 
-      - name: Setup
-        uses: ./.github/actions/setup
+  #     - name: Setup
+  #       uses: ./.github/actions/setup
 
-      - name: Install cocoapods
-        run: |
-          cd example/ios
-          pod install
+  #     - name: Install cocoapods
+  #       run: |
+  #         cd example/ios
+  #         pod install
 
-      - name: Build example for iOS
-        working-directory: ./example
-        run: |
-          yarn build:ios
+  #     - name: Build example for iOS
+  #       working-directory: ./example
+  #       run: |
+  #         yarn build:ios

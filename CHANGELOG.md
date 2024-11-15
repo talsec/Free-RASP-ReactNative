@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 2024-11-15
+
+-   Android SDK version: 12.0.0
+-   iOS SDK version: 6.6.3
+
+### React Native
+
+#### Added
+
+-  Added configuration fields for malware detection 
+
+### Android
+
+#### Added
+
+- New feature: **malware detection** as a new callback for enhanced app security
+
+#### Fixed
+
+- Refactoring Magisk checks in the root detection
+
+### iOS
+
+#### Added
+
+- Enhanced security with **[Serotonin Jailbreak](https://github.com/SerotoninApp/Serotonin) Detection** to identify compromised devices.
+
+#### Changed
+
+- Updated SDK code signing; it will now be signed with:
+  - Team ID: PBDDS45LQS
+  - Team Name: Lynx SFT s.r.o.
+
 ## [3.9.3] - 2024-10-28
 - Android SDK version: 11.1.3
 - iOS SDK version: 6.6.1
@@ -17,6 +50,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.9.2] - 2024-10-18
 - Android SDK version: 11.1.3
 - iOS SDK version: 6.6.0
+
+-   Android SDK version: 11.1.3
+-   iOS SDK version: 6.6.0
 
 ### Android
 
@@ -51,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Android
 
-#### Added 
+#### Added
 
 - Added the auditing of the internal execution for the future check optimization and overall security improvements.
 
@@ -69,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### iOS
 
-#### Added 
+#### Added
 
 - [Dopamine](https://github.com/opa334/Dopamine) jailbreak detection.
 

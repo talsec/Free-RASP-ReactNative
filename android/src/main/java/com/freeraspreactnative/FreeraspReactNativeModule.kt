@@ -1,5 +1,6 @@
 package com.freeraspreactnative
 
+import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
 import com.aheaditec.talsec_security.security.api.ThreatListener
@@ -12,8 +13,14 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.freeraspreactnative.utils.getArraySafe
+import com.freeraspreactnative.utils.getBooleanSafe
+import com.freeraspreactnative.utils.getMapThrowing
+import com.freeraspreactnative.utils.getNestedArraySafe
+import com.freeraspreactnative.utils.getStringThrowing
+import com.freeraspreactnative.utils.toEncodedWritableArray
 
-class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
+class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
   private val listener = ThreatListener(FreeraspThreatHandler, FreeraspThreatHandler)
@@ -42,8 +49,7 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
 
       promise.resolve("freeRASP started")
 
-    }
-    catch (e: Exception) {
+    } catch (e: Exception) {
       promise.reject("TalsecInitializationError", e.message, e)
     }
   }
@@ -65,6 +71,7 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
     val channelData: WritableArray = Arguments.createArray()
     channelData.pushString(THREAT_CHANNEL_NAME)
     channelData.pushString(THREAT_CHANNEL_KEY)
+    channelData.pushString(MALWARE_CHANNEL_KEY)
     promise.resolve(channelData)
   }
 
@@ -87,6 +94,15 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
     // Remove upstream listeners, stop unnecessary background tasks
   }
 
+  /**
+   * Method to add apps to Malware whitelist, so they don't get flagged as malware
+   */
+  @ReactMethod
+  fun addToWhitelist(packageName: String, promise: Promise) {
+    Talsec.addToWhitelist(reactContext, packageName)
+    promise.resolve(true)
+  }
+
   private fun buildTalsecConfig(config: ReadableMap): TalsecConfig {
     val androidConfig = config.getMapThrowing("androidConfig")
     val packageName = androidConfig.getStringThrowing("packageName")
@@ -97,6 +113,14 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
       .supportedAlternativeStores(androidConfig.getArraySafe("supportedAlternativeStores"))
       .prod(config.getBooleanSafe("isProd"))
 
+    if (androidConfig.hasKey("malwareConfig")) {
+      val malwareConfig = androidConfig.getMapThrowing("malwareConfig")
+      talsecBuilder.whitelistedInstallationSources(malwareConfig.getArraySafe("whitelistedInstallationSources"))
+      talsecBuilder.blacklistedHashes(malwareConfig.getArraySafe("blacklistedHashes"))
+      talsecBuilder.blacklistedPackageNames(malwareConfig.getArraySafe("blacklistedPackageNames"))
+      talsecBuilder.suspiciousPermissions(malwareConfig.getNestedArraySafe("suspiciousPermissions"))
+    }
+
     return talsecBuilder.build()
   }
 
@@ -106,10 +130,27 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
       .toString() // name of the channel over which threat callbacks are sent
     val THREAT_CHANNEL_KEY = (10000..999999999).random()
       .toString() // key of the argument map under which threats are expected
+    val MALWARE_CHANNEL_KEY = (10000..999999999).random()
+      .toString() // key of the argument map under which malware data is expected
     private lateinit var appReactContext: ReactApplicationContext
     private fun notifyListeners(threat: Threat) {
       val params = Arguments.createMap()
       params.putInt(THREAT_CHANNEL_KEY, threat.value)
+      appReactContext
+        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        .emit(THREAT_CHANNEL_NAME, params)
+    }
+
+    /**
+     * Sends malware detected event to React Native
+     */
+    private fun notifyMalware(suspiciousApps: MutableList<SuspiciousAppInfo>) {
+      val params = Arguments.createMap()
+      params.putInt(THREAT_CHANNEL_KEY, Threat.Malware.value)
+      params.putArray(
+        MALWARE_CHANNEL_KEY, suspiciousApps.toEncodedWritableArray(appReactContext)
+      )
+
       appReactContext
         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
         .emit(THREAT_CHANNEL_NAME, params)
@@ -119,6 +160,10 @@ class FreeraspReactNativeModule(val reactContext: ReactApplicationContext) :
   internal object ThreatListener : FreeraspThreatHandler.TalsecReactNative {
     override fun threatDetected(threatType: Threat) {
       notifyListeners(threatType)
+    }
+
+    override fun malwareDetected(suspiciousApps: MutableList<SuspiciousAppInfo>) {
+      notifyMalware(suspiciousApps)
     }
   }
 }

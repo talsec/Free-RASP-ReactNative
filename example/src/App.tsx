@@ -1,21 +1,48 @@
 import * as React from 'react';
 
 import { Platform } from 'react-native';
-import { useFreeRasp } from 'freerasp-react-native';
+import {
+  addToWhitelist,
+  useFreeRasp,
+  type SuspiciousAppInfo,
+} from 'freerasp-react-native';
 import { DemoApp } from './DemoApp';
 import { commonChecks, iosChecks, androidChecks } from './checks';
+import { useEffect } from 'react';
 
 const App = () => {
   const [appChecks, setAppChecks] = React.useState([
     ...commonChecks,
     ...(Platform.OS === 'ios' ? iosChecks : androidChecks),
   ]);
+  const [suspiciousApps, setSuspiciousApps] = React.useState<
+    SuspiciousAppInfo[]
+  >([]);
+
+  useEffect(() => {
+    (async () => {
+      Platform.OS === 'android' && (await addItemsToMalwareWhitelist());
+    })();
+  }, []);
 
   const config = {
     androidConfig: {
       packageName: 'com.freeraspreactnativeexample',
       certificateHashes: ['AKoRuyLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0='],
       // supportedAlternativeStores: ['storeOne', 'storeTwo'],
+      malwareConfig: {
+        blacklistedHashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
+        blacklistedPackageNames: ['com.wultra.app.screenlogger'],
+        suspiciousPermissions: [
+          [
+            'android.permission.INTERNET',
+            'android.permission.ACCESS_COARSE_LOCATION',
+          ],
+          ['android.permission.BLUETOOTH'],
+          ['android.permission.BATTERY_STATS'],
+        ],
+        whitelistedInstallationSources: ['com.apkpure.aegon'],
+      },
     },
     iosConfig: {
       appBundleId: 'com.freeraspreactnativeexample',
@@ -144,11 +171,39 @@ const App = () => {
         )
       );
     },
+    // Android only
+    malware: (detectedApps: SuspiciousAppInfo[]) => {
+      setSuspiciousApps(detectedApps);
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Malware' ? { ...threat, status: 'nok' } : threat
+        )
+      );
+    },
+  };
+
+  const addItemsToMalwareWhitelist = async () => {
+    const appsToWhitelist = [
+      'com.talsecreactnativesecuritypluginexample',
+      'com.example.myApp',
+    ];
+    await Promise.all(
+      appsToWhitelist.map(async (app) => {
+        try {
+          const whitelistResponse = await addToWhitelist(app);
+          console.info(
+            `${app} stored to Malware Whitelist: ${whitelistResponse}`
+          );
+        } catch (error) {
+          console.info('Malware whitelist failed: ', error);
+        }
+      })
+    );
   };
 
   useFreeRasp(config, actions);
 
-  return <DemoApp checks={appChecks} />;
+  return <DemoApp checks={appChecks} suspiciousApps={suspiciousApps} />;
 };
 
 export default App;

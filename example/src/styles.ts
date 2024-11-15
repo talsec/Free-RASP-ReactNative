@@ -4,4 +4,5 @@ export const Colors = {
   checkNokLight: 'rgba(247, 173, 173, 1)',
   checkOkDark: 'green',
   checkNokDark: 'rgb(200, 0, 0)',
+  grey: 'rgb(120, 120, 120)',
 };

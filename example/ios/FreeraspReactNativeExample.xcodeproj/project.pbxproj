@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* FreeraspReactNativeExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* FreeraspReactNativeExampleTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-FreeraspReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-FreeraspReactNativeExample.a */; };
+		030014488BDA0448D18833AA /* libPods-FreeraspReactNativeExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8488310E7CEBAD4453B2B105 /* libPods-FreeraspReactNativeExample.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7699B88040F8A987B510C191 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a */; };
+		4ED36F23A824FA42AAF69DEA /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09A90BCC7156013BB41680E2 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -30,19 +30,19 @@
 		00E356EE1AD99517003FC87E /* FreeraspReactNativeExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FreeraspReactNativeExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* FreeraspReactNativeExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FreeraspReactNativeExampleTests.m; sourceTree = "<group>"; };
+		038937FFB95426BE2297B416 /* Pods-FreeraspReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample/Pods-FreeraspReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
+		09A90BCC7156013BB41680E2 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* FreeraspReactNativeExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FreeraspReactNativeExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = FreeraspReactNativeExample/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = FreeraspReactNativeExample/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FreeraspReactNativeExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FreeraspReactNativeExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FreeraspReactNativeExample/main.m; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-FreeraspReactNativeExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample.debug.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample/Pods-FreeraspReactNativeExample.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-FreeraspReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample/Pods-FreeraspReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-FreeraspReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FreeraspReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1BFFF7106D93FA70E5F83B56 /* Pods-FreeraspReactNativeExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample.release.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample/Pods-FreeraspReactNativeExample.release.xcconfig"; sourceTree = "<group>"; };
+		2DDE1F099A37D62A4850E520 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FreeraspReactNativeExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig"; sourceTree = "<group>"; };
+		8488310E7CEBAD4453B2B105 /* libPods-FreeraspReactNativeExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FreeraspReactNativeExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85E04B3D386AA8B417F2AAF3 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8C2BD8B529DF06E4000304E9 /* Talsec */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Talsec; path = ../../ios/Talsec; sourceTree = "<group>"; };
 		8C2BD8BB29DF0976000304E9 /* TalsecRuntime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TalsecRuntime.xcframework; path = ../../ios/Talsec/TalsecRuntime.xcframework; sourceTree = "<group>"; };
 		A41E05172962B9FD00B363A8 /* TalsecRuntime.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = TalsecRuntime.xcframework; path = "../../../../React/test2/someTestProject/node_modules/freerasp-react-native/ios/TalsecRuntime.xcframework"; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a in Frameworks */,
+				4ED36F23A824FA42AAF69DEA /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-FreeraspReactNativeExample.a in Frameworks */,
+				030014488BDA0448D18833AA /* libPods-FreeraspReactNativeExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,8 +112,8 @@
 				A44E69A2295DA98F000A719C /* TalsecRuntime.xcframework */,
 				A41E05172962B9FD00B363A8 /* TalsecRuntime.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-FreeraspReactNativeExample.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a */,
+				8488310E7CEBAD4453B2B105 /* libPods-FreeraspReactNativeExample.a */,
+				09A90BCC7156013BB41680E2 /* libPods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -152,10 +152,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-FreeraspReactNativeExample.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-FreeraspReactNativeExample.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig */,
+				038937FFB95426BE2297B416 /* Pods-FreeraspReactNativeExample.debug.xcconfig */,
+				1BFFF7106D93FA70E5F83B56 /* Pods-FreeraspReactNativeExample.release.xcconfig */,
+				85E04B3D386AA8B417F2AAF3 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig */,
+				2DDE1F099A37D62A4850E520 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -167,12 +167,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "FreeraspReactNativeExampleTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				A4BC7293855B5A05F4C72AC9 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */,
-				F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */,
+				995743924976FEBF7E02912B /* [CP] Embed Pods Frameworks */,
+				E336F02480C5189A28C1E46B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -188,14 +188,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "FreeraspReactNativeExample" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				A46062B41DA6D2651EEB7340 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */,
-				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
+				98A5FD6C0A62A5C5AA93C483 /* [CP] Embed Pods Frameworks */,
+				BE093CB94A51CDDBD748D259 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -278,7 +278,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
+		98A5FD6C0A62A5C5AA93C483 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -295,29 +295,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample/Pods-FreeraspReactNativeExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		995743924976FEBF7E02912B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		A46062B41DA6D2651EEB7340 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -339,24 +334,29 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C59DA0FBD6956966B86A3779 /* [CP] Embed Pods Frameworks */ = {
+		A4BC7293855B5A05F4C72AC9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests/Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
+		BE093CB94A51CDDBD748D259 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -373,7 +373,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FreeraspReactNativeExample/Pods-FreeraspReactNativeExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
+		E336F02480C5189A28C1E46B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -442,7 +442,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig */;
+			baseConfigurationReference = 85E04B3D386AA8B417F2AAF3 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -469,7 +469,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig */;
+			baseConfigurationReference = 2DDE1F099A37D62A4850E520 /* Pods-FreeraspReactNativeExample-FreeraspReactNativeExampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -493,7 +493,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-FreeraspReactNativeExample.debug.xcconfig */;
+			baseConfigurationReference = 038937FFB95426BE2297B416 /* Pods-FreeraspReactNativeExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -519,7 +519,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-FreeraspReactNativeExample.release.xcconfig */;
+			baseConfigurationReference = 1BFFF7106D93FA70E5F83B56 /* Pods-FreeraspReactNativeExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

@@ -39,7 +39,9 @@ internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatLis
     listener?.threatDetected(Threat.ObfuscationIssues)
   }
 
-  override fun onMalwareDetected(p0: MutableList<SuspiciousAppInfo>?) {}
+  override fun onMalwareDetected(suspiciousAppInfos: MutableList<SuspiciousAppInfo>?) {
+    listener?.malwareDetected(suspiciousAppInfos ?: mutableListOf())
+  }
 
   override fun onUnlockedDeviceDetected() {
     listener?.threatDetected(Threat.Passcode)
@@ -59,5 +61,7 @@ internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatLis
 
   internal interface TalsecReactNative {
     fun threatDetected(threatType: Threat)
+
+    fun malwareDetected(suspiciousApps: MutableList<SuspiciousAppInfo>)
   }
 }

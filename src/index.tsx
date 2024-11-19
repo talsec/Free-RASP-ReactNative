@@ -117,6 +117,9 @@ export const setThreatListeners = async <T extends NativeEventEmitterActions>(
       case Threat.Malware.value:
         config.malware?.(parseMalwareData(event[malwareKey]));
         break;
+      case Threat.ADBEnabled.value:
+        config.adbEnabled?.();
+        break;
       default:
         onInvalidCallback();
         break;

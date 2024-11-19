@@ -17,4 +17,5 @@ export const androidChecks = [
   { name: 'Obfuscation Issues', status: 'ok' },
   { name: 'Developer Mode', status: 'ok' },
   { name: 'Malware', status: 'ok' },
+  { name: 'ADB Enabled', status: 'ok' },
 ];

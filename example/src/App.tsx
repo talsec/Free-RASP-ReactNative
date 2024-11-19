@@ -32,7 +32,7 @@ const App = () => {
       // supportedAlternativeStores: ['storeOne', 'storeTwo'],
       malwareConfig: {
         blacklistedHashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
-        blacklistedPackageNames: ['com.wultra.app.screenlogger'],
+        blacklistedPackageNames: ['com.freeraspreactnativeexample'],
         suspiciousPermissions: [
           [
             'android.permission.INTERNET',
@@ -45,7 +45,7 @@ const App = () => {
       },
     },
     iosConfig: {
-      appBundleId: 'com.freeraspreactnativeexample',
+      appBundleId: 'org.reactjs.native.example.FreeraspReactNativeExample',
       appTeamId: 'your_team_ID',
     },
     watcherMail: 'your_email_address@example.com',
@@ -177,6 +177,14 @@ const App = () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Malware' ? { ...threat, status: 'nok' } : threat
+        )
+      );
+    },
+    // Android only
+    adbEnabled: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'ADB Enabled' ? { ...threat, status: 'nok' } : threat
         )
       );
     },

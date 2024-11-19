@@ -55,6 +55,10 @@ internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatLis
     listener?.threatDetected(Threat.DevMode)
   }
 
+  override fun onADBEnabledDetected() {
+    listener?.threatDetected(Threat.ADBEnabled)
+  }
+
   override fun onSystemVPNDetected() {
     listener?.threatDetected(Threat.SystemVPN)
   }

@@ -17,6 +17,7 @@ export class Threat {
   static ObfuscationIssues = new Threat(0);
   static DevMode = new Threat(0);
   static Malware = new Threat(0);
+  static ADBEnabled = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -38,6 +39,7 @@ export class Threat {
           this.ObfuscationIssues,
           this.DevMode,
           this.Malware,
+          this.ADBEnabled,
         ]
       : [
           this.AppIntegrity,

@@ -75,7 +75,10 @@ internal object Utils {
         context.packageManager.getInstallerPackageName(packageName)
       }
     } catch (e: Exception) {
-      Log.e("Talsec", "Could not retrieve app installation source for ${packageName}: ${e.message}")
+      Log.e(
+        "Talsec",
+        "Could not retrieve app installation source for ${packageName}: ${e.message}",
+      )
       null
     }
   }

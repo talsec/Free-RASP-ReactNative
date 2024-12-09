@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.12.0] - 2024-12-06
+
+- iOS SDK version:  6.6.3
+- Android SDK version: 13.0.0
+
+### React Native
+
+#### Changed
+
+- App icons for detected malware are not fetched automatically anymore, which reduces computation required to retrieve malware data. From now on, app icons have to be retrieved using the `getAppIcon` method
+- Parsing of malware data is now async
+
+### Android
+
+#### Changed
+
+- Malware data is now parsed on background thread to improve responsiveness
+
 ## [3.11.0] - 2024-11-19
 
 ### React Native

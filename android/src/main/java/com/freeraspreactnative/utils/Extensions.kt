@@ -86,7 +86,7 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
     packageName = this.packageName,
     appName = Utils.getAppName(context, this.applicationInfo),
     version = this.versionName,
-    appIcon = Utils.getAppIconAsBase64String(context, this.packageName),
+    appIcon = null, // this requires heavier computations, so appIcon has to be retrieved separately
     installerStore = Utils.getInstallationSource(context, this.packageName)
   )
 }

@@ -49,6 +49,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   init {
     appReactContext = reactContext
+    reactContext.addLifecycleEventListener(lifecycleListener)
   }
 
   @ReactMethod
@@ -192,7 +193,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
           val params = Arguments.createMap()
           params.putInt(THREAT_CHANNEL_KEY, Threat.Malware.value)
           params.putArray(
-            MALWARE_CHANNEL_KEY, suspiciousApps.toEncodedWritableArray(appReactContext)
+            MALWARE_CHANNEL_KEY, encodedSuspiciousApps
           )
 
           appReactContext

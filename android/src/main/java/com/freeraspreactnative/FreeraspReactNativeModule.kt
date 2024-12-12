@@ -40,8 +40,6 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
     override fun onHostDestroy() {
       backgroundHandlerThread.quitSafely()
-      reactContext.removeLifecycleEventListener(this)
-      listener.unregisterListener(reactContext)
     }
   }
 

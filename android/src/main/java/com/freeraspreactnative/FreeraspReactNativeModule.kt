@@ -1,10 +1,14 @@
 package com.freeraspreactnative
 
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Looper
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
 import com.aheaditec.talsec_security.security.api.ThreatListener
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -13,6 +17,7 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.freeraspreactnative.utils.Utils
 import com.freeraspreactnative.utils.getArraySafe
 import com.freeraspreactnative.utils.getBooleanSafe
 import com.freeraspreactnative.utils.getMapThrowing
@@ -24,6 +29,19 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   ReactContextBaseJavaModule(reactContext) {
 
   private val listener = ThreatListener(FreeraspThreatHandler, FreeraspThreatHandler)
+  private val lifecycleListener = object : LifecycleEventListener {
+    override fun onHostResume() {
+      // do nothing
+    }
+
+    override fun onHostPause() {
+      // do nothing
+    }
+
+    override fun onHostDestroy() {
+      backgroundHandlerThread.quitSafely()
+    }
+  }
 
   override fun getName(): String {
     return NAME
@@ -31,6 +49,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   init {
     appReactContext = reactContext
+    reactContext.addLifecycleEventListener(lifecycleListener)
   }
 
   @ReactMethod
@@ -103,6 +122,20 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     promise.resolve(true)
   }
 
+  /**
+   * Method retrieves app icon for the given parameter
+   * @param packageName package name of the app we want to retrieve icon for
+   * @return PNG with app icon encoded as a base64 string
+   */
+  @ReactMethod
+  fun getAppIcon(packageName: String, promise: Promise) {
+    // Perform the app icon encoding on a background thread
+    backgroundHandler.post {
+      val encodedData = Utils.getAppIconAsBase64String(reactContext, packageName)
+      mainHandler.post { promise.resolve(encodedData) }
+    }
+  }
+
   private fun buildTalsecConfig(config: ReadableMap): TalsecConfig {
     val androidConfig = config.getMapThrowing("androidConfig")
     val packageName = androidConfig.getStringThrowing("packageName")
@@ -126,13 +159,19 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   companion object {
     const val NAME = "FreeraspReactNative"
-    val THREAT_CHANNEL_NAME = (10000..999999999).random()
+    private val THREAT_CHANNEL_NAME = (10000..999999999).random()
       .toString() // name of the channel over which threat callbacks are sent
-    val THREAT_CHANNEL_KEY = (10000..999999999).random()
+    private val THREAT_CHANNEL_KEY = (10000..999999999).random()
       .toString() // key of the argument map under which threats are expected
-    val MALWARE_CHANNEL_KEY = (10000..999999999).random()
+    private val MALWARE_CHANNEL_KEY = (10000..999999999).random()
       .toString() // key of the argument map under which malware data is expected
+
+    private val backgroundHandlerThread = HandlerThread("BackgroundThread").apply { start() }
+    private val backgroundHandler = Handler(backgroundHandlerThread.looper)
+    private val mainHandler = Handler(Looper.getMainLooper())
+
     private lateinit var appReactContext: ReactApplicationContext
+
     private fun notifyListeners(threat: Threat) {
       val params = Arguments.createMap()
       params.putInt(THREAT_CHANNEL_KEY, threat.value)
@@ -145,15 +184,23 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
      * Sends malware detected event to React Native
      */
     private fun notifyMalware(suspiciousApps: MutableList<SuspiciousAppInfo>) {
-      val params = Arguments.createMap()
-      params.putInt(THREAT_CHANNEL_KEY, Threat.Malware.value)
-      params.putArray(
-        MALWARE_CHANNEL_KEY, suspiciousApps.toEncodedWritableArray(appReactContext)
-      )
+      // Perform the malware encoding on a background thread
+      backgroundHandler.post {
 
-      appReactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        .emit(THREAT_CHANNEL_NAME, params)
+        val encodedSuspiciousApps = suspiciousApps.toEncodedWritableArray(appReactContext)
+
+        mainHandler.post {
+          val params = Arguments.createMap()
+          params.putInt(THREAT_CHANNEL_KEY, Threat.Malware.value)
+          params.putArray(
+            MALWARE_CHANNEL_KEY, encodedSuspiciousApps
+          )
+
+          appReactContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(THREAT_CHANNEL_NAME, params)
+        }
+      }
     }
   }
 

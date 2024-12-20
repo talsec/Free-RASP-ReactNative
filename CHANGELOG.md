@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Android
 
-#### Changed
+#### Added
 
 - Added request integrity information to data collection headers.
 - Enhanced and accelerated the data collection logic.

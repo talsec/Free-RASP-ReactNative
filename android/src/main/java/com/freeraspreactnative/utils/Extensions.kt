@@ -61,7 +61,7 @@ internal fun ReadableMap.getNestedArraySafe(key: String): Array<Array<String>> {
   if (this.hasKey(key)) {
     val inputArray = this.getArray(key)!!
     for (i in 0 until inputArray.size()) {
-      outArray.add(inputArray.getArray(i).toPrimitiveArray())
+      inputArray.getArray(i)?.let { outArray.add(it.toPrimitiveArray()) }
     }
   }
   return outArray.toTypedArray()

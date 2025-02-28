@@ -59,7 +59,7 @@ export const DemoApp: React.FC<{
           backgroundColor: Colors.background,
           justifyContent: 'center',
         }}>
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView>
           <VStack>
             <Image source={TalsecLogo} style={{ alignSelf: 'center' }} />;
             {Platform.OS === 'android' && (
@@ -161,11 +161,6 @@ export const DemoApp: React.FC<{
 };
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    flexGrow: 1,
-    paddingVertical: 20,
-    alignItems: 'center', // Centers content inside ScrollView
-  },
   button: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -177,13 +172,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   blockedButton: {
-    backgroundColor: Colors.checkOkLight, // When blocked
+    backgroundColor: Colors.checkOkLight,
   },
   unblockedButton: {
-    backgroundColor: Colors.checkNokLight, // When not blocked
-  },
-  vStack: {
-    width: '90%', // Ensures items stay within proper width
-    alignItems: 'center',
+    backgroundColor: Colors.checkNokLight,
   },
 });

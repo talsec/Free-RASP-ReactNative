@@ -8,8 +8,8 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Button,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import { Colors } from './styles';
 import { MalwareModal } from './MalwareModal';
@@ -161,12 +161,18 @@ export const DemoApp: React.FC<{
 };
 
 const styles = StyleSheet.create({
+  text: {
+    fontSize: 16,
+    fontWeight: '500',
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
   button: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 180,
     height: 50,
-    backgroundColor: Colors.lightBlue,
+    backgroundColor: Colors.checkOkLight,
     borderRadius: 10,
     padding: 2,
     marginTop: 20,

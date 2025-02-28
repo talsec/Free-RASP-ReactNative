@@ -128,6 +128,11 @@ export const setThreatListeners = async <T extends NativeEventEmitterActions>(
       case Threat.ADBEnabled.value:
         config.adbEnabled?.();
         break;
+      case Threat.Screenshot.value:
+        config.screenshot?.();
+        break;
+      case Threat.ScreenRecording.value:
+        config.screenRecording?.();
       default:
         onInvalidCallback();
         break;
@@ -182,6 +187,24 @@ export const getAppIcon = (packageName: string): Promise<string> => {
     );
   }
   return FreeraspReactNative.getAppIcon(packageName);
+};
+
+export const blockScreenCapture = (enable: boolean): Promise<string> => {
+  if (Platform.OS === 'ios') {
+    return Promise.reject(
+      'Blocking/Unblocking Screen Capture not available on iOS'
+    );
+  }
+  return FreeraspReactNative.blockScreenCapture(enable);
+};
+
+export const isScreenCaptureBlocked = (): Promise<boolean> => {
+  if (Platform.OS === 'ios') {
+    return Promise.reject(
+      'Checking Screen Capture status not available on iOS'
+    );
+  }
+  return FreeraspReactNative.isScreenCaptureBlocked();
 };
 
 export * from './types';

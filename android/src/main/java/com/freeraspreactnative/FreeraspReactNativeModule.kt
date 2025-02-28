@@ -1,5 +1,6 @@
 package com.freeraspreactnative
 
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -24,6 +25,7 @@ import com.freeraspreactnative.utils.getMapThrowing
 import com.freeraspreactnative.utils.getNestedArraySafe
 import com.freeraspreactnative.utils.getStringThrowing
 import com.freeraspreactnative.utils.toEncodedWritableArray
+import com.freeraspreactnative.ScreenProtector
 
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -31,11 +33,15 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   private val listener = ThreatListener(FreeraspThreatHandler, FreeraspThreatHandler)
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
-      // do nothing
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        currentActivity?.let { ScreenProtector.register(it) }
+      }
     }
 
     override fun onHostPause() {
-      // do nothing
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        currentActivity?.let { ScreenProtector.unregister(it) }
+      }
     }
 
     override fun onHostDestroy() {
@@ -54,8 +60,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   @ReactMethod
   fun talsecStart(
-    options: ReadableMap,
-    promise: Promise
+    options: ReadableMap, promise: Promise
   ) {
 
     try {
@@ -64,6 +69,12 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
       listener.registerListener(reactContext)
       runOnUiThread {
         Talsec.start(reactContext, config)
+        // Ensure ScreenProtector is registered AFTER Talsec starts
+        currentActivity?.let { activity ->
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            ScreenProtector.register(activity)
+          }
+        }
       }
 
       promise.resolve("freeRASP started")
@@ -136,6 +147,43 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     }
   }
 
+  /**
+   * Method Block/Unblock screen capture
+   * @param enable boolean for whether want to block or unblock the screen capture
+   */
+  @ReactMethod
+  fun blockScreenCapture(enable: Boolean, promise: Promise) {
+    val activity = currentActivity ?: run {
+      promise.reject(
+        "NativePluginError", "Cannot block screen capture, activity is null."
+      )
+      return
+    }
+
+    runOnUiThread {
+      try {
+        Talsec.blockScreenCapture(activity, enable)
+        promise.resolve("Screen capture is now ${if (enable) "Blocked" else "Enabled"}.")
+      } catch (e: Exception) {
+        promise.reject("NativePluginError", "Error in blockScreenCapture: ${e.message}")
+      }
+    }
+  }
+
+  /**
+   * Method Returns whether screen capture is blocked or not
+   * @return boolean for is screem capture blocked or not
+   */
+  @ReactMethod
+  fun isScreenCaptureBlocked(promise: Promise) {
+    try {
+      val isBlocked = Talsec.isScreenCaptureBlocked()
+      promise.resolve(isBlocked)
+    } catch (e: Exception) {
+      promise.reject("NativePluginError", "Error in isScreenCaptureBlocked: ${e.message}")
+    }
+  }
+
   private fun buildTalsecConfig(config: ReadableMap): TalsecConfig {
     val androidConfig = config.getMapThrowing("androidConfig")
     val packageName = androidConfig.getStringThrowing("packageName")
@@ -170,13 +218,14 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     private val backgroundHandler = Handler(backgroundHandlerThread.looper)
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    internal var talsecStarted = false
+
     private lateinit var appReactContext: ReactApplicationContext
 
     private fun notifyListeners(threat: Threat) {
       val params = Arguments.createMap()
       params.putInt(THREAT_CHANNEL_KEY, threat.value)
-      appReactContext
-        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+      appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
         .emit(THREAT_CHANNEL_NAME, params)
     }
 
@@ -196,8 +245,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
             MALWARE_CHANNEL_KEY, encodedSuspiciousApps
           )
 
-          appReactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+          appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(THREAT_CHANNEL_NAME, params)
         }
       }

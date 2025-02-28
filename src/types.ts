@@ -53,4 +53,6 @@ export type NativeEventEmitterActions = {
   systemVPN?: () => any;
   malware?: (suspiciousApps: SuspiciousAppInfo[]) => any;
   adbEnabled?: () => any;
+  screenshot?: () => any;
+  screenRecording?: () => any;
 };

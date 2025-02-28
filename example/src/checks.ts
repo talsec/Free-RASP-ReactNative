@@ -9,6 +9,8 @@ export const commonChecks = [
   { name: 'System VPN', status: 'ok' },
   { name: 'Device Binding', status: 'ok' },
   { name: 'Unofficial Store', status: 'ok' },
+  { name: 'Screenshot', status: 'ok' },
+  { name: 'Screen Recording', status: 'ok' },
 ];
 
 export const iosChecks = [{ name: 'Device ID', status: 'ok' }];

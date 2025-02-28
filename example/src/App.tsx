@@ -188,6 +188,24 @@ const App = () => {
         )
       );
     },
+    // Android only
+    screenshot: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Screenshot' ? { ...threat, status: 'nok' } : threat
+        )
+      );
+    },
+    // Android only
+    screenRecording: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Screen Recording'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
   };
 
   const addItemsToMalwareWhitelist = async () => {

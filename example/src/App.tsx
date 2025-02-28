@@ -188,7 +188,7 @@ const App = () => {
         )
       );
     },
-    // Android only
+    // Android & iOS
     screenshot: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
@@ -196,7 +196,7 @@ const App = () => {
         )
       );
     },
-    // Android only
+    // Android & iOS
     screenRecording: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>

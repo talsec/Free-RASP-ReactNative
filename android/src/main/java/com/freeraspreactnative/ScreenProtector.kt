@@ -20,7 +20,7 @@ internal object ScreenProtector {
   private const val TAG = "TalsecScreenProtector"
   private const val SCREEN_CAPTURE_PERMISSION = "android.permission.DETECT_SCREEN_CAPTURE"
   private const val SCREEN_RECORDING_PERMISSION = "android.permission.DETECT_SCREEN_RECORDING"
-
+  private var registered = false
   private val screenCaptureCallback = ScreenCaptureCallback { Talsec.onScreenshotDetected() }
   private val screenRecordCallback: Consumer<Int> = Consumer<Int> { state ->
     if (state == SCREEN_RECORDING_STATE_VISIBLE) {
@@ -36,7 +36,7 @@ internal object ScreenProtector {
    * granted for the app in the AndroidManifest.xml
    */
   internal fun register(activity: Activity) {
-    if (!FreeraspReactNativeModule.talsecStarted) {
+    if (!FreeraspReactNativeModule.talsecStarted || registered) {
       return
     }
 
@@ -47,6 +47,7 @@ internal object ScreenProtector {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
       registerScreenRecording(activity)
     }
+    registered = true
   }
 
   /**
@@ -109,7 +110,7 @@ internal object ScreenProtector {
   @SuppressLint("MissingPermission")
   @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
   internal fun unregister(activity: Activity) {
-    if (!FreeraspReactNativeModule.talsecStarted) {
+    if (!FreeraspReactNativeModule.talsecStarted || !registered) {
       return
     }
 
@@ -120,6 +121,7 @@ internal object ScreenProtector {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
       unregisterScreenRecording(activity)
     }
+    registered = false
   }
 
   // Missing permission is suppressed because the decision to use the screen capture API is made

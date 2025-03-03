@@ -26,26 +26,20 @@ export const DemoApp: React.FC<{
   }[];
   suspiciousApps: SuspiciousAppInfo[];
 }> = ({ checks, suspiciousApps }) => {
-  const [isBlocked, setIsBlocked] = React.useState(false);
+  const [hasScreenCaptureBlocked, setHasScreenCaptureBlocked] =
+    React.useState(false);
+
   React.useEffect(() => {
     (async () => {
-      Platform.OS === 'android' && (await checkScreenCaptureStatus());
+      Platform.OS === 'android' && (await toggleScreenCaptureBlock());
     })();
   }, []);
 
-  const checkScreenCaptureStatus = async () => {
-    try {
-      const status = await isScreenCaptureBlocked();
-      setIsBlocked(status);
-    } catch (error) {
-      console.error('Screen capture status check failed:', error);
-    }
-  };
-
   const toggleScreenCaptureBlock = async () => {
     try {
-      await blockScreenCapture(!isBlocked);
-      setIsBlocked(!isBlocked);
+      const status = await isScreenCaptureBlocked();
+      await blockScreenCapture(!status);
+      setHasScreenCaptureBlocked(!status);
     } catch (error: any) {
       console.error('Screen capture Error:', error.message);
     }
@@ -53,12 +47,7 @@ export const DemoApp: React.FC<{
 
   return (
     <>
-      <Flex
-        fill
-        style={{
-          backgroundColor: Colors.background,
-          justifyContent: 'center',
-        }}>
+      <Flex fill style={styles.flex}>
         <ScrollView>
           <VStack>
             <Image source={TalsecLogo} style={{ alignSelf: 'center' }} />;
@@ -69,53 +58,34 @@ export const DemoApp: React.FC<{
                   onPress={toggleScreenCaptureBlock}
                   style={[
                     styles.button,
-                    isBlocked ? styles.blockedButton : styles.unblockedButton,
+                    hasScreenCaptureBlocked
+                      ? styles.unblockedButton
+                      : styles.blockedButton,
                   ]}>
                   <Text
                     style={[
-                      styles.text,
-                      {
-                        color: isBlocked
-                          ? Colors.checkOkDark
-                          : Colors.checkNokDark,
-                      },
+                      styles.buttonText,
+                      hasScreenCaptureBlocked
+                        ? styles.colorCheckNok
+                        : styles.colorCheckOk,
                     ]}>
-                    {isBlocked
+                    {hasScreenCaptureBlocked
                       ? 'Enable Screen Capture'
                       : 'Block Screen Capture'}
                   </Text>
                 </TouchableOpacity>
               </HStack>
             )}
-            <Text
-              style={{
-                alignSelf: 'center',
-                fontWeight: 'bold',
-                fontSize: 25,
-                color: 'white',
-                paddingTop: 15,
-              }}>
-              freeRASP checks:
-            </Text>
+            <Text style={styles.titleText}>freeRASP checks:</Text>
             {checks.map((check: any, idx: number) => (
               <Box
                 key={idx}
-                style={{
-                  borderColor:
-                    check.status === 'ok'
-                      ? Colors.checkOkDark
-                      : Colors.checkNokDark,
-                  backgroundColor:
-                    check.status === 'ok'
-                      ? Colors.checkOkLight
-                      : Colors.checkNokLight,
-                  borderWidth: 1,
-                  paddingHorizontal: 30,
-                  paddingVertical: 4,
-                  marginVertical: 8,
-                  marginHorizontal: 20,
-                  borderRadius: 15,
-                }}>
+                style={[
+                  styles.box,
+                  check.status === 'ok'
+                    ? styles.boxCheckOk
+                    : styles.boxCheckNok,
+                ]}>
                 <HStack style={{ justifyContent: 'space-between' }}>
                   <Text
                     style={{
@@ -134,20 +104,22 @@ export const DemoApp: React.FC<{
                   {check.status === 'ok' ? (
                     <Image
                       source={CheckmarkCircle}
-                      style={{
-                        tintColor: Colors.checkOkDark,
-                        width: 30,
-                        height: 30,
-                      }}
+                      style={[
+                        styles.checkIcon,
+                        {
+                          tintColor: Colors.checkOkDark,
+                        },
+                      ]}
                     />
                   ) : (
                     <Image
                       source={CloseCircle}
-                      style={{
-                        tintColor: Colors.checkNokDark,
-                        width: 30,
-                        height: 30,
-                      }}
+                      style={[
+                        styles.checkIcon,
+                        {
+                          tintColor: Colors.checkNokDark,
+                        },
+                      ]}
                     />
                   )}
                 </HStack>
@@ -161,7 +133,12 @@ export const DemoApp: React.FC<{
 };
 
 const styles = StyleSheet.create({
-  text: {
+  flex: {
+    paddingTop: 50,
+    backgroundColor: Colors.background,
+    justifyContent: 'center',
+  },
+  buttonText: {
     fontSize: 16,
     fontWeight: '500',
     alignSelf: 'center',
@@ -182,5 +159,38 @@ const styles = StyleSheet.create({
   },
   unblockedButton: {
     backgroundColor: Colors.checkNokLight,
+  },
+  colorCheckNok: {
+    color: Colors.checkNokDark,
+  },
+  colorCheckOk: {
+    color: Colors.checkOkDark,
+  },
+  boxCheckNok: {
+    borderColor: Colors.checkNokDark,
+    backgroundColor: Colors.checkNokLight,
+  },
+  boxCheckOk: {
+    borderColor: Colors.checkOkDark,
+    backgroundColor: Colors.checkOkLight,
+  },
+  box: {
+    borderWidth: 1,
+    paddingHorizontal: 30,
+    paddingVertical: 4,
+    marginVertical: 8,
+    marginHorizontal: 20,
+    borderRadius: 15,
+  },
+  checkIcon: {
+    width: 30,
+    height: 30,
+  },
+  titleText: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 25,
+    color: 'white',
+    paddingTop: 15,
   },
 });

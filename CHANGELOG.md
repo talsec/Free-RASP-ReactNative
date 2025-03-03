@@ -5,16 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased] - 2024-02-28
+## [3.14.0] - 2024-03-03
 
 - iOS SDK version:  6.8.0
 - Android SDK version: 14.0.1
 
 ### React Native
 
+#### Added
+
+- `blockScreenCapture` method to block/unblock screen capture
+- `isScreenCaptureBlocked` method to get the current screen capture blocking status
+- New callbacks:
+    - `screenshot`: Detects when a screenshot is taken
+    - `screenRecording`: Detects when screen recording is active
+
+#### Changed
+
+- Raised Android compileSDK level to 35
+
+#### Fixed 
+
+- Compatibility issues with RN New Architecture
+- Added proguard rules for malware data serialization in release mode on Android
+
+### Android
+
+#### Added
+
+- Passive and active screenshot/screen recording protection
+
+#### Changed
+
+- Improved root detection
+
 #### Fixed
 
-- Resolved compatibility issue on Android with RN 0.77+
+- Proguard rules to address warnings from okhttp dependency
+
+### iOS
+
+#### Added
+
+- Passive Screenshot/Screen Recording detection
 
 ## [3.13.0] - 2024-12-20
 

@@ -25,7 +25,6 @@ import com.freeraspreactnative.utils.getMapThrowing
 import com.freeraspreactnative.utils.getNestedArraySafe
 import com.freeraspreactnative.utils.getStringThrowing
 import com.freeraspreactnative.utils.toEncodedWritableArray
-import com.freeraspreactnative.ScreenProtector
 
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -69,15 +68,17 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
       listener.registerListener(reactContext)
       runOnUiThread {
         Talsec.start(reactContext, config)
-        // Ensure ScreenProtector is registered AFTER Talsec starts
-        currentActivity?.let { activity ->
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            ScreenProtector.register(activity)
+        mainHandler.post {
+          talsecStarted = true
+          // This code must be called only AFTER Talsec.start
+          currentActivity?.let { activity ->
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+              ScreenProtector.register(activity)
+            }
           }
+          promise.resolve("freeRASP started")
         }
       }
-
-      promise.resolve("freeRASP started")
 
     } catch (e: Exception) {
       promise.reject("TalsecInitializationError", e.message, e)
@@ -218,9 +219,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     private val backgroundHandler = Handler(backgroundHandlerThread.looper)
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    internal var talsecStarted = false
-
     private lateinit var appReactContext: ReactApplicationContext
+
+    internal var talsecStarted = false
 
     private fun notifyListeners(threat: Threat) {
       val params = Arguments.createMap()

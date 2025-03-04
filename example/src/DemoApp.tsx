@@ -31,15 +31,24 @@ export const DemoApp: React.FC<{
 
   React.useEffect(() => {
     (async () => {
-      Platform.OS === 'android' && (await toggleScreenCaptureBlock());
+      Platform.OS === 'android' && (await updateScreenCaptureStatus());
     })();
   }, []);
 
+  const updateScreenCaptureStatus = async () => {
+    try {
+      const isBlocked = await isScreenCaptureBlocked();
+      setHasScreenCaptureBlocked(isBlocked);
+    } catch (error) {
+      console.error('Error fetching screen capture status:', error);
+    }
+  };
+
   const toggleScreenCaptureBlock = async () => {
     try {
-      const status = await isScreenCaptureBlocked();
-      await blockScreenCapture(!status);
-      setHasScreenCaptureBlocked(!status);
+      const response = await blockScreenCapture(!hasScreenCaptureBlocked);
+      console.info('Changing Screen Capture Status:', response);
+      await updateScreenCaptureStatus();
     } catch (error: any) {
       console.error('Screen capture Error:', error.message);
     }

@@ -90,7 +90,7 @@ class FreeraspReactNative: RCTEventEmitter {
 }
 
 struct ThreatIdentifiers {
-    static let threatIdentifierList: [Int] = (1...12).map { _ in Int.random(in: 100_000..<999_999_999) }
+    static let threatIdentifierList: [Int] = (1...14).map { _ in Int.random(in: 100_000..<999_999_999) }
 }
 
 /// An extension to unify callback names with RN ones.
@@ -122,6 +122,10 @@ extension SecurityThreat {
                 return ThreatIdentifiers.threatIdentifierList[10]
             case .unofficialStore:
                 return ThreatIdentifiers.threatIdentifierList[11]
+            case .screenshot:
+                return ThreatIdentifiers.threatIdentifierList[12]
+            case .screenRecording:
+                return ThreatIdentifiers.threatIdentifierList[13]
             @unknown default:
                 abort()
         }
@@ -129,7 +133,7 @@ extension SecurityThreat {
 }
 
 extension SecurityThreatCenter: SecurityThreatHandler {
-    
+
     public func threatDetected(_ securityThreat: TalsecRuntime.SecurityThreat) {
         if (securityThreat.rawValue == "passcodeChange") {
             return

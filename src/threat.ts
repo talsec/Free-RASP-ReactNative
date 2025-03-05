@@ -18,6 +18,8 @@ export class Threat {
   static DevMode = new Threat(0);
   static Malware = new Threat(0);
   static ADBEnabled = new Threat(0);
+  static Screenshot = new Threat(0);
+  static ScreenRecording = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -40,6 +42,8 @@ export class Threat {
           this.DevMode,
           this.Malware,
           this.ADBEnabled,
+          this.Screenshot,
+          this.ScreenRecording,
         ]
       : [
           this.AppIntegrity,
@@ -53,6 +57,8 @@ export class Threat {
           this.DeviceBinding,
           this.DeviceID,
           this.UnofficialStore,
+          this.Screenshot,
+          this.ScreenRecording,
         ];
   }
 }

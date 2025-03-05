@@ -90,7 +90,7 @@ dependencies {
   implementation "com.facebook.react:react-native:$react_native_version"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
-  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:13.2.0"
+  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:14.0.1"
 }
 
 if (isNewArchitectureEnabled()) {

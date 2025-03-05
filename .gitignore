@@ -42,6 +42,7 @@ android.iml
 **/android/**/build
 **/android/**/release
 **/android/**/debug
+!**/android/app/src/debug/AndroidManixest.xml
 
 # Cocoapods
 #

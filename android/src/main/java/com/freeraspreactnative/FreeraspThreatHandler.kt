@@ -63,6 +63,14 @@ internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatLis
     listener?.threatDetected(Threat.SystemVPN)
   }
 
+  override fun onScreenshotDetected() {
+    listener?.threatDetected(Threat.Screenshot)
+  }
+
+  override fun onScreenRecordingDetected() {
+    listener?.threatDetected(Threat.ScreenRecording)
+  }
+
   internal interface TalsecReactNative {
     fun threatDetected(threatType: Threat)
 

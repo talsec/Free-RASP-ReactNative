@@ -40,11 +40,11 @@ def getIntegerDefault(name) {
 }
 
 android {
-  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
+  compileSdkVersion getIntegerDefault("compileSdkVersion")
 
   defaultConfig {
     minSdkVersion getIntegerDefault("minSdkVersion")
-    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+    targetSdkVersion getIntegerDefault("targetSdkVersion")
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
   }
   buildTypes {

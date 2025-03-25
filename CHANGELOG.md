@@ -5,11 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.14.2] - 2024-03-25
+## [4.0.0] - 2024-03-25
 
 - iOS SDK version:  6.9.0
-- Android SDK version: 14.0.1
+- Android SDK version: 15.0.0
 
+### React Native
+
+#### Changed
+
+- Android SDK requires `kotlinVersion` >= `2.0.0`
+- Set Java verison to 17
+
+### Android 
+
+#### Changed
+
+- Compile API increased to 35, dependencies updated
+- Internal library obfuscation reworked
+- Root detection divided into 2 parts (quick initial checks, and time-demanding asynchronous post checks)
+
+#### Fixed
+
+- ANR issues bug-fixing
 ### iOS
 
 #### Added

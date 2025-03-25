@@ -1,6 +1,6 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["FreeraspReactNative_kotlinVersion"]
+  def kotlin_version = "2.1.0"
 
   repositories {
     google()
@@ -59,8 +59,12 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+
+  kotlinOptions {
+    jvmTarget = "17"
   }
 
   if (project.android.hasProperty("namespace")) {
@@ -80,7 +84,7 @@ rootProject.allprojects {
   }
 }
 
-def kotlin_version = getExtOrDefault("kotlinVersion")
+def kotlin_version = "2.1.0"
 def react_native_version = getExtOrDefault("reactNativeVersion")
 
 dependencies {

@@ -1,6 +1,7 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["FreeraspReactNative_kotlinVersion"]
+  def kotlin_version = project.properties["FreeraspReactNative_kotlinVersion"]
+
 
   repositories {
     google()
@@ -39,6 +40,10 @@ def getIntegerDefault(name) {
   return (project.properties["FreeraspReactNative_" + name]).toInteger()
 }
 
+def getDefault(name) {
+  return project.properties["FreeraspReactNative_" + name]
+}
+
 android {
   compileSdkVersion getIntegerDefault("compileSdkVersion")
 
@@ -59,8 +64,12 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+
+  kotlinOptions {
+    jvmTarget = "17"
   }
 
   if (project.android.hasProperty("namespace")) {
@@ -80,7 +89,7 @@ rootProject.allprojects {
   }
 }
 
-def kotlin_version = getExtOrDefault("kotlinVersion")
+def kotlin_version = getDefault("kotlinVersion")
 def react_native_version = getExtOrDefault("reactNativeVersion")
 
 dependencies {
@@ -90,7 +99,7 @@ dependencies {
   implementation "com.facebook.react:react-native:$react_native_version"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
-  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:14.0.1"
+  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:15.0.0"
 }
 
 if (isNewArchitectureEnabled()) {

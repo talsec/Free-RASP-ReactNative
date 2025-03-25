@@ -1,6 +1,7 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
-  def kotlin_version = "2.1.0"
+  def kotlin_version = project.properties["FreeraspReactNative_kotlinVersion"]
+
 
   repositories {
     google()
@@ -37,6 +38,10 @@ def getExtOrIntegerDefault(name) {
 
 def getIntegerDefault(name) {
   return (project.properties["FreeraspReactNative_" + name]).toInteger()
+}
+
+def getDefault(name) {
+  return project.properties["FreeraspReactNative_" + name]
 }
 
 android {
@@ -84,7 +89,7 @@ rootProject.allprojects {
   }
 }
 
-def kotlin_version = "2.1.0"
+def kotlin_version = getDefault("kotlinVersion")
 def react_native_version = getExtOrDefault("reactNativeVersion")
 
 dependencies {
@@ -94,7 +99,7 @@ dependencies {
   implementation "com.facebook.react:react-native:$react_native_version"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
-  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-Capacitor:15.0.0"
+  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:15.0.0"
 }
 
 if (isNewArchitectureEnabled()) {

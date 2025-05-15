@@ -45,6 +45,50 @@ class FreeraspReactNative: RCTEventEmitter {
         Talsec.start(config: config)
     }
 
+    @objc(blockScreenCapture:withResolver:withRejecter:)
+    private func blockScreenCapture(enable: Bool, resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+        getProtectedWindow { window in
+            if let window = window {
+                Talsec.blockScreenCapture(enable: enable, window: window)
+                resolve("Screen capture is now \((enable) ? "Blocked" : "Enabled").")
+            } else {
+                reject("BlockScreenCaptureError", "No windows found to block screen capture", nil)
+            }
+        }
+    }
+    
+    @objc(isScreenCaptureBlocked:withRejecter:)
+    private func isScreenCaptureBlocked(resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+        getProtectedWindow { window in
+            if let window = window {
+                let isBlocked = Talsec.isScreenCaptureBlocked(in: window)
+                resolve(isBlocked)
+            } else {
+                reject("IsScreenCaptureBlockedError", "Error while checking if screen capture is blocked", nil)
+            }
+        }
+    }
+  
+    @objc(storeExternalId:withResolver:withRejecter:)
+    private func storeExternalId(externalId: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        UserDefaults.standard.set(externalId, forKey: "app.talsec.externalid")
+        resolve("OK - Store external ID")
+    }
+    
+    private func getProtectedWindow(completion: @escaping (UIWindow?) -> Void) {
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                if let window = windowScene.windows.first {
+                    completion(window)
+                } else {
+                    completion(nil)
+                }
+            } else {
+                completion(nil)
+            }
+        }
+    }
+
     /**
      * Method to setup the message passing between native and React Native
      */

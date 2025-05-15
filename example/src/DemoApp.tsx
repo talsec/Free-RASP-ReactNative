@@ -9,7 +9,9 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  Platform,
+  TextInput,
+  View,
+  Modal,
 } from 'react-native';
 import { Colors } from './styles';
 import { MalwareModal } from './MalwareModal';
@@ -17,7 +19,13 @@ import {
   isScreenCaptureBlocked,
   blockScreenCapture,
   type SuspiciousAppInfo,
+  storeExternalId,
 } from 'freerasp-react-native';
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Toast,
+} from 'react-native-alert-notification';
 
 export const DemoApp: React.FC<{
   checks: {
@@ -28,10 +36,12 @@ export const DemoApp: React.FC<{
 }> = ({ checks, suspiciousApps }) => {
   const [hasScreenCaptureBlocked, setHasScreenCaptureBlocked] =
     React.useState(false);
+  const [externalIdValue, setExternalIdValue] = React.useState('');
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     (async () => {
-      Platform.OS === 'android' && (await updateScreenCaptureStatus());
+      await updateScreenCaptureStatus();
     })();
   }, []);
 
@@ -54,89 +64,144 @@ export const DemoApp: React.FC<{
     }
   };
 
+  const handleModalSend = async () => {
+    setModalVisible(false);
+    try {
+      await storeExternalId(externalIdValue);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Success',
+        textBody: 'External ID stored',
+      });
+    } catch (error: any) {
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: 'Warning',
+        textBody: 'External ID not stored',
+      });
+    }
+  };
+
+  const handleModalDismiss = () => {
+    setModalVisible(false);
+  };
+
   return (
     <>
-      <Flex fill style={styles.flex}>
-        <ScrollView>
-          <VStack>
-            <Image source={TalsecLogo} style={{ alignSelf: 'center' }} />;
-            {Platform.OS === 'android' && (
+      <AlertNotificationRoot>
+        <Flex fill style={styles.flex}>
+          <ScrollView>
+            <VStack>
+              <Image source={TalsecLogo} style={{ alignSelf: 'center' }} />;
               <HStack
                 style={{ justifyContent: 'space-evenly', paddingTop: 10 }}>
                 <TouchableOpacity
                   onPress={toggleScreenCaptureBlock}
                   style={[
                     styles.button,
-                    hasScreenCaptureBlocked
-                      ? styles.unblockedButton
-                      : styles.blockedButton,
+                    hasScreenCaptureBlocked && styles.blockedButton,
                   ]}>
                   <Text
                     style={[
                       styles.buttonText,
-                      hasScreenCaptureBlocked
-                        ? styles.colorCheckNok
-                        : styles.colorCheckOk,
+                      { color: hasScreenCaptureBlocked ? 'white' : 'black' },
                     ]}>
                     {hasScreenCaptureBlocked
                       ? 'Enable Screen Capture'
                       : 'Block Screen Capture'}
                   </Text>
                 </TouchableOpacity>
-              </HStack>
-            )}
-            <Text style={styles.titleText}>freeRASP checks:</Text>
-            {checks.map((check: any, idx: number) => (
-              <Box
-                key={idx}
-                style={[
-                  styles.box,
-                  check.status === 'ok'
-                    ? styles.boxCheckOk
-                    : styles.boxCheckNok,
-                ]}>
-                <HStack style={{ justifyContent: 'space-between' }}>
-                  <Text
-                    style={{
-                      color: check.status === 'ok' ? 'green' : 'rgb(200, 0, 0)',
-                      fontWeight: 'bold',
-                      alignSelf: 'center',
-                    }}>
-                    {check.name}
+                <TouchableOpacity
+                  onPress={() => setModalVisible(true)}
+                  style={[styles.button]}>
+                  <Text style={[styles.buttonText, { color: 'black' }]}>
+                    Set External ID
                   </Text>
-                  {check.name === 'Malware' && (
-                    <MalwareModal
-                      isDisabled={check.status === 'ok'}
-                      suspiciousApps={suspiciousApps}
-                    />
-                  )}
-                  {check.status === 'ok' ? (
-                    <Image
-                      source={CheckmarkCircle}
-                      style={[
-                        styles.checkIcon,
-                        {
-                          tintColor: Colors.checkOkDark,
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <Image
-                      source={CloseCircle}
-                      style={[
-                        styles.checkIcon,
-                        {
-                          tintColor: Colors.checkNokDark,
-                        },
-                      ]}
-                    />
-                  )}
-                </HStack>
-              </Box>
-            ))}
-          </VStack>
-        </ScrollView>
-      </Flex>
+                </TouchableOpacity>
+                <Modal
+                  transparent
+                  visible={modalVisible}
+                  animationType="fade"
+                  onRequestClose={handleModalDismiss}>
+                  <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                      <Text style={styles.title}>Set External ID</Text>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Type something..."
+                        value={externalIdValue}
+                        onChangeText={setExternalIdValue}
+                      />
+                      <View style={styles.buttonRow}>
+                        <TouchableOpacity
+                          style={styles.sendButton}
+                          onPress={handleModalSend}>
+                          <Text style={styles.modalText}>Send</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.dismissButton}
+                          onPress={handleModalDismiss}>
+                          <Text style={styles.modalText}>Dismiss</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                </Modal>
+              </HStack>
+              <Text style={styles.titleText}>freeRASP checks:</Text>
+              {checks.map((check: any, idx: number) => (
+                <Box
+                  key={idx}
+                  style={[
+                    styles.box,
+                    check.status === 'ok'
+                      ? styles.boxCheckOk
+                      : styles.boxCheckNok,
+                  ]}>
+                  <HStack style={{ justifyContent: 'space-between' }}>
+                    <Text
+                      style={{
+                        color:
+                          check.status === 'ok' ? 'green' : 'rgb(200, 0, 0)',
+                        fontWeight: 'bold',
+                        alignSelf: 'center',
+                      }}>
+                      {check.name}
+                    </Text>
+                    {check.name === 'Malware' && (
+                      <MalwareModal
+                        isDisabled={check.status === 'ok'}
+                        suspiciousApps={suspiciousApps}
+                      />
+                    )}
+                    {check.status === 'ok' ? (
+                      <Image
+                        source={CheckmarkCircle}
+                        style={[
+                          styles.checkIcon,
+                          {
+                            tintColor: Colors.checkOkDark,
+                          },
+                        ]}
+                      />
+                    ) : (
+                      <Image
+                        source={CloseCircle}
+                        style={[
+                          styles.checkIcon,
+                          {
+                            tintColor: Colors.checkNokDark,
+                          },
+                        ]}
+                      />
+                    )}
+                  </HStack>
+                </Box>
+              ))}
+            </VStack>
+          </ScrollView>
+        </Flex>
+      </AlertNotificationRoot>
     </>
   );
 };
@@ -164,10 +229,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   blockedButton: {
-    backgroundColor: Colors.checkOkLight,
-  },
-  unblockedButton: {
-    backgroundColor: Colors.checkNokLight,
+    backgroundColor: Colors.checkNokDark,
   },
   colorCheckNok: {
     color: Colors.checkNokDark,
@@ -201,5 +263,53 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'white',
     paddingTop: 15,
+  },
+  modalOverlay: {
+    flex: 1,
+    height: 10,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 20,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  sendButton: {
+    backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  dismissButton: {
+    backgroundColor: '#f44336',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    alignItems: 'center',
+  },
+  modalText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

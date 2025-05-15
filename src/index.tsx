@@ -191,21 +191,15 @@ export const getAppIcon = (packageName: string): Promise<string> => {
 };
 
 export const blockScreenCapture = (enable: boolean): Promise<string> => {
-  if (Platform.OS === 'ios') {
-    return Promise.reject(
-      'Blocking/Unblocking Screen Capture not available on iOS'
-    );
-  }
   return FreeraspReactNative.blockScreenCapture(enable);
 };
 
 export const isScreenCaptureBlocked = (): Promise<boolean> => {
-  if (Platform.OS === 'ios') {
-    return Promise.reject(
-      'Checking Screen Capture status not available on iOS'
-    );
-  }
   return FreeraspReactNative.isScreenCaptureBlocked();
+};
+
+export const storeExternalId = (data: string): Promise<string> => {
+  return FreeraspReactNative.storeExternalId(data);
 };
 
 export * from './types';

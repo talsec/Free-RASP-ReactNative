@@ -11,6 +11,14 @@ RCT_EXTERN_METHOD(getThreatChannelData:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getThreatIdentifiers:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(blockScreenCapture:(BOOL)enable
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(isScreenCaptureBlocked:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(storeExternalId:(NSString *)externalId
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(onInvalidCallback)
 
 + (BOOL)requiresMainQueueSetup

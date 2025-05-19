@@ -77,14 +77,16 @@ class FreeraspReactNative: RCTEventEmitter {
     
     private func getProtectedWindow(completion: @escaping (UIWindow?) -> Void) {
         DispatchQueue.main.async {
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                if let window = windowScene.windows.first {
-                    completion(window)
+            if #available(iOS 13.0, *) {
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                    if let window = windowScene.windows.first {
+                        completion(window)
+                    } else {
+                        completion(nil)
+                    }
                 } else {
                     completion(nil)
                 }
-            } else {
-                completion(nil)
             }
         }
     }

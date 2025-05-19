@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### iOS
 
-### Added
+#### Added
 
 - Added externalId to put an integrator-specified custom identifier into the logs.
 - Added eventId to the logs, which is unique per each log. It allows traceability of the same log across various systems.

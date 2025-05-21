@@ -5133,10 +5133,20 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
+react-native-alert-notification@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-alert-notification/-/react-native-alert-notification-0.4.2.tgz#fabb1bc94e4f7d459dd8e47e8aed03a93651b8c7"
+  integrity sha512-98EQ+DtI7thEAHzoXMbN8dZRCFcoGXMRYYIKvooPPdASuuZIuON4oxCbJNDb6r6lebnPc/25JCD1tJPaoPNWnw==
+
 react-native-flex-layout@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/react-native-flex-layout/-/react-native-flex-layout-0.1.5.tgz#147379c9286a6d6999cd942dc9f4bdec75514ddd"
   integrity sha512-DrLir5Wl0RhgJXHeDBSaa1Y1LdpNuoz0PEe5E1T1+xVWt2DAz/r+1N8bnhtVkTKJE6WrH6jIH2hoe8kogR0X+w==
+
+react-native-safe-area-context@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.4.0.tgz#04b51940408c114f75628a12a93569d30c525454"
+  integrity sha512-JaEThVyJcLhA+vU0NU8bZ0a1ih6GiF4faZ+ArZLqpYbL6j7R3caRqj+mE3lEtKCuHgwjLg3bCxLL1GPUJZVqUA==
 
 react-native-svg-transformer@^1.5.0:
   version "1.5.0"

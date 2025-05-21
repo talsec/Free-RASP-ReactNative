@@ -5,7 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0] - 2024-03-25
+## [4.1.0] - 2025-05-15
+
+- iOS SDK version: 6.11.0
+- Android SDK version: 15.1.0
+
+### React Native
+
+#### Added
+
+- Added interface for screenshot / screen recording blocking on iOS
+- Added interface for external ID storage
+
+### Android 
+
+#### Added
+
+- Added externalId to put an integrator-specified custom identifier into the logs.
+- Added eventId to the logs, which is unique per each log. It allows traceability of the same log across various systems.
+
+#### Changed
+
+- New root detection checks added
+
+### iOS
+
+#### Added
+
+- Added externalId to put an integrator-specified custom identifier into the logs.
+- Added eventId to the logs, which is unique per each log. It allows traceability of the same log across various systems.
+- Screen capture protection obscuring app content in screenshots and screen recordings preventing unauthorized content capture. Refer to the freeRASP integration documentation.
+
+#### Fixed
+
+- Resolved an issue with the screen recording detection.
+- Resolved an issue that prevented Xcode tests from running correctly.
+
+## [4.0.0] - 2025-03-25
 
 - iOS SDK version:  6.9.0
 - Android SDK version: 15.0.0
@@ -28,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Fixed
 
 - ANR issues bug-fixing
+
 ### iOS
 
 #### Added
@@ -38,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deep signing of the OpenSSL binaries.
 
-## [3.14.1] - 2024-03-10
+## [3.14.1] - 2025-03-10
 
 - iOS SDK version:  6.8.0
 - Android SDK version: 14.0.1
@@ -49,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Take Android targetSdkVersion, compileSdkVersion from plugin only
 
-## [3.14.0] - 2024-03-05
+## [3.14.0] - 2025-03-05
 
 - iOS SDK version:  6.8.0
 - Android SDK version: 14.0.1

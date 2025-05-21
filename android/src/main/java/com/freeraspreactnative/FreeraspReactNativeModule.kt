@@ -185,6 +185,21 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     }
   }
 
+  @ReactMethod
+  fun storeExternalId(
+      externalId: String, promise: Promise
+  ) {
+      try {
+          Talsec.storeExternalId(reactContext, externalId)
+          promise.resolve("OK - Store external ID")
+      } catch (e: Exception) {
+          promise.reject(
+              "NativePluginError",
+              "Error during storeExternalId operation in Talsec Native Plugin"
+          )
+      }
+  }
+
   private fun buildTalsecConfig(config: ReadableMap): TalsecConfig {
     val androidConfig = config.getMapThrowing("androidConfig")
     val packageName = androidConfig.getStringThrowing("packageName")

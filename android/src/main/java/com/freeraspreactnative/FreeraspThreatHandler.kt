@@ -71,6 +71,10 @@ internal object FreeraspThreatHandler : ThreatListener.ThreatDetected, ThreatLis
     listener?.threatDetected(Threat.ScreenRecording)
   }
 
+  override fun onMultiInstanceDetected() {
+    listener?.threatDetected(Threat.MultiInstance)
+  }
+
   internal interface TalsecReactNative {
     fun threatDetected(threatType: Threat)
 

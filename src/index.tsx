@@ -134,6 +134,9 @@ export const setThreatListeners = async <T extends NativeEventEmitterActions>(
       case Threat.ScreenRecording.value:
         config.screenRecording?.();
         break;
+      case Threat.MultiInstance.value:
+        config.multiInstance?.();
+        break;
       default:
         onInvalidCallback();
         break;

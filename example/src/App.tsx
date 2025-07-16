@@ -206,6 +206,16 @@ const App = () => {
         )
       );
     },
+    // Android only
+    multiInstance: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Multi Instance'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
   };
 
   const addItemsToMalwareWhitelist = async () => {

@@ -55,4 +55,5 @@ export type NativeEventEmitterActions = {
   adbEnabled?: () => any;
   screenshot?: () => any;
   screenRecording?: () => any;
+  multiInstance?: () => any;
 };

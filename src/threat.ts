@@ -20,6 +20,7 @@ export class Threat {
   static ADBEnabled = new Threat(0);
   static Screenshot = new Threat(0);
   static ScreenRecording = new Threat(0);
+  static MultiInstance = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -44,6 +45,7 @@ export class Threat {
           this.ADBEnabled,
           this.Screenshot,
           this.ScreenRecording,
+          this.MultiInstance,
         ]
       : [
           this.AppIntegrity,

@@ -8,3 +8,5 @@
 
 -keep class com.freeraspreactnative.models.RNSuspiciousAppInfo$Companion
 -keep class com.freeraspreactnative.models.RNPackageInfo$Companion
+
+-repackageclasses 'ts'

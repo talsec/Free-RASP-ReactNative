@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.2] - 2025-08-21
+
+- iOS SDK version: 6.12.1
+- Android SDK version: 16.0.1
+
+### React Native
+
+#### Changed
+
+- Replaced deprecated `getCurrentActivity()` call on Android (compatibility with RN 0.81+)
+
 ## [4.2.1] - 2025-08-05
+
+- iOS SDK version: 6.12.1
+- Android SDK version: 16.0.1
 
 ### React Native
 

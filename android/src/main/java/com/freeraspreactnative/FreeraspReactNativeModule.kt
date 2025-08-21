@@ -33,13 +33,13 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        currentActivity?.let { ScreenProtector.register(it) }
+        reactContext.currentActivity?.let { ScreenProtector.register(it) }
       }
     }
 
     override fun onHostPause() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        currentActivity?.let { ScreenProtector.unregister(it) }
+        reactContext.currentActivity?.let { ScreenProtector.unregister(it) }
       }
     }
 
@@ -71,7 +71,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
         mainHandler.post {
           talsecStarted = true
           // This code must be called only AFTER Talsec.start
-          currentActivity?.let { activity ->
+          reactContext.currentActivity?.let { activity ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
               ScreenProtector.register(activity)
             }
@@ -154,7 +154,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
    */
   @ReactMethod
   fun blockScreenCapture(enable: Boolean, promise: Promise) {
-    val activity = currentActivity ?: run {
+    val activity = reactContext.currentActivity ?: run {
       promise.reject(
         "NativePluginError", "Cannot block screen capture, activity is null."
       )

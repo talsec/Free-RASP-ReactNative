@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [4.2.3] - 2025-09-03
 
 - iOS SDK version: 6.12.1
-- Android SDK version: 16.0.3
+- Android SDK version: 16.0.4
 
 ### Android
 

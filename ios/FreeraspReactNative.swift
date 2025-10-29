@@ -8,6 +8,9 @@ class FreeraspReactNative: RCTEventEmitter {
 
     let threatChannelKey = String(Int.random(in: 100_000..<999_999_999)) // key of the argument map under which threats are expected
     let threatChannelName = String(Int.random(in: 100_000..<999_999_999)) // name of the channel over which threat callbacks are sent
+  
+    let raspExecutionStateChannelKey = String(Int.random(in: 100_000..<999_999_999)) // key of the argument map under which threats are expected
+    let raspExecutionStateChannelName = String(Int.random(in: 100_000..<999_999_999)) // name of the channel over which threat callbacks are sent
 
     override init() {
         super.init()
@@ -98,9 +101,25 @@ class FreeraspReactNative: RCTEventEmitter {
     private func getThreatChannelData(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         resolve([threatChannelName, threatChannelKey])
     }
+  
+    /**
+     * Method to setup the message passing between native and React Native
+     */
+    @objc(getRaspExecutionStateChannelData:withRejecter:)
+    private func getRaspExecutionStateChannelData(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+      resolve([raspExecutionStateChannelName, raspExecutionStateChannelKey])
+    }
 
     func dispatchEvent(securityThreat: SecurityThreat) -> Void {
-        FreeraspReactNative.shared!.sendEvent(withName: threatChannelName, body: [threatChannelKey: securityThreat.callbackIdentifier])
+        FreeraspReactNative.shared!.sendEvent(withName: threatChannelName, body: [
+            threatChannelKey: securityThreat.callbackIdentifier,
+        ])
+    }
+  
+    func dispatchRaspExecutionStateEvent(event: RaspExecutionStates) -> Void {
+      FreeraspReactNative.shared!.sendEvent(withName: raspExecutionStateChannelName, body: [
+        raspExecutionStateChannelKey: event.callbackIdentifier,
+      ])
     }
 
     /**
@@ -109,6 +128,14 @@ class FreeraspReactNative: RCTEventEmitter {
     @objc(getThreatIdentifiers:withRejecter:)
     private func getThreatIdentifiers(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         resolve(getThreatIdentifiers())
+    }
+  
+    /**
+     * Method to get the random identifiers of callbacks
+     */
+    @objc(getRaspExecutionStateIdentifiers:withRejecter:)
+    private func getRaspExecutionStateIdentifiers(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        resolve(getRaspExecutionStateIdentifiers())
     }
 
     /**
@@ -129,14 +156,22 @@ class FreeraspReactNative: RCTEventEmitter {
                 threat in threat.callbackIdentifier
             }
     }
+  
+    private func getRaspExecutionStateIdentifiers() -> [Int] {
+      return RaspExecutionStates.allCases
+            .map {
+                event in event.callbackIdentifier
+            }
+    }
 
     override func supportedEvents() -> [String]! {
-        return [threatChannelName]
+      return [threatChannelName, raspExecutionStateChannelName]
     }
 }
 
 struct ThreatIdentifiers {
     static let threatIdentifierList: [Int] = (1...14).map { _ in Int.random(in: 100_000..<999_999_999) }
+    static let raspExecutionStateIdentifierList: [Int] = (1...1).map { _ in Int.random(in: 100_000..<999_999_999) }
 }
 
 /// An extension to unify callback names with RN ones.
@@ -178,7 +213,7 @@ extension SecurityThreat {
     }
 }
 
-extension SecurityThreatCenter: SecurityThreatHandler {
+extension SecurityThreatCenter: @retroactive SecurityThreatHandler, @retroactive RaspExecutionState {
 
     public func threatDetected(_ securityThreat: TalsecRuntime.SecurityThreat) {
         if (securityThreat.rawValue == "passcodeChange") {
@@ -186,4 +221,25 @@ extension SecurityThreatCenter: SecurityThreatHandler {
         }
         FreeraspReactNative.shared!.dispatchEvent(securityThreat: securityThreat)
     }
+  
+    public func onAllChecksFinished() {
+      
+      FreeraspReactNative.shared!.dispatchRaspExecutionStateEvent(event: RaspExecutionStates.allChecksFinished)
+    }
+}
+
+enum RaspExecutionStates : String, Codable, CaseIterable, Equatable {
+  
+  case allChecksFinished
+  
+  public static var allCases: [RaspExecutionStates] {
+    return [.allChecksFinished]
+  }
+  
+  var callbackIdentifier: Int {
+    switch self {
+      case .allChecksFinished:
+        return ThreatIdentifiers.raspExecutionStateIdentifierList[0]
+    }
+  }
 }

@@ -37,7 +37,7 @@ export type PackageInfo = {
   installerStore?: string;
 };
 
-export type NativeEventEmitterActions = {
+export type ThreatEventActions = {
   privilegedAccess?: () => any;
   debug?: () => any;
   simulator?: () => any;
@@ -56,4 +56,13 @@ export type NativeEventEmitterActions = {
   screenshot?: () => any;
   screenRecording?: () => any;
   multiInstance?: () => any;
+  timeSpoofing?: () => any;
+  locationSpoofing?: () => any;
+  unsecureWifi?: () => any;
+};
+
+export type NativeEvent = { [key: string]: number | string[] | undefined };
+
+export type RaspExecutionStateEventActions = {
+  allChecksFinished?: () => any;
 };

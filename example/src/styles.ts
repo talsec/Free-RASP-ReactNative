@@ -5,4 +5,6 @@ export const Colors = {
   checkOkDark: 'green',
   checkNokDark: 'rgb(200, 0, 0)',
   grey: 'rgb(120, 120, 120)',
+  progressLight: 'rgba(173, 216, 230, 1)', // light blue
+  progressDark: 'rgb(30, 144, 255)', // dodger blue
 };

@@ -21,4 +21,7 @@ export const androidChecks = [
   { name: 'Malware', status: 'ok' },
   { name: 'ADB Enabled', status: 'ok' },
   { name: 'Multi Instance', status: 'ok' },
+  { name: 'Time Spoofing', status: 'ok' },
+  { name: 'Location Spoofing', status: 'ok' },
+  { name: 'Unsecure Wifi', status: 'ok' },
 ];

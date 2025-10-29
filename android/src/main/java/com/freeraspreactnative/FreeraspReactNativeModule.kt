@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.util.Log
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
@@ -18,6 +19,9 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.freeraspreactnative.events.BaseRaspEvent
+import com.freeraspreactnative.events.RaspExecutionStateEvent
+import com.freeraspreactnative.events.ThreatEvent
 import com.freeraspreactnative.utils.Utils
 import com.freeraspreactnative.utils.getArraySafe
 import com.freeraspreactnative.utils.getBooleanSafe
@@ -29,7 +33,7 @@ import com.freeraspreactnative.utils.toEncodedWritableArray
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
-  private val listener = ThreatListener(FreeraspThreatHandler, FreeraspThreatHandler)
+  private val listener = ThreatListener(FreeraspThreatHandler, FreeraspThreatHandler, FreeraspThreatHandler)
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -90,19 +94,39 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
    */
   @ReactMethod
   fun getThreatIdentifiers(promise: Promise) {
-    promise.resolve(Threat.getThreatValues())
+    promise.resolve(ThreatEvent.ALL_EVENTS)
   }
 
   /**
-   * Method to setup the message passing between native and React Native
+   * Method to get the random identifiers of callbacks
+   */
+  @ReactMethod
+  fun getRaspExecutionStateIdentifiers(promise: Promise) {
+    promise.resolve(RaspExecutionStateEvent.ALL_EVENTS)
+  }
+
+  /**
+   * Method to setup the threat message passing between native and React Native
    * @return list of [THREAT_CHANNEL_NAME, THREAT_CHANNEL_KEY]
    */
   @ReactMethod
   fun getThreatChannelData(promise: Promise) {
     val channelData: WritableArray = Arguments.createArray()
-    channelData.pushString(THREAT_CHANNEL_NAME)
-    channelData.pushString(THREAT_CHANNEL_KEY)
-    channelData.pushString(MALWARE_CHANNEL_KEY)
+    channelData.pushString(ThreatEvent.CHANNEL_NAME)
+    channelData.pushString(ThreatEvent.CHANNEL_KEY)
+    channelData.pushString(ThreatEvent.MALWARE_CHANNEL_KEY)
+    promise.resolve(channelData)
+  }
+
+  /**
+   * Method to setup the execution state message passing between native and React Native
+   * @return list of [THREAT_CHANNEL_NAME, THREAT_CHANNEL_KEY]
+   */
+  @ReactMethod
+  fun getRaspExecutionStateChannelData(promise: Promise) {
+    val channelData: WritableArray = Arguments.createArray()
+    channelData.pushString(RaspExecutionStateEvent.CHANNEL_NAME)
+    channelData.pushString(RaspExecutionStateEvent.CHANNEL_KEY)
     promise.resolve(channelData)
   }
 
@@ -223,12 +247,6 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   companion object {
     const val NAME = "FreeraspReactNative"
-    private val THREAT_CHANNEL_NAME = (10000..999999999).random()
-      .toString() // name of the channel over which threat callbacks are sent
-    private val THREAT_CHANNEL_KEY = (10000..999999999).random()
-      .toString() // key of the argument map under which threats are expected
-    private val MALWARE_CHANNEL_KEY = (10000..999999999).random()
-      .toString() // key of the argument map under which malware data is expected
 
     private val backgroundHandlerThread = HandlerThread("BackgroundThread").apply { start() }
     private val backgroundHandler = Handler(backgroundHandlerThread.looper)
@@ -238,11 +256,11 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
     internal var talsecStarted = false
 
-    private fun notifyListeners(threat: Threat) {
+    private fun notifyEvent(event: BaseRaspEvent) {
       val params = Arguments.createMap()
-      params.putInt(THREAT_CHANNEL_KEY, threat.value)
+      params.putInt(event.channelKey, event.value)
       appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        .emit(THREAT_CHANNEL_NAME, params)
+        .emit(event.channelName, params)
     }
 
     /**
@@ -256,25 +274,29 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
         mainHandler.post {
           val params = Arguments.createMap()
-          params.putInt(THREAT_CHANNEL_KEY, Threat.Malware.value)
+          params.putInt(ThreatEvent.CHANNEL_KEY, ThreatEvent.Malware.value)
           params.putArray(
-            MALWARE_CHANNEL_KEY, encodedSuspiciousApps
+            ThreatEvent.MALWARE_CHANNEL_KEY, encodedSuspiciousApps
           )
 
           appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(THREAT_CHANNEL_NAME, params)
+            .emit(ThreatEvent.CHANNEL_NAME, params)
         }
       }
     }
   }
 
   internal object ThreatListener : FreeraspThreatHandler.TalsecReactNative {
-    override fun threatDetected(threatType: Threat) {
-      notifyListeners(threatType)
+    override fun threatDetected(threatEventType: ThreatEvent) {
+      notifyEvent(threatEventType)
     }
 
     override fun malwareDetected(suspiciousApps: MutableList<SuspiciousAppInfo>) {
       notifyMalware(suspiciousApps)
+    }
+
+    override fun raspExecutionStateChanged(event: RaspExecutionStateEvent) {
+      notifyEvent(event)
     }
   }
 }

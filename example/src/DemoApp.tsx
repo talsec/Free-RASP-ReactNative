@@ -12,6 +12,7 @@ import {
   TextInput,
   View,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import { Colors } from './styles';
 import { MalwareModal } from './MalwareModal';
@@ -33,7 +34,8 @@ export const DemoApp: React.FC<{
     status: string;
   }[];
   suspiciousApps: SuspiciousAppInfo[];
-}> = ({ checks, suspiciousApps }) => {
+  allChecksFinishedStatus: 'in progress' | 'completed';
+}> = ({ checks, suspiciousApps, allChecksFinishedStatus }) => {
   const [hasScreenCaptureBlocked, setHasScreenCaptureBlocked] =
     React.useState(false);
   const [externalIdValue, setExternalIdValue] = React.useState('');
@@ -148,6 +150,45 @@ export const DemoApp: React.FC<{
                   </View>
                 </Modal>
               </HStack>
+              <Text style={styles.titleText}>RASP Execution State:</Text>
+              <Box
+                style={[
+                  styles.box,
+                  allChecksFinishedStatus === 'completed'
+                    ? styles.boxCheckOk
+                    : styles.boxProgress,
+                ]}>
+                <HStack
+                  style={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color:
+                        allChecksFinishedStatus === 'completed'
+                          ? 'green'
+                          : Colors.progressDark,
+                      fontWeight: 'bold',
+                      alignSelf: 'center',
+                    }}>
+                    All Checks Finished
+                  </Text>
+                  {allChecksFinishedStatus === 'completed' ? (
+                    <Image
+                      source={CheckmarkCircle}
+                      style={[
+                        styles.checkIcon,
+                        {
+                          tintColor: Colors.checkOkDark,
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <ActivityIndicator size={30} color={Colors.progressDark} />
+                  )}
+                </HStack>
+              </Box>
               <Text style={styles.titleText}>freeRASP checks:</Text>
               {checks.map((check: any, idx: number) => (
                 <Box
@@ -244,6 +285,10 @@ const styles = StyleSheet.create({
   boxCheckOk: {
     borderColor: Colors.checkOkDark,
     backgroundColor: Colors.checkOkLight,
+  },
+  boxProgress: {
+    borderColor: Colors.progressDark,
+    backgroundColor: Colors.progressLight,
   },
   box: {
     borderWidth: 1,

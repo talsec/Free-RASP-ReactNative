@@ -21,6 +21,9 @@ export class Threat {
   static Screenshot = new Threat(0);
   static ScreenRecording = new Threat(0);
   static MultiInstance = new Threat(0);
+  static TimeSpoofing = new Threat(0);
+  static LocationSpoofing = new Threat(0);
+  static UnsecureWifi = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -46,6 +49,9 @@ export class Threat {
           this.Screenshot,
           this.ScreenRecording,
           this.MultiInstance,
+          this.TimeSpoofing,
+          this.LocationSpoofing,
+          this.UnsecureWifi,
         ]
       : [
           this.AppIntegrity,

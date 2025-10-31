@@ -8,6 +8,7 @@ import android.util.Log
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
+import com.aheaditec.talsec_security.security.api.TalsecMode
 import com.aheaditec.talsec_security.security.api.ThreatListener
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
@@ -71,7 +72,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
       FreeraspThreatHandler.listener = ThreatListener
       listener.registerListener(reactContext)
       runOnUiThread {
-        Talsec.start(reactContext, config)
+        Talsec.start(reactContext, config, TalsecMode.BACKGROUND)
         mainHandler.post {
           talsecStarted = true
           // This code must be called only AFTER Talsec.start
@@ -231,8 +232,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
     val talsecBuilder = TalsecConfig.Builder(packageName, certificateHashes)
       .watcherMail(config.getString("watcherMail"))
-      .supportedAlternativeStores(androidConfig.getArraySafe("supportedAlternativeStores"))
       .prod(config.getBooleanSafe("isProd"))
+      .killOnBypass(config.getBooleanSafe("killOnBypass", false))
+      .supportedAlternativeStores(androidConfig.getArraySafe("supportedAlternativeStores"))
 
     if (androidConfig.hasKey("malwareConfig")) {
       val malwareConfig = androidConfig.getMapThrowing("malwareConfig")

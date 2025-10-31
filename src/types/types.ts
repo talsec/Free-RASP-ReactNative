@@ -3,6 +3,7 @@ export type TalsecConfig = {
   iosConfig?: TalsecIosConfig;
   watcherMail: string;
   isProd?: boolean;
+  killOnBypass?: boolean;
 };
 
 export type TalsecAndroidConfig = {
@@ -27,6 +28,7 @@ export type TalsecMalwareConfig = {
 export type SuspiciousAppInfo = {
   packageInfo: PackageInfo;
   reason: string;
+  permissions?: string[];
 };
 
 export type PackageInfo = {

@@ -75,6 +75,7 @@ internal fun SuspiciousAppInfo.toRNSuspiciousAppInfo(context: ReactContext): RNS
   return RNSuspiciousAppInfo(
     packageInfo = this.packageInfo.toRNPackageInfo(context),
     reason = this.reason,
+    permissions = this.permissions
   )
 }
 

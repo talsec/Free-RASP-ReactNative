@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 data class RNSuspiciousAppInfo(
   val packageInfo: RNPackageInfo,
   val reason: String,
+  val permissions: Set<String>?
 )
 
 /**

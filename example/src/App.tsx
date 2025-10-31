@@ -54,6 +54,7 @@ const App = () => {
     },
     watcherMail: 'your_email_address@example.com',
     isProd: true,
+    killOnBypass: true,
   };
 
   const actions = {

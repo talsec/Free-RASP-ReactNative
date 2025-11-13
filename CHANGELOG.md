@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.3.0] - 2025-10-31
 
-- Android SDK version: 17.0.0
+- Android SDK version: 17.0.1
 - iOS SDK version: 6.13.0
 
 ### React Native
@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `JaCoCo` issue causing `MethodTooLargeException` during instrumentation
 - `DeadApplicationException` when calling `Settings.Global.getInt` or `Settings.Secure.getInt` on invalid context
 - `AndroidKeyStore` crashes causing `java.util.concurrent.TimeoutException` when calling `finalize()` method on `Cipher` (GC issues)
+- Fixed issue with late initializers and `TalsecMode` coroutines scopes
 
 #### Changed
 
@@ -165,7 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added interface for screenshot / screen recording blocking on iOS
 - Added interface for external ID storage
 
-### Android 
+### Android
 
 #### Added
 
@@ -201,7 +202,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Android SDK requires `kotlinVersion` >= `2.0.0`
 - Set Java verison to 17
 
-### Android 
+### Android
 
 #### Changed
 
@@ -253,7 +254,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Raised Android compileSDK level to 35
 
-#### Fixed 
+#### Fixed
 
 - Compatibility issues with RN New Architecture
 - Added proguard rules for malware data serialization in release mode on Android
@@ -331,7 +332,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
--  Added configuration fields for malware detection 
+-  Added configuration fields for malware detection
 
 ### Android
 

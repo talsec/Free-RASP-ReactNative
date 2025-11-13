@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added API for `allChecksFinished` callback into new `RaspExecutionStateEventActions` object
 - Added matched permissions to `SuspiciousAppInfo` object when malware detection reason is `suspiciousPermission`
 
+#### Fixed
+
+- Resolved potential collision in threat identifiers
+
 ### Android
 
 #### Added

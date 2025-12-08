@@ -1,13 +1,18 @@
 package com.freeraspreactnative.utils
 
-internal object RandomGenerator {
-  private val generatedNumbers = mutableSetOf<Int>()
+import java.security.SecureRandom
 
-  internal fun generateRandomIdentifiers(length: Int): List<Int> {
-    val previousLength = generatedNumbers.size
-    while (generatedNumbers.size < previousLength + length) {
-      generatedNumbers.add((10000..999999999).random())
+internal object RandomGenerator {
+    private val secureRandom = SecureRandom()
+    private val generatedNumbers = mutableSetOf<Int>()
+
+    internal fun next(): Int {
+        val min = 10000
+        val max = 999999999
+        var nextNumber = secureRandom.nextInt((max - min) + 1) + min
+        while (!generatedNumbers.add(nextNumber)) {
+            nextNumber = secureRandom.nextInt((max - min) + 1) + min
+        }
+        return nextNumber
     }
-    return generatedNumbers.toList().takeLast(length)
-  }
 }

@@ -1,7 +1,7 @@
 package com.freeraspreactnative.events
 
 import com.facebook.react.bridge.Arguments
-import com.freeraspreactnative.utils.RandomGenerator.generateRandomIdentifiers
+import com.freeraspreactnative.utils.RandomGenerator
 
 /**
  * Sealed class to represent the error codes.
@@ -14,33 +14,31 @@ internal sealed class ThreatEvent(override val value: Int) : BaseRaspEvent {
   override val channelName: String get() = CHANNEL_NAME
   override val channelKey: String get() = CHANNEL_KEY
 
-  data object AppIntegrity : ThreatEvent(identifiers[3])
-  data object PrivilegedAccess : ThreatEvent(identifiers[4])
-  data object Debug : ThreatEvent(identifiers[5])
-  data object Hooks : ThreatEvent(identifiers[6])
-  data object Passcode : ThreatEvent(identifiers[7])
-  data object Simulator : ThreatEvent(identifiers[8])
-  data object SecureHardwareNotAvailable : ThreatEvent(identifiers[9])
-  data object DeviceBinding : ThreatEvent(identifiers[10])
-  data object UnofficialStore : ThreatEvent(identifiers[11])
-  data object ObfuscationIssues : ThreatEvent(identifiers[12])
-  data object SystemVPN : ThreatEvent(identifiers[13])
-  data object DevMode : ThreatEvent(identifiers[14])
-  data object Malware : ThreatEvent(identifiers[15])
-  data object ADBEnabled : ThreatEvent(identifiers[16])
-  data object Screenshot : ThreatEvent(identifiers[17])
-  data object ScreenRecording : ThreatEvent(identifiers[18])
-  data object MultiInstance : ThreatEvent(identifiers[19])
-  data object TimeSpoofing : ThreatEvent(identifiers[20])
-  data object LocationSpoofing : ThreatEvent(identifiers[21])
-  data object UnsecureWifi : ThreatEvent(identifiers[22])
+  data object AppIntegrity : ThreatEvent(RandomGenerator.next())
+  data object PrivilegedAccess : ThreatEvent(RandomGenerator.next())
+  data object Debug : ThreatEvent(RandomGenerator.next())
+  data object Hooks : ThreatEvent(RandomGenerator.next())
+  data object Passcode : ThreatEvent(RandomGenerator.next())
+  data object Simulator : ThreatEvent(RandomGenerator.next())
+  data object SecureHardwareNotAvailable : ThreatEvent(RandomGenerator.next())
+  data object DeviceBinding : ThreatEvent(RandomGenerator.next())
+  data object UnofficialStore : ThreatEvent(RandomGenerator.next())
+  data object ObfuscationIssues : ThreatEvent(RandomGenerator.next())
+  data object SystemVPN : ThreatEvent(RandomGenerator.next())
+  data object DevMode : ThreatEvent(RandomGenerator.next())
+  data object Malware : ThreatEvent(RandomGenerator.next())
+  data object ADBEnabled : ThreatEvent(RandomGenerator.next())
+  data object Screenshot : ThreatEvent(RandomGenerator.next())
+  data object ScreenRecording : ThreatEvent(RandomGenerator.next())
+  data object MultiInstance : ThreatEvent(RandomGenerator.next())
+  data object TimeSpoofing : ThreatEvent(RandomGenerator.next())
+  data object LocationSpoofing : ThreatEvent(RandomGenerator.next())
+  data object UnsecureWifi : ThreatEvent(RandomGenerator.next())
 
   companion object {
-    val identifiers = generateRandomIdentifiers(23)
-
-    internal val CHANNEL_NAME = identifiers[0].toString()
-    internal val CHANNEL_KEY = identifiers[1].toString()
-    internal val MALWARE_CHANNEL_KEY = identifiers[2].toString()
+    internal val CHANNEL_NAME = RandomGenerator.next().toString()
+    internal val CHANNEL_KEY = RandomGenerator.next().toString()
+    internal val MALWARE_CHANNEL_KEY = RandomGenerator.next().toString()
 
     internal val ALL_EVENTS = Arguments.fromList(
       listOf(

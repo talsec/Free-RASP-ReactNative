@@ -3,6 +3,7 @@ export type TalsecConfig = {
   iosConfig?: TalsecIosConfig;
   watcherMail: string;
   isProd?: boolean;
+  killOnBypass?: boolean;
 };
 
 export type TalsecAndroidConfig = {
@@ -27,6 +28,7 @@ export type TalsecMalwareConfig = {
 export type SuspiciousAppInfo = {
   packageInfo: PackageInfo;
   reason: string;
+  permissions?: string[];
 };
 
 export type PackageInfo = {
@@ -37,7 +39,7 @@ export type PackageInfo = {
   installerStore?: string;
 };
 
-export type NativeEventEmitterActions = {
+export type ThreatEventActions = {
   privilegedAccess?: () => any;
   debug?: () => any;
   simulator?: () => any;
@@ -56,4 +58,13 @@ export type NativeEventEmitterActions = {
   screenshot?: () => any;
   screenRecording?: () => any;
   multiInstance?: () => any;
+  timeSpoofing?: () => any;
+  locationSpoofing?: () => any;
+  unsecureWifi?: () => any;
+};
+
+export type NativeEvent = { [key: string]: number | string[] | undefined };
+
+export type RaspExecutionStateEventActions = {
+  allChecksFinished?: () => any;
 };

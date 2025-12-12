@@ -9,6 +9,7 @@ import android.util.Base64
 import android.util.Log
 import com.facebook.react.bridge.ReactContext
 import java.io.ByteArrayOutputStream
+import androidx.core.graphics.createBitmap
 
 
 internal object Utils {
@@ -43,11 +44,7 @@ internal object Utils {
       }
 
       if (drawable.intrinsicWidth > 0 && drawable.intrinsicHeight > 0) {
-        val bitmap = Bitmap.createBitmap(
-          drawable.intrinsicWidth,
-          drawable.intrinsicHeight,
-          Bitmap.Config.ARGB_8888
-        )
+        val bitmap = createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)

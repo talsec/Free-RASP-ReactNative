@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] - 2025-10-31
+
+- Android SDK version: 17.0.1
+- iOS SDK version: 6.13.0
+
+### React Native
+
+#### Added
+
+- Added `killOnBypass` to `TalsecConfig` that configures if the app should be terminated when the threat callbacks are suppressed/hooked by an attacker (Android only) ([Issue 65](https://github.com/talsec/Free-RASP-Android/issues/65))
+- Added API for `timeSpoofing` callback into `ThreatEventActions` (Android only)
+- Added API for `unsecureWifi` callback into `ThreatEventActions` (Android only)
+- Added API for `allChecksFinished` callback into new `RaspExecutionStateEventActions` object
+- Added matched permissions to `SuspiciousAppInfo` object when malware detection reason is `suspiciousPermission`
+
+#### Fixed
+
+- Resolved potential collision in threat identifiers
+
+### Android
+
+#### Added
+
+- Added `killOnBypass` method to the `TalsecConfig.Builder` that configures if the app should be terminated when the threat callbacks are suppressed/hooked by an attacker [Issue 65](https://github.com/talsec/Free-RASP-Android/issues/65)
+- We are introducing a new capability, detecting whether the device time has been tampered with (`timeSpoofing`)
+- We are introducing a new capability, detecting whether the location is being spoofed on the device (`locationSpoofing`)
+- We are introducing a new capability, detection of unsecure WiFi (`unecureWifi`)
+- Removed deprecated functionality `Pbkdf2Native` and both related native libraries (`libpbkdf2_native.so` and `libpolarssl.so`)
+- Added new `RaspExecutionState` which contains `onAllChecksFinished()` method, which is triggered after all checks are completed.
+- Added matched permissions to `SuspiciousAppInfo` object when malware detection reason is `suspiciousPermission`
+- New option to start Talsec, `Talsec.start()` takes new parameter `TalsecMode` that determines the dispatcher thread of initialization and sync checks (uses background thread by default)
+- Capability to check if another app has an option `REQUEST_INSTALL_PACKAGES` enabled in the system settings to malware detection
+
+#### Fixed
+
+- ANR issue caused by `registerScreenCaptureCallback()` method on the main thread
+- `NullPointerException` when checking key alias in Keystore on Android 7
+- `JaCoCo` issue causing `MethodTooLargeException` during instrumentation
+- `DeadApplicationException` when calling `Settings.Global.getInt` or `Settings.Secure.getInt` on invalid context
+- `AndroidKeyStore` crashes causing `java.util.concurrent.TimeoutException` when calling `finalize()` method on `Cipher` (GC issues)
+- Fixed issue with late initializers and `TalsecMode` coroutines scopes
+
+#### Changed
+
+- Shortened the value of threat detection interval
+- Refactoring of internal architecture of SDK that newly uses Coroutines to manage threading
+- Update of internal dependencies and security libraries
+
+### iOS
+
+#### Changed
+
+- Updated internal dependencies
+
 ## [4.2.4] - 2025-09-17
 
 - iOS SDK version: 6.12.1
@@ -112,7 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added interface for screenshot / screen recording blocking on iOS
 - Added interface for external ID storage
 
-### Android 
+### Android
 
 #### Added
 
@@ -148,7 +202,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Android SDK requires `kotlinVersion` >= `2.0.0`
 - Set Java verison to 17
 
-### Android 
+### Android
 
 #### Changed
 
@@ -200,7 +254,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Raised Android compileSDK level to 35
 
-#### Fixed 
+#### Fixed
 
 - Compatibility issues with RN New Architecture
 - Added proguard rules for malware data serialization in release mode on Android
@@ -278,7 +332,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
--  Added configuration fields for malware detection 
+-  Added configuration fields for malware detection
 
 ### Android
 

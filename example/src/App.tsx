@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { Platform } from 'react-native';
+import { Platform, PermissionsAndroid } from 'react-native';
 import {
   addToWhitelist,
   useFreeRasp,
@@ -18,10 +18,14 @@ const App = () => {
   const [suspiciousApps, setSuspiciousApps] = React.useState<
     SuspiciousAppInfo[]
   >([]);
+  const [allChecksStatus, setAllChecksStatus] = React.useState<
+    'in progress' | 'completed'
+  >('in progress');
 
   useEffect(() => {
     (async () => {
       Platform.OS === 'android' && (await addItemsToMalwareWhitelist());
+      await requestLocationPermission();
     })();
   }, []);
 
@@ -50,6 +54,7 @@ const App = () => {
     },
     watcherMail: 'your_email_address@example.com',
     isProd: true,
+    killOnBypass: true,
   };
 
   const actions = {
@@ -216,6 +221,69 @@ const App = () => {
         )
       );
     },
+    // Android only
+    timeSpoofing: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Time Spoofing'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
+    // Android only
+    locationSpoofing: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Location Spoofing'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
+    // Android only
+    unsecureWifi: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Unsecure Wifi'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
+  };
+
+  const raspExecutionStateActions = {
+    // Android & iOS
+    allChecksFinished: () => {
+      setAllChecksStatus('completed');
+    },
+  };
+
+  const requestLocationPermission = async () => {
+    if (Platform.OS !== 'android') {
+      return;
+    }
+    try {
+      const results = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      ]);
+
+      const fineGranted =
+        results[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] ===
+        PermissionsAndroid.RESULTS.GRANTED;
+      const coarseGranted =
+        results[PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION] ===
+        PermissionsAndroid.RESULTS.GRANTED;
+
+      console.info('Location permissions:', {
+        fineGranted,
+        coarseGranted,
+      });
+    } catch (err) {
+      console.warn('Location permission request error:', err);
+    }
   };
 
   const addItemsToMalwareWhitelist = async () => {
@@ -237,9 +305,15 @@ const App = () => {
     );
   };
 
-  useFreeRasp(config, actions);
+  useFreeRasp(config, actions, raspExecutionStateActions);
 
-  return <DemoApp checks={appChecks} suspiciousApps={suspiciousApps} />;
+  return (
+    <DemoApp
+      checks={appChecks}
+      suspiciousApps={suspiciousApps}
+      allChecksFinishedStatus={allChecksStatus}
+    />
+  );
 };
 
 export default App;

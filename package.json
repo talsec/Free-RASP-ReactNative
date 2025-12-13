@@ -41,7 +41,7 @@
   "bugs": {
     "url": "https://github.com/talsec/Free-RASP-ReactNative/issues"
   },
-  "homepage": "https://github.com/talsec/Free-RASP-ReactNative#readme",
+  "homepage": "https://docs.talsec.app/freerasp",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

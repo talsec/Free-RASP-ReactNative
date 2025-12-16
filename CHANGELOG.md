@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Fixed
 
-- Resolved duplicate classes error on iOS [(issue #128)](https://github.com/talsec/Free-RASP-ReactNative/issues/128)
+- Resolved duplicate classes error on iOS [(GH issue #128)](https://github.com/talsec/Free-RASP-ReactNative/issues/128)
 
 ## [4.3.0] - 2025-10-31
 

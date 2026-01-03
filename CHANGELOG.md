@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.2] - 2025-01-03
+
+- Android SDK version: 17.0.1
+- iOS SDK version: 6.13.0
+
+### React Native
+
+#### Fixed
+
+- Resolved potential NullPointerException when execution state events are being sent 
+
 ## [4.3.1] - 2025-12-16
 
 - Android SDK version: 17.0.1

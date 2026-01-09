@@ -59,6 +59,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   init {
     appReactContext = reactContext
     reactContext.addLifecycleEventListener(lifecycleListener)
+    initializeEventKeys()
   }
 
   @ReactMethod
@@ -87,6 +88,12 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     } catch (e: Exception) {
       promise.reject("TalsecInitializationError", e.message, e)
     }
+  }
+
+  // Trigger lazy initialization of the freeRASP events
+  private fun initializeEventKeys() {
+    ThreatEvent.ALL_EVENTS
+    RaspExecutionStateEvent.ALL_EVENTS
   }
 
   /**

@@ -1,6 +1,6 @@
 import { NativeEventEmitter, type EmitterSubscription } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
-import { onInvalidCallback } from '../methods/native';
+import { onInvalidCallback, removeListenerForEvent } from '../methods/native';
 import type {
   NativeEvent,
   RaspExecutionStateEventActions,
@@ -57,7 +57,12 @@ export const setRaspExecutionStateListener = async (
   isInitializing = false;
 };
 
-export const removeRaspExecutionStateEventListener = (): void => {
-  eventsListener?.remove();
-  eventsListener = null;
-};
+export const removeRaspExecutionStateEventListener =
+  async (): Promise<void> => {
+    if (!eventsListener || !executionStateChannel) {
+      return;
+    }
+    await removeListenerForEvent(executionStateChannel);
+    eventsListener?.remove();
+    eventsListener = null;
+  };

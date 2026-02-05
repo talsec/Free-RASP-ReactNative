@@ -37,3 +37,7 @@ export const getAppIcon = (packageName: string): Promise<string> => {
 export const onInvalidCallback = (): void => {
   FreeraspReactNative.onInvalidCallback();
 };
+
+export const removeListenerForEvent = (channel: string): Promise<string> => {
+  return FreeraspReactNative.removeListenerForEvent(channel);
+};

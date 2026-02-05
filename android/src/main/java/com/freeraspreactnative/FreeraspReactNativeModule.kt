@@ -69,7 +69,6 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
     try {
       val config = buildTalsecConfig(options)
-      FreeraspThreatHandler.listener = ThreatListener
       listener.registerListener(reactContext)
       runOnUiThread {
         Talsec.start(reactContext, config, TalsecMode.BACKGROUND)
@@ -147,13 +146,33 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   }
 
   @ReactMethod
-  fun addListener(@Suppress("UNUSED_PARAMETER") eventName: String) {
+  fun addListener(eventName: String) {
+    if (eventName == ThreatEvent.CHANNEL_NAME) {
+      FreeraspThreatHandler.listener = WrapperListener
+      ThreatEvent.isRegisteredWithApp = true
+    }
+    if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
+      RaspExecutionStateEvent.isRegisteredWithApp = true
+    }
     // Set up any upstream listeners or background tasks as necessary
   }
 
   @ReactMethod
   fun removeListeners(@Suppress("UNUSED_PARAMETER") count: Int) {
-    // Remove upstream listeners, stop unnecessary background tasks
+    // built-in RN method,
+    // however it does not suit us as it just tells number of un-registered listeners
+  }
+
+  @ReactMethod
+  fun removeListenerForEvent(eventName: String, promise: Promise) {
+    if (eventName == ThreatEvent.CHANNEL_NAME) {
+      ThreatEvent.isRegisteredWithApp = false
+      FreeraspThreatHandler.listener = null
+    }
+    if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
+      RaspExecutionStateEvent.isRegisteredWithApp = false
+    }
+    promise.resolve("Listener unregistered")
   }
 
   /**
@@ -294,7 +313,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     }
   }
 
-  internal object ThreatListener : FreeraspThreatHandler.TalsecReactNative {
+  internal object WrapperListener : FreeraspThreatHandler.TalsecReactNative {
     override fun threatDetected(threatEventType: ThreatEvent) {
       notifyEvent(threatEventType)
     }

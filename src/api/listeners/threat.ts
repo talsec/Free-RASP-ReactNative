@@ -1,6 +1,6 @@
 import { NativeEventEmitter, type EmitterSubscription } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
-import { onInvalidCallback } from '../methods/native';
+import { onInvalidCallback, removeListenerForEvent } from '../methods/native';
 import { Threat } from '../../models/threat';
 import type { NativeEvent, ThreatEventActions } from '../../types/types';
 import { parseMalwareData } from '../../utils/malware';
@@ -117,7 +117,11 @@ export const setThreatListeners = async (config: ThreatEventActions) => {
   isInitializing = false;
 };
 
-export const removeThreatListener = (): void => {
+export const removeThreatListener = async (): Promise<void> => {
+  if (!eventsListener || !threatChannel) {
+    return;
+  }
+  await removeListenerForEvent(threatChannel);
   eventsListener?.remove();
   eventsListener = null;
 };

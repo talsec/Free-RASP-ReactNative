@@ -1,4 +1,4 @@
-import { talsecStart } from 'freerasp-react-native';
+import { talsecStart } from './native';
 import { useEffect } from 'react';
 import {
   setRaspExecutionStateListener,
@@ -12,6 +12,8 @@ import type {
 } from '../../types/types';
 import { onInvalidCallback } from './native';
 
+let isRaspStarted = false;
+
 export const useFreeRasp = (
   config: TalsecConfig,
   actions: ThreatEventActions,
@@ -22,21 +24,28 @@ export const useFreeRasp = (
       await setThreatListeners(actions);
       raspExecutionStateActions &&
         (await setRaspExecutionStateListener(raspExecutionStateActions));
+
+      if (isRaspStarted) {
+        return;
+      }
+
       try {
-        let response = await talsecStart(config);
+        const response = await talsecStart(config);
         if (response !== 'freeRASP started') {
           onInvalidCallback();
         }
-        console.log(response);
+        isRaspStarted = true;
       } catch (e: any) {
         console.error(`${e.code}: ${e.message}`);
       }
-
-      return () => {
-        removeThreatListener();
-        removeRaspExecutionStateEventListener();
-      };
     })();
+
+    return () => {
+      (async () => {
+        await removeThreatListener();
+        await removeRaspExecutionStateEventListener();
+      })();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };

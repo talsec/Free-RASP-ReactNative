@@ -12,19 +12,39 @@ import {
 import { RaspExecutionState } from '../../models/raspExecutionState';
 
 const eventEmitter = new NativeEventEmitter(FreeraspReactNative);
-let eventsListener: EmitterSubscription | undefined;
+let eventsListener: EmitterSubscription | null = null;
+let executionStateChannel: string | null = null;
+let executionStateKey: string | null = null;
+
+let isMappingPrepared = false;
+let isInitializing = false;
 
 export const setRaspExecutionStateListener = async (
   config: RaspExecutionStateEventActions
 ) => {
-  const [channel, key] = await getRaspExecutionStateChannelData();
-  await prepareRaspExecutionStateMapping();
+  if (eventsListener || isInitializing) {
+    return;
+  }
+
+  isInitializing = true;
+
+  if (!executionStateChannel || !executionStateKey) {
+    [executionStateChannel, executionStateKey] =
+      await getRaspExecutionStateChannelData();
+  }
+
+  if (!isMappingPrepared) {
+    await prepareRaspExecutionStateMapping();
+    isMappingPrepared = true;
+  }
 
   const listener = async (event: NativeEvent) => {
-    if (event[key] === undefined) {
+    if (!executionStateKey) {
       onInvalidCallback();
+      return;
     }
-    switch (event[key]) {
+
+    switch (event[executionStateKey]) {
       case RaspExecutionState.AllChecksFinished.value:
         config.allChecksFinished?.();
         break;
@@ -33,10 +53,11 @@ export const setRaspExecutionStateListener = async (
         break;
     }
   };
-  eventsListener = eventEmitter.addListener(channel, listener);
+  eventsListener = eventEmitter.addListener(executionStateChannel, listener);
+  isInitializing = false;
 };
 
 export const removeRaspExecutionStateEventListener = (): void => {
   eventsListener?.remove();
-  eventsListener = undefined;
+  eventsListener = null;
 };

@@ -10,8 +10,6 @@ internal sealed class RaspExecutionStateEvent(override val value: Int) : BaseRas
   data object AllChecksFinished : RaspExecutionStateEvent(RandomGenerator.next())
 
   companion object Companion {
-    internal var isRegisteredWithApp = false
-
     internal val CHANNEL_NAME = RandomGenerator.next().toString()
     internal val CHANNEL_KEY = RandomGenerator.next().toString()
     internal val ALL_EVENTS = Arguments.fromList(

@@ -36,8 +36,6 @@ internal sealed class ThreatEvent(override val value: Int) : BaseRaspEvent {
   data object UnsecureWifi : ThreatEvent(RandomGenerator.next())
 
   companion object {
-    internal var isRegisteredWithApp = false
-
     internal val CHANNEL_NAME = RandomGenerator.next().toString()
     internal val CHANNEL_KEY = RandomGenerator.next().toString()
     internal val MALWARE_CHANNEL_KEY = RandomGenerator.next().toString()

@@ -22,11 +22,13 @@ let isInitializing = false;
 export const setRaspExecutionStateListener = async (
   config: RaspExecutionStateEventActions
 ) => {
-  if (eventsListener || isInitializing) {
+  if (isInitializing) {
     return;
   }
 
   isInitializing = true;
+
+  await removeRaspExecutionStateEventListener();
 
   if (!executionStateChannel || !executionStateKey) {
     [executionStateChannel, executionStateKey] =

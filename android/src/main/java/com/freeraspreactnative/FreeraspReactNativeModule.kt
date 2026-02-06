@@ -22,6 +22,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.freeraspreactnative.events.BaseRaspEvent
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.events.ThreatEvent
+import com.freeraspreactnative.interfaces.WrapperExecutionStateListener
+import com.freeraspreactnative.interfaces.WrapperThreatListener
 import com.freeraspreactnative.utils.Utils
 import com.freeraspreactnative.utils.getArraySafe
 import com.freeraspreactnative.utils.getBooleanSafe
@@ -33,7 +35,7 @@ import com.freeraspreactnative.utils.toEncodedWritableArray
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
-  private val listener = ThreatListener(FreeraspThreatHandler, FreeraspThreatHandler, FreeraspThreatHandler)
+  private val listener = ThreatListener(WrapperThreatHandler, WrapperThreatHandler, WrapperThreatHandler)
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -148,29 +150,26 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun addListener(eventName: String) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      FreeraspThreatHandler.listener = WrapperListener
-      ThreatEvent.isRegisteredWithApp = true
+      WrapperThreatHandler.threatDispatcher.listener = WrapperListener
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      RaspExecutionStateEvent.isRegisteredWithApp = true
+      WrapperThreatHandler.executionStateDispatcher.listener = WrapperListener
     }
-    // Set up any upstream listeners or background tasks as necessary
   }
 
   @ReactMethod
   fun removeListeners(@Suppress("UNUSED_PARAMETER") count: Int) {
-    // built-in RN method,
-    // however it does not suit us as it just tells number of un-registered listeners
+    // built-in RN method, however it does not suit us as it just tells
+    // number of un-registered listeners, so we use `removeListenerForEvent`
   }
 
   @ReactMethod
   fun removeListenerForEvent(eventName: String, promise: Promise) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      ThreatEvent.isRegisteredWithApp = false
-      FreeraspThreatHandler.listener = null
+      WrapperThreatHandler.threatDispatcher.listener = null
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      RaspExecutionStateEvent.isRegisteredWithApp = false
+      WrapperThreatHandler.executionStateDispatcher.listener = null
     }
     promise.resolve("Listener unregistered")
   }
@@ -313,7 +312,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     }
   }
 
-  internal object WrapperListener : FreeraspThreatHandler.TalsecReactNative {
+  internal object WrapperListener : WrapperThreatListener, WrapperExecutionStateListener {
     override fun threatDetected(threatEventType: ThreatEvent) {
       notifyEvent(threatEventType)
     }

@@ -20,11 +20,13 @@ let isMappingPrepared = false;
 let isInitializing = false;
 
 export const setThreatListeners = async (config: ThreatEventActions) => {
-  if (eventsListener || isInitializing) {
+  if (isInitializing) {
     return;
   }
 
   isInitializing = true;
+
+  await removeThreatListener();
 
   if (!threatChannel || !threatKey || !threatMalwareKey) {
     [threatChannel, threatKey, threatMalwareKey] = await getThreatChannelData();

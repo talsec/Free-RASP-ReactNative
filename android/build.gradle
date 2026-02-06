@@ -44,8 +44,14 @@ def getDefault(name) {
   return project.properties["FreeraspReactNative_" + name]
 }
 
+def getMaxVersion(name) {
+  def rootVersion = rootProject.ext.has(name) ? rootProject.ext.get(name).toInteger() : 0
+  def pluginVersion = getIntegerDefault(name)
+  return Math.max(rootVersion, pluginVersion)
+}
+
 android {
-  compileSdkVersion getIntegerDefault("compileSdkVersion")
+  compileSdk getMaxVersion("compileSdk")
 
   defaultConfig {
     minSdkVersion getIntegerDefault("minSdkVersion")

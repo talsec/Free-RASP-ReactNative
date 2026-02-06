@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Prevent multiple registration of the freeRASP listeners on the native side
 
+#### Changed
+
+- Updated compile and target SDK versions to 36 on Android
+- Higher compileSdk from [rootProject, plugin] is now used in build.gradle on Android
+
 ### Android
 
 #### Added

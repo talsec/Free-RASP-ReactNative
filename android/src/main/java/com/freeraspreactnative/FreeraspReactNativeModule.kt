@@ -35,7 +35,12 @@ import com.freeraspreactnative.utils.toEncodedWritableArray
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
-  private val listener = ThreatListener(WrapperThreatHandler, WrapperThreatHandler, WrapperThreatHandler)
+  private val listener = ThreatListener(
+    WrapperThreatHandler.threatDetected,
+    WrapperThreatHandler.deviceState,
+    WrapperThreatHandler.raspExecutionState
+  )
+
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -236,17 +241,17 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   @ReactMethod
   fun storeExternalId(
-      externalId: String, promise: Promise
+    externalId: String, promise: Promise
   ) {
-      try {
-          Talsec.storeExternalId(reactContext, externalId)
-          promise.resolve("OK - Store external ID")
-      } catch (e: Exception) {
-          promise.reject(
-              "NativePluginError",
-              "Error during storeExternalId operation in Talsec Native Plugin"
-          )
-      }
+    try {
+      Talsec.storeExternalId(reactContext, externalId)
+      promise.resolve("OK - Store external ID")
+    } catch (e: Exception) {
+      promise.reject(
+        "NativePluginError",
+        "Error during storeExternalId operation in Talsec Native Plugin"
+      )
+    }
   }
 
   private fun buildTalsecConfig(config: ReadableMap): TalsecConfig {

@@ -251,6 +251,16 @@ const App = () => {
         )
       );
     },
+    // Android only
+    automation: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Automation'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
   };
 
   const raspExecutionStateActions = {

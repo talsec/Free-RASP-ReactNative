@@ -24,4 +24,5 @@ export const androidChecks = [
   { name: 'Time Spoofing', status: 'ok' },
   { name: 'Location Spoofing', status: 'ok' },
   { name: 'Unsecure Wifi', status: 'ok' },
+  { name: 'Automation', status: 'ok' },
 ];

@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { getThreatCount, itemsHaveType } from '../utils/utils';
 import { FreeraspReactNative } from '../api/nativeModules';
 import { Threat } from '../models/threat';

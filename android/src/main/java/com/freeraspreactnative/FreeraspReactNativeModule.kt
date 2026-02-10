@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import com.aheaditec.talsec_security.security.api.ExternalIdResult
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
@@ -244,8 +245,32 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     externalId: String, promise: Promise
   ) {
     try {
-      Talsec.storeExternalId(reactContext, externalId)
-      promise.resolve("OK - Store external ID")
+      when (val result = Talsec.storeExternalId(reactContext, externalId)) {
+        is ExternalIdResult.Error -> {
+          promise.reject(
+            "ExternalIdError",
+            "Setting up External ID failed - ${result.errorMsg}"
+          )
+        }
+
+        is ExternalIdResult.Success -> {
+          promise.resolve("OK - Store external ID")
+          return
+        }
+      }
+    } catch (e: Exception) {
+      promise.reject(
+        "NativePluginError",
+        "Error during storeExternalId operation in Talsec Native Plugin"
+      )
+    }
+  }
+
+  @ReactMethod
+  fun removeExternalId(promise: Promise) {
+    try {
+      Talsec.removeExternalId(reactContext)
+      promise.resolve("OK - External ID removed")
     } catch (e: Exception) {
       promise.reject(
         "NativePluginError",

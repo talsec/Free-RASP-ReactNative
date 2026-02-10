@@ -15,6 +15,9 @@ RCT_EXTERN_METHOD(getRaspExecutionStateChannelData:(RCTPromiseResolveBlock)resol
                   withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(getRaspExecutionStateIdentifiers:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(removeListenerForEvent:(NSString *)eventName
+                  withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(blockScreenCapture:(BOOL)enable
                   withResolver:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
@@ -22,6 +25,8 @@ RCT_EXTERN_METHOD(isScreenCaptureBlocked:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(storeExternalId:(NSString *)externalId
                   withResolver:(RCTPromiseResolveBlock)resolve
+                  withRejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(removeExternalId:(RCTPromiseResolveBlock)resolve
                   withRejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(onInvalidCallback)
 

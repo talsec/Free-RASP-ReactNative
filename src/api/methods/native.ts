@@ -25,6 +25,10 @@ export const storeExternalId = (data: string): Promise<string> => {
   return FreeraspReactNative.storeExternalId(data);
 };
 
+export const removeExternalId = (): Promise<string> => {
+  return FreeraspReactNative.removeExternalId();
+};
+
 export const getAppIcon = (packageName: string): Promise<string> => {
   if (Platform.OS === 'ios') {
     return Promise.reject(

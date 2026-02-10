@@ -27,10 +27,12 @@ internal class ExecutionStateDispatcher {
   }
 
   private fun flushCache(registeredListener: WrapperExecutionStateListener) {
-    synchronized(cache) {
-      cache.forEach { registeredListener.raspExecutionStateChanged(it) }
+    val events = synchronized(cache) {
+      val snapshot = cache.toSet()
       cache.clear()
+      snapshot
     }
+    events.forEach { registeredListener.raspExecutionStateChanged(it) }
   }
 }
 

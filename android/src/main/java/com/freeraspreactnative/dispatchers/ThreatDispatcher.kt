@@ -41,15 +41,20 @@ internal class ThreatDispatcher {
   }
 
   private fun flushCache(registeredListener: WrapperThreatListener) {
-    synchronized(threatCache) {
-      threatCache.forEach { registeredListener.threatDetected(it) }
+    val threats = synchronized(threatCache) {
+      val snapshot = threatCache.toSet()
       threatCache.clear()
+      snapshot
     }
-    synchronized(malwareCache) {
-      if (malwareCache.isNotEmpty()) {
-        registeredListener.malwareDetected(malwareCache.toMutableList())
-        malwareCache.clear()
-      }
+    threats.forEach { registeredListener.threatDetected(it) }
+
+    val malware = synchronized(malwareCache) {
+      val snapshot = malwareCache.toMutableList()
+      malwareCache.clear()
+      snapshot
+    }
+    if (malware.isNotEmpty()) {
+      registeredListener.malwareDetected(malware)
     }
   }
 }

@@ -2,6 +2,6 @@ package com.freeraspreactnative.interfaces
 
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 
-internal interface WrapperExecutionStateListener {
+internal interface PluginExecutionStateListener {
   fun raspExecutionStateChanged(event: RaspExecutionStateEvent)
 }

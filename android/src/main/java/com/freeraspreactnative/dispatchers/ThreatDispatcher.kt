@@ -2,13 +2,13 @@ package com.freeraspreactnative.dispatchers
 
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.freeraspreactnative.events.ThreatEvent
-import com.freeraspreactnative.interfaces.WrapperThreatListener
+import com.freeraspreactnative.interfaces.PluginThreatListener
 
 internal class ThreatDispatcher {
   private val threatCache = mutableSetOf<ThreatEvent>()
   private val malwareCache = mutableSetOf<SuspiciousAppInfo>()
 
-  var listener: WrapperThreatListener? = null
+  var listener: PluginThreatListener? = null
     set(value) {
       field = value
       if (value != null) {
@@ -40,7 +40,7 @@ internal class ThreatDispatcher {
     }
   }
 
-  private fun flushCache(registeredListener: WrapperThreatListener) {
+  private fun flushCache(registeredListener: PluginThreatListener) {
     val threats = synchronized(threatCache) {
       val snapshot = threatCache.toSet()
       threatCache.clear()

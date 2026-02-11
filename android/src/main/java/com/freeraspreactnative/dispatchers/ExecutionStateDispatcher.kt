@@ -1,12 +1,12 @@
 package com.freeraspreactnative.dispatchers
 
 import com.freeraspreactnative.events.RaspExecutionStateEvent
-import com.freeraspreactnative.interfaces.WrapperExecutionStateListener
+import com.freeraspreactnative.interfaces.PluginExecutionStateListener
 
 internal class ExecutionStateDispatcher {
   private val cache = mutableSetOf<RaspExecutionStateEvent>()
 
-  var listener: WrapperExecutionStateListener? = null
+  var listener: PluginExecutionStateListener? = null
     set(value) {
       field = value
       if (value != null) {
@@ -26,7 +26,7 @@ internal class ExecutionStateDispatcher {
     }
   }
 
-  private fun flushCache(registeredListener: WrapperExecutionStateListener) {
+  private fun flushCache(registeredListener: PluginExecutionStateListener) {
     val events = synchronized(cache) {
       val snapshot = cache.toSet()
       cache.clear()

@@ -23,8 +23,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.freeraspreactnative.events.BaseRaspEvent
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.events.ThreatEvent
-import com.freeraspreactnative.interfaces.WrapperExecutionStateListener
-import com.freeraspreactnative.interfaces.WrapperThreatListener
+import com.freeraspreactnative.interfaces.PluginExecutionStateListener
+import com.freeraspreactnative.interfaces.PluginThreatListener
 import com.freeraspreactnative.utils.Utils
 import com.freeraspreactnative.utils.getArraySafe
 import com.freeraspreactnative.utils.getBooleanSafe
@@ -37,9 +37,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   ReactContextBaseJavaModule(reactContext) {
 
   private val listener = ThreatListener(
-    WrapperThreatHandler.threatDetected,
-    WrapperThreatHandler.deviceState,
-    WrapperThreatHandler.raspExecutionState
+    PluginThreatHandler.threatDetected,
+    PluginThreatHandler.deviceState,
+    PluginThreatHandler.raspExecutionState
   )
 
   private val lifecycleListener = object : LifecycleEventListener {
@@ -156,10 +156,10 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun addListener(eventName: String) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      WrapperThreatHandler.threatDispatcher.listener = WrapperListener
+      PluginThreatHandler.threatDispatcher.listener = PluginListener
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      WrapperThreatHandler.executionStateDispatcher.listener = WrapperListener
+      PluginThreatHandler.executionStateDispatcher.listener = PluginListener
     }
   }
 
@@ -172,10 +172,10 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun removeListenerForEvent(eventName: String, promise: Promise) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      WrapperThreatHandler.threatDispatcher.listener = null
+      PluginThreatHandler.threatDispatcher.listener = null
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      WrapperThreatHandler.executionStateDispatcher.listener = null
+      PluginThreatHandler.executionStateDispatcher.listener = null
     }
     promise.resolve("Listener unregistered")
   }
@@ -342,7 +342,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     }
   }
 
-  internal object WrapperListener : WrapperThreatListener, WrapperExecutionStateListener {
+  internal object PluginListener : PluginThreatListener, PluginExecutionStateListener {
     override fun threatDetected(threatEventType: ThreatEvent) {
       notifyEvent(threatEventType)
     }

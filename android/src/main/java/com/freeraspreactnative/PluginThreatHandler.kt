@@ -7,7 +7,7 @@ import com.freeraspreactnative.dispatchers.ThreatDispatcher
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.events.ThreatEvent
 
-internal object WrapperThreatHandler {
+internal object PluginThreatHandler {
 
   internal val threatDispatcher = ThreatDispatcher()
   internal val executionStateDispatcher = ExecutionStateDispatcher()

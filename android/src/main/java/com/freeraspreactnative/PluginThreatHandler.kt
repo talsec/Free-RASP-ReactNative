@@ -1,5 +1,6 @@
 package com.freeraspreactnative
 
+import android.content.Context
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.ThreatListener
 import com.freeraspreactnative.dispatchers.ExecutionStateDispatcher
@@ -12,7 +13,7 @@ internal object PluginThreatHandler {
   internal val threatDispatcher = ThreatDispatcher()
   internal val executionStateDispatcher = ExecutionStateDispatcher()
 
-  internal val threatDetected = object : ThreatListener.ThreatDetected() {
+  private val threatDetected = object : ThreatListener.ThreatDetected() {
 
     override fun onRootDetected() {
       threatDispatcher.dispatchThreat(ThreatEvent.PrivilegedAccess)
@@ -79,7 +80,7 @@ internal object PluginThreatHandler {
     }
   }
 
-  internal val deviceState = object : ThreatListener.DeviceState() {
+  private val deviceState = object : ThreatListener.DeviceState() {
 
     override fun onUnlockedDeviceDetected() {
       threatDispatcher.dispatchThreat(ThreatEvent.Passcode)
@@ -102,9 +103,19 @@ internal object PluginThreatHandler {
     }
   }
 
-  internal val raspExecutionState = object : ThreatListener.RaspExecutionState() {
+  private val raspExecutionState = object : ThreatListener.RaspExecutionState() {
     override fun onAllChecksFinished() {
       executionStateDispatcher.dispatch(RaspExecutionStateEvent.AllChecksFinished)
     }
+  }
+
+  private val internalListener = ThreatListener(threatDetected, deviceState, raspExecutionState)
+
+  internal fun registerListener(context: Context) {
+    internalListener.registerListener(context)
+  }
+
+  internal fun unregisterListener(context: Context) {
+    internalListener.unregisterListener(context)
   }
 }

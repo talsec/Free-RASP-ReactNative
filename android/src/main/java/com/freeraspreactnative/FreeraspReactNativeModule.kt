@@ -36,12 +36,6 @@ import com.freeraspreactnative.utils.toEncodedWritableArray
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
-  private val listener = ThreatListener(
-    PluginThreatHandler.threatDetected,
-    PluginThreatHandler.deviceState,
-    PluginThreatHandler.raspExecutionState
-  )
-
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -77,7 +71,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
     try {
       val config = buildTalsecConfig(options)
-      listener.registerListener(reactContext)
+      PluginThreatHandler.registerListener(reactContext)
       runOnUiThread {
         Talsec.start(reactContext, config, TalsecMode.BACKGROUND)
         mainHandler.post {

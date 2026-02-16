@@ -11,6 +11,30 @@ class FreeraspReactNative: RCTEventEmitter {
         FreeraspReactNative.shared = self
     }
 
+    @objc(addListener:)
+    override func addListener(_ eventName: String!) {
+        super.addListener(eventName)
+        if eventName == EventIdentifiers.threatChannelName {
+            ThreatDispatcher.shared.listener = { [weak self] threat in
+                self?.dispatchThreatEvent(threat: threat)
+            }
+        } else if eventName == EventIdentifiers.raspExecutionStateChannelName {
+            ExecutionStateDispatcher.shared.listener = { [weak self] event in
+                self?.dispatchRaspExecutionStateEvent(event: event)
+            }
+        }
+    }
+
+    @objc(removeListenerForEvent:withResolver:withRejecter:)
+    func removeListenerForEvent(eventName: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        if eventName == EventIdentifiers.threatChannelName {
+            ThreatDispatcher.shared.listener = nil
+        } else if eventName == EventIdentifiers.raspExecutionStateChannelName {
+            ExecutionStateDispatcher.shared.listener = nil
+        }
+        resolve("Listener unregistered")
+    }
+
     @objc(talsecStart:withResolver:withRejecter:)
     func talsecStart(options: NSDictionary, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         do {
@@ -72,12 +96,18 @@ class FreeraspReactNative: RCTEventEmitter {
         resolve("OK - Store external ID")
     }
 
+    @objc(removeExternalId:withRejecter:)
+    private func removeExternalId(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        UserDefaults.standard.removeObject(forKey: "app.talsec.externalid")
+        resolve("OK - External ID removed")
+    }
+
     /**
      * Method to setup the message passing between native and React Native
      */
     @objc(getThreatChannelData:withRejecter:)
     private func getThreatChannelData(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        resolve([EventIdentifiers.threatChannelName, EventIdentifiers.threatChannelKey])
+        resolve([EventIdentifiers.threatChannelName, EventIdentifiers.threatChannelKey, "0"])
     }
   
     /**
@@ -88,16 +118,16 @@ class FreeraspReactNative: RCTEventEmitter {
       resolve([EventIdentifiers.raspExecutionStateChannelName, EventIdentifiers.raspExecutionStateChannelKey])
     }
 
-    func dispatchEvent(securityThreat: SecurityThreat) -> Void {
+    func dispatchThreatEvent(threat: SecurityThreat) {
         FreeraspReactNative.shared!.sendEvent(withName: EventIdentifiers.threatChannelName, body: [
-          EventIdentifiers.threatChannelKey: securityThreat.callbackIdentifier,
+            EventIdentifiers.threatChannelKey: threat.callbackIdentifier
         ])
     }
   
-    func dispatchRaspExecutionStateEvent(event: RaspExecutionStates) -> Void {
-      FreeraspReactNative.shared!.sendEvent(withName: EventIdentifiers.raspExecutionStateChannelName, body: [
-        EventIdentifiers.raspExecutionStateChannelKey: event.callbackIdentifier,
-      ])
+    func dispatchRaspExecutionStateEvent(event: RaspExecutionStates) {
+        FreeraspReactNative.shared!.sendEvent(withName: EventIdentifiers.raspExecutionStateChannelName, body: [
+            EventIdentifiers.raspExecutionStateChannelKey: event.callbackIdentifier,
+        ])
     }
 
     /**
@@ -139,12 +169,11 @@ extension SecurityThreatCenter: @retroactive SecurityThreatHandler, @retroactive
         if (securityThreat.rawValue == "passcodeChange") {
             return
         }
-        FreeraspReactNative.shared!.dispatchEvent(securityThreat: securityThreat)
+        ThreatDispatcher.shared.dispatch(threat: securityThreat)
     }
   
     public func onAllChecksFinished() {
-      
-      FreeraspReactNative.shared!.dispatchRaspExecutionStateEvent(event: RaspExecutionStates.allChecksFinished)
+        ExecutionStateDispatcher.shared.dispatch(event: RaspExecutionStates.allChecksFinished)
     }
 }
 

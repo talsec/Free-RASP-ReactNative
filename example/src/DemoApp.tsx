@@ -21,6 +21,7 @@ import {
   blockScreenCapture,
   type SuspiciousAppInfo,
   storeExternalId,
+  removeExternalId,
 } from 'freerasp-react-native';
 import {
   ALERT_TYPE,
@@ -84,6 +85,24 @@ export const DemoApp: React.FC<{
     }
   };
 
+  const handleModalRemove = async () => {
+    setModalVisible(false);
+    try {
+      await removeExternalId();
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Success',
+        textBody: 'External ID removed',
+      });
+    } catch (error: any) {
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: 'Warning',
+        textBody: 'External ID not removed',
+      });
+    }
+  };
+
   const handleModalDismiss = () => {
     setModalVisible(false);
   };
@@ -139,6 +158,11 @@ export const DemoApp: React.FC<{
                           style={styles.sendButton}
                           onPress={handleModalSend}>
                           <Text style={styles.modalText}>Send</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.removeButton}
+                          onPress={handleModalRemove}>
+                          <Text style={styles.modalText}>Remove</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.dismissButton}
@@ -340,6 +364,14 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     backgroundColor: '#4CAF50',
+    padding: 10,
+    borderRadius: 5,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
+  },
+  removeButton: {
+    backgroundColor: '#FF9800',
     padding: 10,
     borderRadius: 5,
     flex: 1,

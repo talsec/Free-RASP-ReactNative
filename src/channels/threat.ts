@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { getThreatCount, itemsHaveType } from '../utils/utils';
 import { FreeraspReactNative } from '../api/nativeModules';
 import { Threat } from '../models/threat';
@@ -18,9 +17,8 @@ export const getThreatIdentifiers = async (): Promise<number[]> => {
 export const getThreatChannelData = async (): Promise<
   [string, string, string]
 > => {
-  const dataLength = Platform.OS === 'ios' ? 2 : 3;
   const data = await FreeraspReactNative.getThreatChannelData();
-  if (data.length !== dataLength || !itemsHaveType(data, 'string')) {
+  if (data.length !== 3 || !itemsHaveType(data, 'string')) {
     onInvalidCallback();
   }
   return data;

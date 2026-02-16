@@ -1,6 +1,6 @@
 import { NativeEventEmitter, type EmitterSubscription } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
-import { onInvalidCallback } from '../methods/native';
+import { onInvalidCallback, removeListenerForEvent } from '../methods/native';
 import type {
   NativeEvent,
   RaspExecutionStateEventActions,
@@ -12,19 +12,41 @@ import {
 import { RaspExecutionState } from '../../models/raspExecutionState';
 
 const eventEmitter = new NativeEventEmitter(FreeraspReactNative);
-let eventsListener: EmitterSubscription | undefined;
+let eventsListener: EmitterSubscription | null = null;
+let executionStateChannel: string | null = null;
+let executionStateKey: string | null = null;
+
+let isMappingPrepared = false;
+let isInitializing = false;
 
 export const setRaspExecutionStateListener = async (
   config: RaspExecutionStateEventActions
 ) => {
-  const [channel, key] = await getRaspExecutionStateChannelData();
-  await prepareRaspExecutionStateMapping();
+  if (isInitializing) {
+    return;
+  }
+
+  isInitializing = true;
+
+  await removeRaspExecutionStateEventListener();
+
+  if (!executionStateChannel || !executionStateKey) {
+    [executionStateChannel, executionStateKey] =
+      await getRaspExecutionStateChannelData();
+  }
+
+  if (!isMappingPrepared) {
+    await prepareRaspExecutionStateMapping();
+    isMappingPrepared = true;
+  }
 
   const listener = async (event: NativeEvent) => {
-    if (event[key] === undefined) {
+    if (!executionStateKey) {
       onInvalidCallback();
+      return;
     }
-    switch (event[key]) {
+
+    switch (event[executionStateKey]) {
       case RaspExecutionState.AllChecksFinished.value:
         config.allChecksFinished?.();
         break;
@@ -33,10 +55,16 @@ export const setRaspExecutionStateListener = async (
         break;
     }
   };
-  eventsListener = eventEmitter.addListener(channel, listener);
+  eventsListener = eventEmitter.addListener(executionStateChannel, listener);
+  isInitializing = false;
 };
 
-export const removeRaspExecutionStateEventListener = (): void => {
-  eventsListener?.remove();
-  eventsListener = undefined;
-};
+export const removeRaspExecutionStateEventListener =
+  async (): Promise<void> => {
+    if (!eventsListener || !executionStateChannel) {
+      return;
+    }
+    await removeListenerForEvent(executionStateChannel);
+    eventsListener?.remove();
+    eventsListener = null;
+  };

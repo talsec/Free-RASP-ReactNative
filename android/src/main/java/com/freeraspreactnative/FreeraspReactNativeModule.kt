@@ -4,6 +4,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import com.aheaditec.talsec_security.security.api.ExternalIdResult
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
@@ -22,6 +23,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.freeraspreactnative.events.BaseRaspEvent
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.events.ThreatEvent
+import com.freeraspreactnative.interfaces.PluginExecutionStateListener
+import com.freeraspreactnative.interfaces.PluginThreatListener
 import com.freeraspreactnative.utils.Utils
 import com.freeraspreactnative.utils.getArraySafe
 import com.freeraspreactnative.utils.getBooleanSafe
@@ -33,7 +36,6 @@ import com.freeraspreactnative.utils.toEncodedWritableArray
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
-  private val listener = ThreatListener(FreeraspThreatHandler, FreeraspThreatHandler, FreeraspThreatHandler)
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -57,7 +59,6 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   }
 
   init {
-    appReactContext = reactContext
     reactContext.addLifecycleEventListener(lifecycleListener)
     initializeEventKeys()
   }
@@ -69,8 +70,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
     try {
       val config = buildTalsecConfig(options)
-      FreeraspThreatHandler.listener = ThreatListener
-      listener.registerListener(reactContext)
+      PluginThreatHandler.registerListener(reactContext)
       runOnUiThread {
         Talsec.start(reactContext, config, TalsecMode.BACKGROUND)
         mainHandler.post {
@@ -147,13 +147,30 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   }
 
   @ReactMethod
-  fun addListener(@Suppress("UNUSED_PARAMETER") eventName: String) {
-    // Set up any upstream listeners or background tasks as necessary
+  fun addListener(eventName: String) {
+    if (eventName == ThreatEvent.CHANNEL_NAME) {
+      PluginThreatHandler.threatDispatcher.listener = PluginListener(reactContext)
+    }
+    if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
+      PluginThreatHandler.executionStateDispatcher.listener = PluginListener(reactContext)
+    }
   }
 
   @ReactMethod
   fun removeListeners(@Suppress("UNUSED_PARAMETER") count: Int) {
-    // Remove upstream listeners, stop unnecessary background tasks
+    // built-in RN method, however it does not suit us as it just tells
+    // number of un-registered listeners, so we use `removeListenerForEvent`
+  }
+
+  @ReactMethod
+  fun removeListenerForEvent(eventName: String, promise: Promise) {
+    if (eventName == ThreatEvent.CHANNEL_NAME) {
+      PluginThreatHandler.threatDispatcher.listener = null
+    }
+    if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
+      PluginThreatHandler.executionStateDispatcher.listener = null
+    }
+    promise.resolve("Listener unregistered")
   }
 
   /**
@@ -218,17 +235,41 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   @ReactMethod
   fun storeExternalId(
-      externalId: String, promise: Promise
+    externalId: String, promise: Promise
   ) {
-      try {
-          Talsec.storeExternalId(reactContext, externalId)
-          promise.resolve("OK - Store external ID")
-      } catch (e: Exception) {
+    try {
+      when (val result = Talsec.storeExternalId(reactContext, externalId)) {
+        is ExternalIdResult.Error -> {
           promise.reject(
-              "NativePluginError",
-              "Error during storeExternalId operation in Talsec Native Plugin"
+            "ExternalIdError",
+            "Setting up External ID failed - ${result.errorMsg}"
           )
+        }
+
+        is ExternalIdResult.Success -> {
+          promise.resolve("OK - Store external ID")
+          return
+        }
       }
+    } catch (e: Exception) {
+      promise.reject(
+        "NativePluginError",
+        "Error during storeExternalId operation in Talsec Native Plugin"
+      )
+    }
+  }
+
+  @ReactMethod
+  fun removeExternalId(promise: Promise) {
+    try {
+      Talsec.removeExternalId(reactContext)
+      promise.resolve("OK - External ID removed")
+    } catch (e: Exception) {
+      promise.reject(
+        "NativePluginError",
+        "Error during storeExternalId operation in Talsec Native Plugin"
+      )
+    }
   }
 
   private fun buildTalsecConfig(config: ReadableMap): TalsecConfig {
@@ -260,11 +301,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     private val backgroundHandler = Handler(backgroundHandlerThread.looper)
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    private lateinit var appReactContext: ReactApplicationContext
-
     internal var talsecStarted = false
 
-    private fun notifyEvent(event: BaseRaspEvent) {
+    private fun notifyEvent(event: BaseRaspEvent, appReactContext: ReactApplicationContext) {
       val params = Arguments.createMap()
       params.putInt(event.channelKey, event.value)
       appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -274,7 +313,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     /**
      * Sends malware detected event to React Native
      */
-    private fun notifyMalware(suspiciousApps: MutableList<SuspiciousAppInfo>) {
+    private fun notifyMalware(suspiciousApps: MutableList<SuspiciousAppInfo>, appReactContext: ReactApplicationContext) {
       // Perform the malware encoding on a background thread
       backgroundHandler.post {
 
@@ -294,17 +333,17 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     }
   }
 
-  internal object ThreatListener : FreeraspThreatHandler.TalsecReactNative {
+  internal class PluginListener(private val reactContext: ReactApplicationContext) : PluginThreatListener, PluginExecutionStateListener {
     override fun threatDetected(threatEventType: ThreatEvent) {
-      notifyEvent(threatEventType)
+      notifyEvent(threatEventType, reactContext)
     }
 
     override fun malwareDetected(suspiciousApps: MutableList<SuspiciousAppInfo>) {
-      notifyMalware(suspiciousApps)
+      notifyMalware(suspiciousApps, reactContext)
     }
 
     override fun raspExecutionStateChanged(event: RaspExecutionStateEvent) {
-      notifyEvent(event)
+      notifyEvent(event, reactContext)
     }
   }
 }

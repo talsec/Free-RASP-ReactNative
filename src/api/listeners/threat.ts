@@ -1,6 +1,6 @@
 import { NativeEventEmitter, type EmitterSubscription } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
-import { onInvalidCallback } from '../methods/native';
+import { onInvalidCallback, removeListenerForEvent } from '../methods/native';
 import { Threat } from '../../models/threat';
 import type { NativeEvent, ThreatEventActions } from '../../types/types';
 import { parseMalwareData } from '../../utils/malware';
@@ -10,17 +10,40 @@ import {
 } from '../../channels/threat';
 
 const eventEmitter = new NativeEventEmitter(FreeraspReactNative);
-let eventsListener: EmitterSubscription | undefined;
+let eventsListener: EmitterSubscription | null = null;
+
+let threatChannel: string | null = null;
+let threatKey: string | null = null;
+let threatMalwareKey: string | null = null;
+
+let isMappingPrepared = false;
+let isInitializing = false;
 
 export const setThreatListeners = async (config: ThreatEventActions) => {
-  const [channel, key, malwareKey] = await getThreatChannelData();
-  await prepareThreatMapping();
+  if (isInitializing) {
+    return;
+  }
+
+  isInitializing = true;
+
+  await removeThreatListener();
+
+  if (!threatChannel || !threatKey || !threatMalwareKey) {
+    [threatChannel, threatKey, threatMalwareKey] = await getThreatChannelData();
+  }
+
+  if (!isMappingPrepared) {
+    await prepareThreatMapping();
+    isMappingPrepared = true;
+  }
 
   const listener = async (event: NativeEvent) => {
-    if (event[key] === undefined) {
+    if (!threatKey || !threatMalwareKey) {
       onInvalidCallback();
+      return;
     }
-    switch (event[key]) {
+
+    switch (event[threatKey]) {
       case Threat.PrivilegedAccess.value:
         config.privilegedAccess?.();
         break;
@@ -61,7 +84,7 @@ export const setThreatListeners = async (config: ThreatEventActions) => {
         config.systemVPN?.();
         break;
       case Threat.Malware.value:
-        const malwareData = event[malwareKey];
+        const malwareData = event[threatMalwareKey];
         config.malware?.(
           await parseMalwareData(Array.isArray(malwareData) ? malwareData : [])
         );
@@ -87,15 +110,23 @@ export const setThreatListeners = async (config: ThreatEventActions) => {
       case Threat.UnsecureWifi.value:
         config.unsecureWifi?.();
         break;
+      case Threat.Automation.value:
+        config.automation?.();
+        break;
       default:
         onInvalidCallback();
         break;
     }
   };
-  eventsListener = eventEmitter.addListener(channel, listener);
+  eventsListener = eventEmitter.addListener(threatChannel, listener);
+  isInitializing = false;
 };
 
-export const removeThreatListener = (): void => {
+export const removeThreatListener = async (): Promise<void> => {
+  if (!eventsListener || !threatChannel) {
+    return;
+  }
+  await removeListenerForEvent(threatChannel);
   eventsListener?.remove();
-  eventsListener = undefined;
+  eventsListener = null;
 };

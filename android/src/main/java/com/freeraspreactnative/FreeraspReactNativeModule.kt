@@ -59,7 +59,6 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   }
 
   init {
-    appReactContext = reactContext
     reactContext.addLifecycleEventListener(lifecycleListener)
     initializeEventKeys()
   }
@@ -150,10 +149,10 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun addListener(eventName: String) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      PluginThreatHandler.threatDispatcher.listener = PluginListener
+      PluginThreatHandler.threatDispatcher.listener = PluginListener(reactContext)
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      PluginThreatHandler.executionStateDispatcher.listener = PluginListener
+      PluginThreatHandler.executionStateDispatcher.listener = PluginListener(reactContext)
     }
   }
 
@@ -302,11 +301,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     private val backgroundHandler = Handler(backgroundHandlerThread.looper)
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    private lateinit var appReactContext: ReactApplicationContext
-
     internal var talsecStarted = false
 
-    private fun notifyEvent(event: BaseRaspEvent) {
+    private fun notifyEvent(event: BaseRaspEvent, appReactContext: ReactApplicationContext) {
       val params = Arguments.createMap()
       params.putInt(event.channelKey, event.value)
       appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
@@ -316,7 +313,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     /**
      * Sends malware detected event to React Native
      */
-    private fun notifyMalware(suspiciousApps: MutableList<SuspiciousAppInfo>) {
+    private fun notifyMalware(suspiciousApps: MutableList<SuspiciousAppInfo>, appReactContext: ReactApplicationContext) {
       // Perform the malware encoding on a background thread
       backgroundHandler.post {
 
@@ -336,17 +333,17 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     }
   }
 
-  internal object PluginListener : PluginThreatListener, PluginExecutionStateListener {
+  internal class PluginListener(private val reactContext: ReactApplicationContext) : PluginThreatListener, PluginExecutionStateListener {
     override fun threatDetected(threatEventType: ThreatEvent) {
-      notifyEvent(threatEventType)
+      notifyEvent(threatEventType, reactContext)
     }
 
     override fun malwareDetected(suspiciousApps: MutableList<SuspiciousAppInfo>) {
-      notifyMalware(suspiciousApps)
+      notifyMalware(suspiciousApps, reactContext)
     }
 
     override fun raspExecutionStateChanged(event: RaspExecutionStateEvent) {
-      notifyEvent(event)
+      notifyEvent(event, reactContext)
     }
   }
 }

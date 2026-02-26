@@ -44,7 +44,7 @@ internal class ThreatDispatcher(private val listener: PluginThreatListener) {
   }
 
   fun dispatchMalware(apps: MutableList<SuspiciousAppInfo>) {
-    if (isAppInForeground) {
+    if (isAppInForeground && isListenerRegistered) {
       listener.malwareDetected(apps)
     }
     else {

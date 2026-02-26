@@ -1,5 +1,5 @@
 struct EventIdentifiers {
-    static var generatedNumbers = RandomGenerator.generateRandomIdentifiers(length: 19)
+    static var generatedNumbers = RandomGenerator.generateRandomIdentifiers(length: 20)
     
     // Channel identifiers for RN event emitter
     static let threatChannelKey: String = String(generatedNumbers[0])
@@ -8,6 +8,6 @@ struct EventIdentifiers {
     static let raspExecutionStateChannelName: String = String(generatedNumbers[3])
   
     static let raspExecutionStateIdentifierList: [Int] = [generatedNumbers[4]]
-    static let threatIdentifierList: [Int] = generatedNumbers.suffix(14)
+    static let threatIdentifierList: [Int] = generatedNumbers.suffix(15)
 
 }

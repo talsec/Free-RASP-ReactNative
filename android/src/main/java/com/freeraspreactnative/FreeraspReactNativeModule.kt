@@ -9,7 +9,6 @@ import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
 import com.aheaditec.talsec_security.security.api.TalsecMode
-import com.aheaditec.talsec_security.security.api.ThreatListener
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.Promise
@@ -19,8 +18,8 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.freeraspreactnative.events.BaseRaspEvent
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.events.ThreatEvent
 import com.freeraspreactnative.interfaces.PluginExecutionStateListener
@@ -38,12 +37,16 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
+      PluginThreatHandler.threatDispatcher.onResume()
+      PluginThreatHandler.executionStateDispatcher.onResume()
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         reactContext.currentActivity?.let { ScreenProtector.register(it) }
       }
     }
 
     override fun onHostPause() {
+      PluginThreatHandler.threatDispatcher.onPause()
+      PluginThreatHandler.executionStateDispatcher.onPause()
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         reactContext.currentActivity?.let { ScreenProtector.unregister(it) }
       }
@@ -51,6 +54,8 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
     override fun onHostDestroy() {
       backgroundHandlerThread.quitSafely()
+      PluginThreatHandler.threatDispatcher.unregisterListener()
+      PluginThreatHandler.executionStateDispatcher.unregisterListener()
     }
   }
 
@@ -61,6 +66,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   init {
     reactContext.addLifecycleEventListener(lifecycleListener)
     initializeEventKeys()
+    PluginThreatHandler.initializeDispatchers(PluginListener(reactContext))
   }
 
   @ReactMethod
@@ -149,10 +155,10 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun addListener(eventName: String) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      PluginThreatHandler.threatDispatcher.listener = PluginListener(reactContext)
+      PluginThreatHandler.threatDispatcher.registerListener()
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      PluginThreatHandler.executionStateDispatcher.listener = PluginListener(reactContext)
+      PluginThreatHandler.executionStateDispatcher.registerListener()
     }
   }
 
@@ -165,10 +171,10 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun removeListenerForEvent(eventName: String, promise: Promise) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      PluginThreatHandler.threatDispatcher.listener = null
+      PluginThreatHandler.threatDispatcher.unregisterListener()
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      PluginThreatHandler.executionStateDispatcher.listener = null
+      PluginThreatHandler.executionStateDispatcher.unregisterListener()
     }
     promise.resolve("Listener unregistered")
   }
@@ -302,48 +308,40 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     private val mainHandler = Handler(Looper.getMainLooper())
 
     internal var talsecStarted = false
+  }
 
-    private fun notifyEvent(event: BaseRaspEvent, appReactContext: ReactApplicationContext) {
+  internal class PluginListener(private val reactContext: ReactApplicationContext) :
+    PluginThreatListener, PluginExecutionStateListener {
+
+    override fun threatDetected(threatEventType: ThreatEvent) {
       val params = Arguments.createMap()
-      params.putInt(event.channelKey, event.value)
-      appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-        .emit(event.channelName, params)
+      params.putInt(threatEventType.channelKey, threatEventType.value)
+      notifyEvent(ThreatEvent.CHANNEL_NAME, params)
     }
 
-    /**
-     * Sends malware detected event to React Native
-     */
-    private fun notifyMalware(suspiciousApps: MutableList<SuspiciousAppInfo>, appReactContext: ReactApplicationContext) {
-      // Perform the malware encoding on a background thread
+    override fun malwareDetected(suspiciousApps: MutableList<SuspiciousAppInfo>) {
       backgroundHandler.post {
-
-        val encodedSuspiciousApps = suspiciousApps.toEncodedWritableArray(appReactContext)
-
+        val encodedSuspiciousApps = suspiciousApps.toEncodedWritableArray(reactContext)
         mainHandler.post {
           val params = Arguments.createMap()
           params.putInt(ThreatEvent.CHANNEL_KEY, ThreatEvent.Malware.value)
           params.putArray(
             ThreatEvent.MALWARE_CHANNEL_KEY, encodedSuspiciousApps
           )
-
-          appReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(ThreatEvent.CHANNEL_NAME, params)
+          notifyEvent(ThreatEvent.CHANNEL_NAME, params)
         }
       }
     }
-  }
-
-  internal class PluginListener(private val reactContext: ReactApplicationContext) : PluginThreatListener, PluginExecutionStateListener {
-    override fun threatDetected(threatEventType: ThreatEvent) {
-      notifyEvent(threatEventType, reactContext)
-    }
-
-    override fun malwareDetected(suspiciousApps: MutableList<SuspiciousAppInfo>) {
-      notifyMalware(suspiciousApps, reactContext)
-    }
 
     override fun raspExecutionStateChanged(event: RaspExecutionStateEvent) {
-      notifyEvent(event, reactContext)
+      val params = Arguments.createMap()
+      params.putInt(event.channelKey, event.value)
+      notifyEvent(event.channelName, params)
+    }
+
+    private fun notifyEvent(eventName: String, params: WritableMap) {
+      reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+        .emit(eventName, params)
     }
   }
 }

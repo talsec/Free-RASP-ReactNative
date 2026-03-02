@@ -221,7 +221,7 @@ const App = () => {
         )
       );
     },
-    // Android only
+    // Android & iOS
     timeSpoofing: () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>

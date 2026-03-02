@@ -116,11 +116,11 @@ internal object PluginThreatHandler {
 
   private val internalListener = ThreatListener(threatDetected, deviceState, raspExecutionState)
 
-  internal fun registerListener(context: Context) {
+  internal fun registerSDKListener(context: Context) {
     internalListener.registerListener(context)
   }
 
-  internal fun unregisterListener(context: Context) {
+  internal fun unregisterSDKListener(context: Context) {
     internalListener.unregisterListener(context)
   }
 }

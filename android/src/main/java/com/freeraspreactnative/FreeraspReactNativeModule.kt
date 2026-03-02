@@ -50,12 +50,15 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         reactContext.currentActivity?.let { ScreenProtector.unregister(it) }
       }
+      if (reactContext.currentActivity?.isFinishing == true) {
+        PluginThreatHandler.threatDispatcher.unregisterListener()
+        PluginThreatHandler.executionStateDispatcher.unregisterListener()
+        PluginThreatHandler.unregisterSDKListener(reactContext)
+      }
     }
 
     override fun onHostDestroy() {
       backgroundHandlerThread.quitSafely()
-      PluginThreatHandler.threatDispatcher.unregisterListener()
-      PluginThreatHandler.executionStateDispatcher.unregisterListener()
     }
   }
 
@@ -73,10 +76,14 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   fun talsecStart(
     options: ReadableMap, promise: Promise
   ) {
+    if (talsecStarted) {
+      promise.resolve("freeRASP started")
+      return
+    }
 
     try {
       val config = buildTalsecConfig(options)
-      PluginThreatHandler.registerListener(reactContext)
+      PluginThreatHandler.registerSDKListener(reactContext)
       runOnUiThread {
         Talsec.start(reactContext, config, TalsecMode.BACKGROUND)
         mainHandler.post {

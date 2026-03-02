@@ -54,6 +54,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved root detection capabilities
 - Detection of wireless ADB added to ADB detections
 
+### iOS
+
+#### Added
+
+- Added time spoofing detection, detecting an inaccurate device clock. It is a new threat `timeSpoofing`.
+
+#### Changed
+
+- Improved jailbreak detection methods.
+
 ## [4.3.2] - 2026-01-03
 
 - Android SDK version: 17.0.1

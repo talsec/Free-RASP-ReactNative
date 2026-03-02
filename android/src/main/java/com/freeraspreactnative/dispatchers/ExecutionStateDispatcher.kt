@@ -25,7 +25,6 @@ internal class ExecutionStateDispatcher(private val listener: PluginExecutionSta
     if (isListenerRegistered) {
       flushCache()
     }
-    
   }
 
   fun onPause() {

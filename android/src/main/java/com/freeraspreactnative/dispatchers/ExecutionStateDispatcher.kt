@@ -3,36 +3,51 @@ package com.freeraspreactnative.dispatchers
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.interfaces.PluginExecutionStateListener
 
-internal class ExecutionStateDispatcher {
+internal class ExecutionStateDispatcher(private val listener: PluginExecutionStateListener) {
   private val cache = mutableSetOf<RaspExecutionStateEvent>()
 
-  var listener: PluginExecutionStateListener? = null
-    set(value) {
-      field = value
-      if (value != null) {
-        flushCache(value)
-      }
+  private var isAppInForeground = false
+  private var isListenerRegistered = false
+
+  fun registerListener() {
+    isListenerRegistered = true
+    isAppInForeground = true
+    flushCache()
+  }
+
+  fun unregisterListener() {
+    isListenerRegistered = false
+    isAppInForeground = false
+  }
+
+  fun onResume() {
+    isAppInForeground = true
+    if (isListenerRegistered) {
+      flushCache()
     }
+  }
+
+  fun onPause() {
+    isAppInForeground = false
+  }
 
   fun dispatch(event: RaspExecutionStateEvent) {
-    val currentListener = listener
-    if (currentListener != null) {
-      currentListener.raspExecutionStateChanged(event)
+    if (isAppInForeground && isListenerRegistered) {
+      listener.raspExecutionStateChanged(event)
     } else {
       synchronized(cache) {
-        val checkedListener = listener
-        checkedListener?.raspExecutionStateChanged(event) ?: cache.add(event)
+        cache.add(event)
       }
     }
   }
 
-  private fun flushCache(registeredListener: PluginExecutionStateListener) {
+  private fun flushCache() {
     val events = synchronized(cache) {
       val snapshot = cache.toSet()
       cache.clear()
       snapshot
     }
-    events.forEach { registeredListener.raspExecutionStateChanged(it) }
+    events.forEach { listener.raspExecutionStateChanged(it) }
   }
 }
 

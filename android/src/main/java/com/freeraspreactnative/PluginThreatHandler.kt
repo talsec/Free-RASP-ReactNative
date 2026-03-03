@@ -10,8 +10,13 @@ import com.freeraspreactnative.events.ThreatEvent
 
 internal object PluginThreatHandler {
 
-  internal val threatDispatcher = ThreatDispatcher()
-  internal val executionStateDispatcher = ExecutionStateDispatcher()
+  internal lateinit var threatDispatcher: ThreatDispatcher
+  internal lateinit var executionStateDispatcher: ExecutionStateDispatcher
+
+  fun initializeDispatchers(listener: FreeraspReactNativeModule.PluginListener) {
+    threatDispatcher = ThreatDispatcher(listener)
+    executionStateDispatcher = ExecutionStateDispatcher(listener)
+  }
 
   private val threatDetected = object : ThreatListener.ThreatDetected() {
 
@@ -111,11 +116,11 @@ internal object PluginThreatHandler {
 
   private val internalListener = ThreatListener(threatDetected, deviceState, raspExecutionState)
 
-  internal fun registerListener(context: Context) {
+  internal fun registerSDKListener(context: Context) {
     internalListener.registerListener(context)
   }
 
-  internal fun unregisterListener(context: Context) {
+  internal fun unregisterSDKListener(context: Context) {
     internalListener.unregisterListener(context)
   }
 }

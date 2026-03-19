@@ -20,6 +20,8 @@ import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.freeraspreactnative.dispatchers.ExecutionStateDispatcher
+import com.freeraspreactnative.dispatchers.ThreatDispatcher
 import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.events.ThreatEvent
 import com.freeraspreactnative.interfaces.PluginExecutionStateListener
@@ -37,22 +39,22 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   private val lifecycleListener = object : LifecycleEventListener {
     override fun onHostResume() {
-      PluginThreatHandler.threatDispatcher.onResume()
-      PluginThreatHandler.executionStateDispatcher.onResume()
+      ThreatDispatcher.onResume()
+      ExecutionStateDispatcher.onResume()
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         reactContext.currentActivity?.let { ScreenProtector.register(it) }
       }
     }
 
     override fun onHostPause() {
-      PluginThreatHandler.threatDispatcher.onPause()
-      PluginThreatHandler.executionStateDispatcher.onPause()
+      ThreatDispatcher.onPause()
+      ExecutionStateDispatcher.onPause()
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         reactContext.currentActivity?.let { ScreenProtector.unregister(it) }
       }
       if (reactContext.currentActivity?.isFinishing == true) {
-        PluginThreatHandler.threatDispatcher.unregisterListener()
-        PluginThreatHandler.executionStateDispatcher.unregisterListener()
+        ThreatDispatcher.unregisterListener()
+        ExecutionStateDispatcher.unregisterListener()
         PluginThreatHandler.unregisterSDKListener(reactContext)
       }
     }
@@ -66,10 +68,11 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     return NAME
   }
 
-  init {
+  override fun initialize() {
     reactContext.addLifecycleEventListener(lifecycleListener)
     initializeEventKeys()
-    PluginThreatHandler.initializeDispatchers(PluginListener(reactContext))
+    PluginThreatHandler.initializePluginListener(PluginListener(reactContext))
+    super.initialize()
   }
 
   @ReactMethod
@@ -162,10 +165,10 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun addListener(eventName: String) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      PluginThreatHandler.threatDispatcher.registerListener()
+      ThreatDispatcher.registerListener(PluginListener(reactContext))
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      PluginThreatHandler.executionStateDispatcher.registerListener()
+      ExecutionStateDispatcher.registerListener(PluginListener(reactContext))
     }
   }
 
@@ -178,10 +181,10 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   @ReactMethod
   fun removeListenerForEvent(eventName: String, promise: Promise) {
     if (eventName == ThreatEvent.CHANNEL_NAME) {
-      PluginThreatHandler.threatDispatcher.unregisterListener()
+      ThreatDispatcher.unregisterListener()
     }
     if (eventName == RaspExecutionStateEvent.CHANNEL_NAME) {
-      PluginThreatHandler.executionStateDispatcher.unregisterListener()
+      ExecutionStateDispatcher.unregisterListener()
     }
     promise.resolve("Listener unregistered")
   }

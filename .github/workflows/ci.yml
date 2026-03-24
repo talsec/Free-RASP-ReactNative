@@ -92,7 +92,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Install pods
-        working-directory: ./example
+        working-directory: ./example/ios
         run: pod install
 
       - name: Build example for iOS

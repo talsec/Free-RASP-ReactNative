@@ -93,7 +93,7 @@ jobs:
 
       - name: Install pods
         working-directory: ./example
-        run: yarn pods
+        run: pod install
 
       - name: Build example for iOS
         working-directory: ./example

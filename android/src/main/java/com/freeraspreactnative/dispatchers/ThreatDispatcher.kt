@@ -5,7 +5,7 @@ import com.freeraspreactnative.events.ThreatEvent
 import com.freeraspreactnative.interfaces.PluginThreatListener
 
 internal object ThreatDispatcher {
-  lateinit var listener: PluginThreatListener
+  private lateinit var listener: PluginThreatListener
   private val threatCache = mutableSetOf<ThreatEvent>()
   private val malwareCache = mutableSetOf<SuspiciousAppInfo>()
 

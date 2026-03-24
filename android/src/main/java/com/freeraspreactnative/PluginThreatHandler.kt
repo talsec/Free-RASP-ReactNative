@@ -10,11 +10,6 @@ import com.freeraspreactnative.events.ThreatEvent
 
 internal object PluginThreatHandler {
 
-  fun initializePluginListener(listener: FreeraspReactNativeModule.PluginListener) {
-    ThreatDispatcher.listener = listener
-    ExecutionStateDispatcher.listener = listener
-  }
-
   private val threatDetected = object : ThreatListener.ThreatDetected() {
 
     override fun onRootDetected() {

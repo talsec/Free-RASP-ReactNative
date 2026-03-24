@@ -71,7 +71,6 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
   override fun initialize() {
     reactContext.addLifecycleEventListener(lifecycleListener)
     initializeEventKeys()
-    PluginThreatHandler.initializePluginListener(PluginListener(reactContext))
     super.initialize()
   }
 

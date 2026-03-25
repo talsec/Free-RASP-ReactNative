@@ -22,5 +22,8 @@ _Describe the PR shortly_
 - [ ] `sdkVersion` property in logs is correct
 - [ ] `sdkPlatform` property in logs is correct
 
+# dSYMs:
+- [ ] attached
+
 # Resolved issues
 _list of issues resolved by this PR_

@@ -20,7 +20,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -36,19 +36,37 @@ jobs:
       - name: Get latest version
         run: echo "PACKAGE_VERSION=$(node scripts/extract_version.js)" >> $GITHUB_ENV
 
+      - name: Download dSYMs
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          url=$(echo "$PR_BODY" | grep -oE 'https://[^ )]*dSYMs\.zip' | head -n 1)
+          if [ -n "$url" ]; then
+            echo "Found dSYMs URL: $url"
+            curl -L -o dSYMs.zip "$url"
+          else
+            echo "No dSYMs.zip URL found in PR body."
+          fi
+
       - name: GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: freeRASP ${{ env.PACKAGE_VERSION }}
-          tag_name: v${{ env.PACKAGE_VERSION }}
-          body_path: ${{ github.workspace }}-CURRENT_CHANGELOG.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          FILES=""
+          if [ -f dSYMs.zip ]; then
+            FILES="dSYMs.zip"
+          fi
+          gh release create v${{ env.PACKAGE_VERSION }} \
+            --title "freeRASP ${{ env.PACKAGE_VERSION }}" \
+            --notes-file ${{ github.workspace }}-CURRENT_CHANGELOG.md \
+            $FILES
 
   publish_npmjs:
     name: Publish release to npm.js
     needs: release_gh
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup
         uses: ./.github/actions/setup

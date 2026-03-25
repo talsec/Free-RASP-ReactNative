@@ -5,11 +5,10 @@ runs:
   using: composite
   steps:
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
-        node-version: '20'
-        node-version-file: .nvmrc
-    
+        node-version: '24'
+
     - name: Upgrade npm for trusted publishing
       run: npm install -g npm@latest
       shell: bash

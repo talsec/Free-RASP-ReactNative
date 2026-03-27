@@ -4,7 +4,7 @@ import com.freeraspreactnative.events.RaspExecutionStateEvent
 import com.freeraspreactnative.interfaces.PluginExecutionStateListener
 
 internal object ExecutionStateDispatcher {
-  lateinit var listener: PluginExecutionStateListener
+  private lateinit var listener: PluginExecutionStateListener
   private val cache = mutableSetOf<RaspExecutionStateEvent>()
 
   private var isAppInForeground = false

@@ -34,10 +34,10 @@ const App = () => {
       packageName: 'com.freeraspreactnativeexample',
       certificateHashes: ['AKoRuyLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0='],
       // supportedAlternativeStores: ['storeOne', 'storeTwo'],
-      malwareConfig: {
-        blacklistedHashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
-        blacklistedPackageNames: ['com.freeraspreactnativeexample'],
-        suspiciousPermissions: [
+      suspiciousAppDetectionConfig: {
+        packageNames: ['com.freeraspreactnativeexample'],
+        hashes: ['FgvSehLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0u'],
+        requestedPermissions: [
           [
             'android.permission.INTERNET',
             'android.permission.ACCESS_COARSE_LOCATION',
@@ -45,7 +45,12 @@ const App = () => {
           ['android.permission.BLUETOOTH'],
           ['android.permission.BATTERY_STATS'],
         ],
-        whitelistedInstallationSources: ['com.apkpure.aegon'],
+        grantedPermissions: [['android.permission.ACCESS_FINE_LOCATION']],
+        malwareScanScope: {
+          scanScope: 'SIDELOADED_AND_SYSTEM_EXCLUDE_OEM',
+          trustedInstallSources: ['com.apkpure.aegon'],
+        },
+        reasonMode: 'HIGHEST_CONFIDENCE',
       },
     },
     iosConfig: {

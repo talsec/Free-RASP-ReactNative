@@ -3,6 +3,10 @@ package com.freeraspreactnative.utils
 import android.content.pm.PackageInfo
 import android.util.Base64
 import android.util.Log
+import com.aheaditec.talsec_security.security.api.MalwareScanScope
+import com.aheaditec.talsec_security.security.api.ReasonMode
+import com.aheaditec.talsec_security.security.api.ScopeType
+import com.aheaditec.talsec_security.security.api.SuspiciousAppDetectionConfig
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
@@ -89,6 +93,44 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
     version = this.versionName,
     appIcon = null, // this requires heavier computations, so appIcon has to be retrieved separately
     installerStore = Utils.getInstallationSource(context, this.packageName)
+  )
+}
+
+internal fun ReadableMap.toMalwareScanScope(): MalwareScanScope? {
+  if (!this.hasKey("malwareScanScope")) return null
+  val scanScopeMap = this.getMap("malwareScanScope") ?: return null
+  val scanScope = try {
+    ScopeType.valueOf(scanScopeMap.getString("scanScope") ?: "SIDELOADED_ONLY")
+  } catch (_: IllegalArgumentException) {
+    ScopeType.SIDELOADED_ONLY
+  }
+  val trustedInstallSources = scanScopeMap.getArraySafe("trustedInstallSources").toSet()
+  return MalwareScanScope(
+    scanScope = scanScope,
+    trustedInstallSources = trustedInstallSources.ifEmpty { null }
+  )
+}
+
+internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectionConfig {
+  val packageNames = this.getArraySafe("packageNames").toSet().ifEmpty { null }
+  val hashes = this.getArraySafe("hashes").toSet().ifEmpty { null }
+  val requestedPermissions = this.getNestedArraySafe("requestedPermissions")
+    .map { it.toSet() }.toSet().ifEmpty { null }
+  val grantedPermissions = this.getNestedArraySafe("grantedPermissions")
+    .map { it.toSet() }.toSet().ifEmpty { null }
+  val malwareScanScope = this.toMalwareScanScope()
+  val reasonMode = try {
+    ReasonMode.valueOf(this.getString("reasonMode") ?: "HIGHEST_CONFIDENCE")
+  } catch (_: IllegalArgumentException) {
+    ReasonMode.HIGHEST_CONFIDENCE
+  }
+  return SuspiciousAppDetectionConfig(
+    packageNames = packageNames,
+    hashes = hashes,
+    requestedPermissions = requestedPermissions,
+    grantedPermissions = grantedPermissions,
+    malwareScanScope = malwareScanScope,
+    reasonMode = reasonMode
   )
 }
 

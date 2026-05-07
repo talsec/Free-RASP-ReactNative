@@ -74,7 +74,7 @@ internal fun ReadableMap.getNestedArraySafe(key: String): Array<Array<String>> {
 internal fun SuspiciousAppInfo.toRNSuspiciousAppInfo(context: ReactContext): RNSuspiciousAppInfo {
   return RNSuspiciousAppInfo(
     packageInfo = this.packageInfo.toRNPackageInfo(context),
-    reason = this.reason,
+    reasons = this.reasons,
     permissions = this.permissions
   )
 }

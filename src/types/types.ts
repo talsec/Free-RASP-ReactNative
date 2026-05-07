@@ -27,7 +27,7 @@ export type TalsecMalwareConfig = {
 
 export type SuspiciousAppInfo = {
   packageInfo: PackageInfo;
-  reason: string;
+  reasons: string[];
   permissions?: string[];
 };
 

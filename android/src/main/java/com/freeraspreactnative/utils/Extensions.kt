@@ -96,18 +96,15 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
   )
 }
 
-internal fun ReadableMap.toMalwareScanScope(): MalwareScanScope? {
-  if (!this.hasKey("malwareScanScope")) return null
-  val scanScopeMap = this.getMap("malwareScanScope") ?: return null
+internal fun ReadableMap.toMalwareScanScope(): MalwareScanScope {
   val scanScope = try {
-    ScopeType.valueOf(scanScopeMap.getString("scanScope") ?: "SIDELOADED_ONLY")
+    ScopeType.valueOf(getString("scanScope") ?: "SIDELOADED_ONLY")
   } catch (_: IllegalArgumentException) {
     ScopeType.SIDELOADED_ONLY
   }
-  val trustedInstallSources = scanScopeMap.getArraySafe("trustedInstallSources").toSet()
   return MalwareScanScope(
     scanScope = scanScope,
-    trustedInstallSources = trustedInstallSources.ifEmpty { null }
+    trustedInstallSources = getArraySafe("trustedInstallSources").toSet().ifEmpty { null }
   )
 }
 
@@ -118,7 +115,8 @@ internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectio
     .map { it.toSet() }.toSet().ifEmpty { null }
   val grantedPermissions = this.getNestedArraySafe("grantedPermissions")
     .map { it.toSet() }.toSet().ifEmpty { null }
-  val malwareScanScope = this.toMalwareScanScope()
+  val malwareScanScope = if (this.hasKey("malwareScanScope"))
+    this.getMap("malwareScanScope")?.toMalwareScanScope() else null
   val reasonMode = try {
     ReasonMode.valueOf(this.getString("reasonMode") ?: "HIGHEST_CONFIDENCE")
   } catch (_: IllegalArgumentException) {

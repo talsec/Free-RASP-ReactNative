@@ -5,6 +5,7 @@ import {
   addToWhitelist,
   useFreeRasp,
   type SuspiciousAppInfo,
+  type TalsecConfig,
 } from 'freerasp-react-native';
 import { DemoApp } from './DemoApp';
 import { commonChecks, iosChecks, androidChecks } from './checks';
@@ -29,7 +30,7 @@ const App = () => {
     })();
   }, []);
 
-  const config = {
+  const config: TalsecConfig = {
     androidConfig: {
       packageName: 'com.freeraspreactnativeexample',
       certificateHashes: ['AKoRuyLMM91E7lX/Zqp3u4jMmd0A7hH/Iqozu0TMVd0='],

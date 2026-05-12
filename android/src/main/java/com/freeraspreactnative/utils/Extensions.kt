@@ -96,32 +96,24 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
   )
 }
 
+private inline fun <reified T : Enum<T>> String?.toEnumOrDefault(default: T): T =
+  if (this == null) default
+  else try { enumValueOf(this) } catch (_: IllegalArgumentException) { default }
+
 internal fun ReadableMap.toMalwareScanScope(): MalwareScanScope {
-  val scanScope = try {
-    ScopeType.valueOf(getString("scanScope") ?: "SIDELOADED_ONLY")
-  } catch (_: IllegalArgumentException) {
-    ScopeType.SIDELOADED_ONLY
-  }
+  val scanScope = getString("scanScope").toEnumOrDefault(ScopeType.SIDELOADED_ONLY)
   val trustedInstallSources = getArraySafe("trustedInstallSources").toList().ifEmpty { null }
   return MalwareScanScope(scanScope, trustedInstallSources)
 }
 
 internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectionConfig {
-  val packageNames = this.getArraySafe("packageNames").toSet().ifEmpty { null }
-  val hashes = this.getArraySafe("hashes").toSet().ifEmpty { null }
-  val requestedPermissions = this.getNestedArraySafe("requestedPermissions")
-    .map { it.toSet() }.toSet().ifEmpty { null }
-  val grantedPermissions = this.getNestedArraySafe("grantedPermissions")
-    .map { it.toSet() }.toSet().ifEmpty { null }
-  val malwareScanScope = if (this.hasKey("malwareScanScope"))
-    this.getMap("malwareScanScope")?.toMalwareScanScope() ?: MalwareScanScope(ScopeType.SIDELOADED_ONLY, null)
-  else
-    MalwareScanScope(ScopeType.SIDELOADED_ONLY, null)
-  val reasonMode = try {
-    ReasonMode.valueOf(this.getString("reasonMode") ?: "HIGHEST_CONFIDENCE")
-  } catch (_: IllegalArgumentException) {
-    ReasonMode.HIGHEST_CONFIDENCE
-  }
+  val packageNames = getArraySafe("packageNames").toSet().ifEmpty { null }
+  val hashes = getArraySafe("hashes").toSet().ifEmpty { null }
+  val requestedPermissions = getNestedArraySafe("requestedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
+  val grantedPermissions = getNestedArraySafe("grantedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
+  val malwareScanScope = getMap("malwareScanScope")?.toMalwareScanScope()
+    ?: MalwareScanScope(ScopeType.SIDELOADED_ONLY, null)
+  val reasonMode = getString("reasonMode").toEnumOrDefault(ReasonMode.HIGHEST_CONFIDENCE)
   return SuspiciousAppDetectionConfig(packageNames, hashes, requestedPermissions, grantedPermissions, malwareScanScope, reasonMode)
 }
 

@@ -112,7 +112,7 @@ internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectio
   val requestedPermissions = getNestedArraySafe("requestedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
   val grantedPermissions = getNestedArraySafe("grantedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
   val malwareScanScope = getMap("malwareScanScope")?.toMalwareScanScope()
-    ?: MalwareScanScope(ScopeType.SIDELOADED_ONLY, null)
+    ?: MalwareScanScope(ScopeType.SIDELOADED_ONLY, emptyList())
   val reasonMode = getString("reasonMode").toEnumOrDefault(ReasonMode.HIGHEST_CONFIDENCE)
   return SuspiciousAppDetectionConfig(packageNames, hashes, requestedPermissions, grantedPermissions, malwareScanScope, reasonMode)
 }

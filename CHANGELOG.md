@@ -7,18 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.0.0] - 2026-05-15
 
-### Breaking
-
-- Removed `MalwareConfig` and `AndroidConfig.malwareConfig`
-
-### React Native
-
-#### Removed
-
-- `TalsecMalwareConfig` type and `TalsecAndroidConfig.malwareConfig` field
-
-## [4.6.0] - 2026-05-07
-
 - Android SDK version: 18.3.0
 - iOS SDK version: 6.14.4
 
@@ -26,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `SuspiciousAppInfo.reason` (String) renamed to `reasons` (string[])
 - Value `"blacklist"` in `reasons` renamed to `"blocklist"`
+- Removed `MalwareConfig` and `AndroidConfig.malwareConfig`
+
+### React Native
+
+#### Removed
+
+- `TalsecMalwareConfig` type and `TalsecAndroidConfig.malwareConfig` field
 
 ### Android
 

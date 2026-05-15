@@ -25,8 +25,8 @@ export type SuspiciousAppDetectionConfig = {
   hashes?: string[];
   requestedPermissions?: string[][];
   grantedPermissions?: string[][];
-  malwareScanScope?: MalwareScanScope;
-  reasonMode?: ReasonMode;
+  malwareScanScope: MalwareScanScope;
+  reasonMode: ReasonMode;
 };
 
 export type TalsecAndroidConfig = {

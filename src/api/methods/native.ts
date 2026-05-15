@@ -1,9 +1,50 @@
 import { Platform } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
-import type { TalsecConfig } from '../../types/types';
+import type {
+  MalwareScanScope,
+  ReasonMode,
+  SuspiciousAppDetectionConfig,
+  TalsecAndroidConfig,
+  TalsecConfig,
+} from '../../types/types';
+
+const DEFAULT_MALWARE_SCAN_SCOPE: MalwareScanScope = {
+  scanScope: 'SIDELOADED_ONLY',
+};
+
+const DEFAULT_REASON_MODE: ReasonMode = 'HIGHEST_CONFIDENCE';
+
+const withSuspiciousAppDetectionDefaults = (
+  config: SuspiciousAppDetectionConfig
+): SuspiciousAppDetectionConfig => ({
+  ...config,
+  malwareScanScope: config.malwareScanScope ?? DEFAULT_MALWARE_SCAN_SCOPE,
+  reasonMode: config.reasonMode ?? DEFAULT_REASON_MODE,
+});
+
+const normalizeAndroidConfig = (
+  androidConfig: TalsecAndroidConfig
+): TalsecAndroidConfig => {
+  if (!androidConfig.suspiciousAppDetectionConfig) {
+    return androidConfig;
+  }
+  return {
+    ...androidConfig,
+    suspiciousAppDetectionConfig: withSuspiciousAppDetectionDefaults(
+      androidConfig.suspiciousAppDetectionConfig
+    ),
+  };
+};
+
+const normalizeConfig = (options: TalsecConfig): TalsecConfig => ({
+  ...options,
+  androidConfig: options.androidConfig
+    ? normalizeAndroidConfig(options.androidConfig)
+    : undefined,
+});
 
 export const talsecStart = async (options: TalsecConfig): Promise<string> => {
-  return FreeraspReactNative.talsecStart(options);
+  return FreeraspReactNative.talsecStart(normalizeConfig(options));
 };
 
 export const addToWhitelist = async (packageName: string): Promise<boolean> => {

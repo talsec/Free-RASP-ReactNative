@@ -36,7 +36,7 @@ internal fun ReadableMap.getBooleanSafe(key: String, defaultValue: Boolean = tru
   return defaultValue
 }
 
-private inline fun <reified T> ReadableArray.toPrimitiveArray(): Array<T> {
+internal inline fun <reified T> ReadableArray.toPrimitiveArray(): Array<T> {
   val output = mutableListOf<T>()
 
   for (i in 0 until this.size()) {
@@ -96,12 +96,8 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
   )
 }
 
-private inline fun <reified T : Enum<T>> String?.toEnumOrDefault(default: T): T =
-  if (this == null) default
-  else try { enumValueOf(this) } catch (_: IllegalArgumentException) { default }
-
 internal fun ReadableMap.toMalwareScanScope(): MalwareScanScope {
-  val scanScope = getString("scanScope").toEnumOrDefault(ScopeType.SIDELOADED_ONLY)
+  val scanScope = ScopeType.valueOf(getStringThrowing("scanScope"))
   val trustedInstallSources = getArraySafe("trustedInstallSources").toList().ifEmpty { null }
   return MalwareScanScope(scanScope, trustedInstallSources)
 }
@@ -111,9 +107,8 @@ internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectio
   val hashes = getArraySafe("hashes").toSet().ifEmpty { null }
   val requestedPermissions = getNestedArraySafe("requestedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
   val grantedPermissions = getNestedArraySafe("grantedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
-  val malwareScanScope = getMap("malwareScanScope")?.toMalwareScanScope()
-    ?: MalwareScanScope(ScopeType.SIDELOADED_ONLY, emptyList())
-  val reasonMode = getString("reasonMode").toEnumOrDefault(ReasonMode.HIGHEST_CONFIDENCE)
+  val malwareScanScope = getMapThrowing("malwareScanScope").toMalwareScanScope()
+  val reasonMode = ReasonMode.valueOf(getStringThrowing("reasonMode"))
   return SuspiciousAppDetectionConfig(packageNames, hashes, requestedPermissions, grantedPermissions, malwareScanScope, reasonMode)
 }
 

@@ -299,14 +299,6 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
       .killOnBypass(config.getBooleanSafe("killOnBypass", false))
       .supportedAlternativeStores(androidConfig.getArraySafe("supportedAlternativeStores"))
 
-    if (androidConfig.hasKey("malwareConfig")) {
-      val malwareConfig = androidConfig.getMapThrowing("malwareConfig")
-      talsecBuilder.whitelistedInstallationSources(malwareConfig.getArraySafe("whitelistedInstallationSources"))
-      talsecBuilder.blacklistedHashes(malwareConfig.getArraySafe("blacklistedHashes"))
-      talsecBuilder.blacklistedPackageNames(malwareConfig.getArraySafe("blacklistedPackageNames"))
-      talsecBuilder.suspiciousPermissions(malwareConfig.getNestedArraySafe("suspiciousPermissions"))
-    }
-
     if (androidConfig.hasKey("suspiciousAppDetectionConfig")) {
       val suspiciousAppConfig = androidConfig.getMapThrowing("suspiciousAppDetectionConfig")
       talsecBuilder.suspiciousAppDetection(suspiciousAppConfig.toSuspiciousAppDetectionConfig())

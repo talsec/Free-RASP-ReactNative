@@ -27,12 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SuspiciousAppInfo.reason` (String) renamed to `reasons` (string[])
 - Value `"blacklist"` in `reasons` renamed to `"blocklist"`
 
-### React Native
-
-#### Deprecated
-
-- `blacklistedPackageNames`, `blacklistedHashes`, `suspiciousPermissions`, `whitelistedInstallationSources` are deprecated but remain functional — use `SuspiciousAppDetectionConfig` instead
-
 ### Android
 
 #### Added
@@ -59,7 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fine-tuned hook detection
 - Fine-tuned location spoofing detection
 - Modified malware incident log structure for better aggregation
-- Old malware configuration API methods in `TalsecConfig.Builder` tagged as deprecated (but remain functional): `blacklistedPackageNames`, `blacklistedHashes`, `suspiciousPermissions`, `whitelistedInstallationSources`
 
 ## [4.5.2] - 2026-03-24
 

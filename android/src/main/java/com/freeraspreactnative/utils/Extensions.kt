@@ -96,7 +96,7 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
   )
 }
 
-internal fun ReadableMap.toMalwareScanScope(): MalwareScanScope {
+internal fun ReadableMap.toScanScope(): MalwareScanScope {
   val scanScope = ScopeType.valueOf(getStringThrowing("scanScope"))
   val trustedInstallSources = getArraySafe("trustedInstallSources").toList().ifEmpty { null }
   return MalwareScanScope(scanScope, trustedInstallSources)
@@ -107,9 +107,9 @@ internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectio
   val hashes = getArraySafe("hashes").toSet().ifEmpty { null }
   val requestedPermissions = getNestedArraySafe("requestedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
   val grantedPermissions = getNestedArraySafe("grantedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
-  val malwareScanScope = getMapThrowing("malwareScanScope").toMalwareScanScope()
+  val scanScope = getMapThrowing("scanScope").toScanScope()
   val reasonMode = ReasonMode.valueOf(getStringThrowing("reasonMode"))
-  return SuspiciousAppDetectionConfig(packageNames, hashes, requestedPermissions, grantedPermissions, malwareScanScope, reasonMode)
+  return SuspiciousAppDetectionConfig(packageNames, hashes, requestedPermissions, grantedPermissions, scanScope, reasonMode)
 }
 
 /**

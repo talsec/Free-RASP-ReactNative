@@ -15,7 +15,7 @@ export type ScopeType =
 
 export type ReasonMode = 'ALL' | 'HIGHEST_CONFIDENCE';
 
-export type MalwareScanScope = {
+export type ScanScope = {
   scanScope: ScopeType;
   trustedInstallSources?: string[];
 };
@@ -25,7 +25,7 @@ export type SuspiciousAppDetectionConfig = {
   hashes?: string[];
   requestedPermissions?: string[][];
   grantedPermissions?: string[][];
-  malwareScanScope: MalwareScanScope;
+  scanScope: ScanScope;
   reasonMode: ReasonMode;
 };
 

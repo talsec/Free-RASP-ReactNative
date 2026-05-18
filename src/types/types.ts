@@ -6,11 +6,34 @@ export type TalsecConfig = {
   killOnBypass?: boolean;
 };
 
+export type ScopeType =
+  | 'SIDELOADED_ONLY'
+  | 'SIDELOADED_AND_SYSTEM_EXCLUDE_OEM'
+  | 'SIDELOADED_AND_OEM'
+  | 'SIDELOADED_AND_SYSTEM_AND_OEM'
+  | 'ALL';
+
+export type ReasonMode = 'ALL' | 'HIGHEST_CONFIDENCE';
+
+export type ScanScope = {
+  scanScope: ScopeType;
+  trustedInstallSources?: string[];
+};
+
+export type SuspiciousAppDetectionConfig = {
+  packageNames?: string[];
+  hashes?: string[];
+  requestedPermissions?: string[][];
+  grantedPermissions?: string[][];
+  scanScope: ScanScope;
+  reasonMode: ReasonMode;
+};
+
 export type TalsecAndroidConfig = {
   packageName: string;
   certificateHashes: string[];
   supportedAlternativeStores?: string[];
-  malwareConfig?: TalsecMalwareConfig;
+  suspiciousAppDetectionConfig?: SuspiciousAppDetectionConfig;
 };
 
 export type TalsecIosConfig = {
@@ -18,16 +41,9 @@ export type TalsecIosConfig = {
   appTeamId: string;
 };
 
-export type TalsecMalwareConfig = {
-  blacklistedHashes?: string[];
-  blacklistedPackageNames?: string[];
-  suspiciousPermissions?: string[][];
-  whitelistedInstallationSources?: string[];
-};
-
 export type SuspiciousAppInfo = {
   packageInfo: PackageInfo;
-  reason: string;
+  reasons: string[];
   permissions?: string[];
 };
 

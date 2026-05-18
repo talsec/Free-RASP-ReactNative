@@ -3,6 +3,10 @@ package com.freeraspreactnative.utils
 import android.content.pm.PackageInfo
 import android.util.Base64
 import android.util.Log
+import com.aheaditec.talsec_security.security.api.MalwareScanScope
+import com.aheaditec.talsec_security.security.api.ReasonMode
+import com.aheaditec.talsec_security.security.api.ScopeType
+import com.aheaditec.talsec_security.security.api.SuspiciousAppDetectionConfig
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
@@ -32,7 +36,7 @@ internal fun ReadableMap.getBooleanSafe(key: String, defaultValue: Boolean = tru
   return defaultValue
 }
 
-private inline fun <reified T> ReadableArray.toPrimitiveArray(): Array<T> {
+internal inline fun <reified T> ReadableArray.toPrimitiveArray(): Array<T> {
   val output = mutableListOf<T>()
 
   for (i in 0 until this.size()) {
@@ -74,7 +78,7 @@ internal fun ReadableMap.getNestedArraySafe(key: String): Array<Array<String>> {
 internal fun SuspiciousAppInfo.toRNSuspiciousAppInfo(context: ReactContext): RNSuspiciousAppInfo {
   return RNSuspiciousAppInfo(
     packageInfo = this.packageInfo.toRNPackageInfo(context),
-    reason = this.reason,
+    reasons = this.reasons,
     permissions = this.permissions
   )
 }
@@ -90,6 +94,22 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
     appIcon = null, // this requires heavier computations, so appIcon has to be retrieved separately
     installerStore = Utils.getInstallationSource(context, this.packageName)
   )
+}
+
+internal fun ReadableMap.toScanScope(): MalwareScanScope {
+  val scanScope = ScopeType.valueOf(getStringThrowing("scanScope"))
+  val trustedInstallSources = getArraySafe("trustedInstallSources").toList().ifEmpty { null }
+  return MalwareScanScope(scanScope, trustedInstallSources)
+}
+
+internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectionConfig {
+  val packageNames = getArraySafe("packageNames").toSet().ifEmpty { null }
+  val hashes = getArraySafe("hashes").toSet().ifEmpty { null }
+  val requestedPermissions = getNestedArraySafe("requestedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
+  val grantedPermissions = getNestedArraySafe("grantedPermissions").map { it.toSet() }.toSet().ifEmpty { null }
+  val scanScope = getMapThrowing("scanScope").toScanScope()
+  val reasonMode = ReasonMode.valueOf(getStringThrowing("reasonMode"))
+  return SuspiciousAppDetectionConfig(packageNames, hashes, requestedPermissions, grantedPermissions, scanScope, reasonMode)
 }
 
 /**

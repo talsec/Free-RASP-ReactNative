@@ -47,7 +47,7 @@ const App = () => {
           ['android.permission.BATTERY_STATS'],
         ],
         grantedPermissions: [['android.permission.ACCESS_FINE_LOCATION']],
-        malwareScanScope: {
+        scanScope: {
           scanScope: 'SIDELOADED_AND_SYSTEM_EXCLUDE_OEM',
           trustedInstallSources: ['com.apkpure.aegon'],
         },

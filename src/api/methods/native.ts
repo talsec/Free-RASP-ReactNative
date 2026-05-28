@@ -1,10 +1,10 @@
 import { Platform } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
 import type { TalsecConfig } from '../../types/types';
-import { normalizeConfig } from '../../utils/config';
+import { withDefaults } from '../../utils/config';
 
 export const talsecStart = async (options: TalsecConfig): Promise<string> => {
-  return FreeraspReactNative.talsecStart(normalizeConfig(options));
+  return FreeraspReactNative.talsecStart(withDefaults(options));
 };
 
 export const addToWhitelist = async (packageName: string): Promise<boolean> => {

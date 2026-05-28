@@ -97,9 +97,9 @@ internal fun PackageInfo.toRNPackageInfo(context: ReactContext): RNPackageInfo {
 }
 
 internal fun ReadableMap.toScanScope(): MalwareScanScope {
-  val scanScope = ScopeType.valueOf(getStringThrowing("scanScope"))
+  val scopeType = ScopeType.valueOf(getStringThrowing("scopeType"))
   val trustedInstallSources = getArraySafe("trustedInstallSources").toList().ifEmpty { null }
-  return MalwareScanScope(scanScope, trustedInstallSources)
+  return MalwareScanScope(scopeType, trustedInstallSources)
 }
 
 internal fun ReadableMap.toSuspiciousAppDetectionConfig(): SuspiciousAppDetectionConfig {

@@ -48,7 +48,7 @@ const App = () => {
         ],
         grantedPermissions: [['android.permission.ACCESS_FINE_LOCATION']],
         scanScope: {
-          scanScope: 'SIDELOADED_AND_SYSTEM_EXCLUDE_OEM',
+          scopeType: 'SIDELOADED_AND_SYSTEM_EXCLUDE_OEM',
           trustedInstallSources: ['com.apkpure.aegon'],
         },
         reasonMode: 'HIGHEST_CONFIDENCE',

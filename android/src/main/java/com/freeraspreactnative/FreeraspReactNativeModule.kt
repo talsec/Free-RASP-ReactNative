@@ -33,6 +33,7 @@ import com.freeraspreactnative.utils.getMapThrowing
 import com.freeraspreactnative.utils.getNestedArraySafe
 import com.freeraspreactnative.utils.getStringThrowing
 import com.freeraspreactnative.utils.toEncodedWritableArray
+import com.freeraspreactnative.utils.toSuspiciousAppDetectionConfig
 
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -298,12 +299,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
       .killOnBypass(config.getBooleanSafe("killOnBypass", false))
       .supportedAlternativeStores(androidConfig.getArraySafe("supportedAlternativeStores"))
 
-    if (androidConfig.hasKey("malwareConfig")) {
-      val malwareConfig = androidConfig.getMapThrowing("malwareConfig")
-      talsecBuilder.whitelistedInstallationSources(malwareConfig.getArraySafe("whitelistedInstallationSources"))
-      talsecBuilder.blacklistedHashes(malwareConfig.getArraySafe("blacklistedHashes"))
-      talsecBuilder.blacklistedPackageNames(malwareConfig.getArraySafe("blacklistedPackageNames"))
-      talsecBuilder.suspiciousPermissions(malwareConfig.getNestedArraySafe("suspiciousPermissions"))
+    if (androidConfig.hasKey("suspiciousAppDetectionConfig")) {
+      val suspiciousAppConfig = androidConfig.getMapThrowing("suspiciousAppDetectionConfig")
+      talsecBuilder.suspiciousAppDetection(suspiciousAppConfig.toSuspiciousAppDetectionConfig())
     }
 
     return talsecBuilder.build()

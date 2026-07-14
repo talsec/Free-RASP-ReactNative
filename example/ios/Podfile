@@ -8,6 +8,10 @@ require Pod::Executable.execute_command('node', ['-p',
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
+# To test the experimental Swift Package Manager integration of freerasp-react-native,
+# install with the SPM opt-in flag and dynamic frameworks:
+#   FREERASP_USE_SPM=1 USE_FRAMEWORKS=dynamic pod install
+# Without these flags the default vendored xcframework is used.
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green

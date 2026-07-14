@@ -99,3 +99,29 @@ jobs:
         working-directory: ./example
         run: |
           yarn build:ios
+
+  build-ios-spm:
+    # Experimental: smoke-test the opt-in Swift Package Manager integration
+    # (FREERASP_USE_SPM=1). Non-blocking while SPM support is experimental; the
+    # vendored build-ios job above remains the gating check.
+    runs-on: macos-latest
+    needs: build-library
+    continue-on-error: true
+    env:
+      FREERASP_USE_SPM: "1"
+      USE_FRAMEWORKS: dynamic
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install pods (SPM)
+        working-directory: ./example/ios
+        run: pod install
+
+      - name: Build example for iOS (SPM)
+        working-directory: ./example
+        run: |
+          yarn build:ios

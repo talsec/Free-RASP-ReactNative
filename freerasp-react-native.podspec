@@ -4,26 +4,20 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
 # ---------------------------------------------------------------------------
-# Swift Package Manager (SPM) — PHASE 1 PRE-PREPARATION (non-breaking)
+# Swift Package Manager (SPM) delivery of TalsecRuntime — STAGE 2 SHAPE.
 #
-# TODO(SPM infra): the dedicated RN-flavour SPM manifest repo + GCP-hosted
-# TalsecRuntime xcframework are NOT ready yet. The values below are PLACEHOLDERS.
-# The opt-in SPM path (FREERASP_USE_SPM=1) is wired but NOT usable until the infra
-# lands. The vendored xcframework remains the default and keeps working.
+# TalsecRuntime is delivered exclusively via SPM (a dedicated RN-flavour manifest
+# repo + a GCP-hosted xcframework). CocoaPods stays for React Native itself;
+# `spm_dependency` (RN >= 0.75) injects the SPM reference into the Pods project and
+# `freerasp_embed_talsec_spm!` (see freerasp_spm.rb) embeds the framework into the
+# app target. Requires USE_FRAMEWORKS=dynamic in the consumer Podfile and iOS 13+.
 #
-# IMPORTANT: this must point at the RN-flavour manifest repo — NOT talsec/Free-RASP-iOS
-# (that is the *native* iOS flavour and is the wrong artifact for React Native).
-#
-# PHASE 2 FLIP (do this once the infra is ready — breaking, major version):
-#   1. Set TALSEC_SPM_URL / TALSEC_SPM_MIN_VERSION to the real manifest repo + tag.
-#   2. Remove the `use_spm` flag and the vendored branch below; call spm_dependency
-#      unconditionally; `raise` if spm_dependency is unavailable (RN < 0.75).
-#   3. `git rm ios/TalsecRuntime.xcframework` and drop its ref in the .xcodeproj.
-#   4. example/ios/Podfile: embed unconditionally + dynamic frameworks.
-#   5. Expo plugin: enable iOS SPM by default (see plugin/src/index.ts).
-#   6. package.json: major bump + react-native peerDependency ">=0.75.0".
-#   7. CI: make the SPM iOS build the blocking gate; drop the vendored job.
-#   8. Release: drop dSYM check/attach (dSYMs come from the GCP/upstream flow).
+# TODO(SPM infra): the manifest repo + GCP-hosted xcframework are NOT ready yet, so
+# the values below are PLACEHOLDERS — the iOS build will not resolve until they exist.
+# Before releasing, also: `git rm ios/TalsecRuntime.xcframework` + exclude it from npm,
+# major version bump, and drop the dSYM check/attach release steps.
+# IMPORTANT: point at the RN-flavour manifest repo — NOT talsec/Free-RASP-iOS
+# (that is the native flavour and the wrong artifact for React Native).
 # ---------------------------------------------------------------------------
 talsec_spm_url = 'https://github.com/talsec/TODO-freerasp-ios-spm' # TODO(SPM infra): real manifest repo
 talsec_spm_min_version = '0.0.0' # TODO(SPM infra): real version once the manifest repo is tagged
@@ -36,43 +30,26 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["author"]
 
-  s.platforms    = { :ios => "11.0" }
+  s.platforms    = { :ios => "13.0" }
   s.source       = { :git => "https://github.com/talsec/freerasp-react-native.git", :tag => "#{s.version}" }
 
-  # Opt-in Swift Package Manager integration for the TalsecRuntime dependency.
-  # Enabled only when FREERASP_USE_SPM=1 AND the running React Native provides the
-  # spm_dependency helper (RN >= 0.75). Otherwise the vendored xcframework is used
-  # (default — no breaking change for existing consumers). The SPM path additionally
-  # requires USE_FRAMEWORKS=dynamic in the consumer Podfile and iOS 13+.
-  use_spm = ENV['FREERASP_USE_SPM'] == '1' && respond_to?(:spm_dependency, true)
+  s.source_files = 'ios/models/*.{h,m,mm,swift}',
+                   'ios/utils/*.{h,m,mm,swift}',
+                   'ios/dispatchers/*.{h,m,mm,swift}',
+                   'ios/*.{h,m,mm,swift}'
 
-  source_globs = [
-    'ios/models/*.{h,m,mm,swift}',
-    'ios/utils/*.{h,m,mm,swift}',
-    'ios/dispatchers/*.{h,m,mm,swift}',
-    'ios/*.{h,m,mm,swift}',
-  ]
-
-  if use_spm
-    # TalsecRuntime is resolved via Swift Package Manager (dedicated RN-flavour manifest repo).
-    # spm_dependency injects an SPM reference into the Pods-generated Xcode project.
-    # NOTE: the vendored xcframework is intentionally NOT linked here to avoid
-    # duplicate symbols.
-    # TODO(SPM infra): placeholders above — this branch is not usable until the infra lands.
-    s.ios.deployment_target = '13.0'
-    spm_dependency(s,
-      url: talsec_spm_url,
-      requirement: { kind: 'upToNextMajorVersion', minimumVersion: talsec_spm_min_version },
-      products: ['TalsecRuntime']
-    )
-  else
-    # TalsecRuntime is provided by the vendored xcframework (default).
-    source_globs << 'ios/TalsecRuntime.xcframework'
-    s.xcconfig = { 'OTHER_LDFLAGS' => '-framework TalsecRuntime' }
-    s.ios.vendored_frameworks = 'ios/TalsecRuntime.xcframework'
+  # TalsecRuntime is resolved exclusively via Swift Package Manager. spm_dependency
+  # (RN >= 0.75) injects the SPM reference into the Pods-generated Xcode project; the
+  # binary framework is embedded into the app target by `freerasp_embed_talsec_spm!`
+  # (freerasp_spm.rb), called from the consumer Podfile post_install.
+  unless respond_to?(:spm_dependency, true)
+    raise "[freerasp-react-native] iOS integration requires React Native >= 0.75 (the spm_dependency helper)."
   end
-
-  s.source_files = source_globs
+  spm_dependency(s,
+    url: talsec_spm_url,
+    requirement: { kind: 'upToNextMajorVersion', minimumVersion: talsec_spm_min_version },
+    products: ['TalsecRuntime']
+  )
 
   # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.
   # See https://github.com/facebook/react-native/blob/febf6b7f33fdb4904669f99d795eba4c0f95d7bf/scripts/cocoapods/new_architecture.rb#L79.

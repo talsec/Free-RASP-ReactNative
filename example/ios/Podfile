@@ -8,15 +8,12 @@ require Pod::Executable.execute_command('node', ['-p',
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
-# To test the experimental Swift Package Manager integration of freerasp-react-native,
-# install with the SPM opt-in flag and dynamic frameworks:
-#   FREERASP_USE_SPM=1 USE_FRAMEWORKS=dynamic pod install
-# Without these flags the default vendored xcframework is used.
-linkage = ENV['USE_FRAMEWORKS']
-if linkage != nil
-  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
-end
+# freerasp-react-native delivers TalsecRuntime via Swift Package Manager, which
+# requires dynamically linked frameworks. Default to dynamic; USE_FRAMEWORKS may
+# override the linkage.
+linkage = (ENV['USE_FRAMEWORKS'] || 'dynamic').to_sym
+Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+use_frameworks! :linkage => linkage
 
 target 'FreeraspRNExample' do
   config = use_native_modules!
@@ -36,16 +33,14 @@ target 'FreeraspRNExample' do
       # :ccache_enabled => true
     )
 
-    # freeRASP: on the opt-in SPM path, embed TalsecRuntime into the app target
-    # so it ships inside the app bundle (otherwise dyld fails at launch).
+    # freeRASP: embed TalsecRuntime (delivered via SPM) into the app target so it
+    # ships inside the app bundle (otherwise dyld fails at launch).
     # In a real app (freerasp-react-native installed in node_modules) resolve it via:
     #   require Pod::Executable.execute_command('node', ['-p',
     #     'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',
     #     __dir__]).strip
     # This example consumes the library from the repo root, so it requires it directly.
-    if ENV['FREERASP_USE_SPM'] == '1'
-      require_relative '../../freerasp_spm.rb'
-      freerasp_embed_talsec_spm!(installer)
-    end
+    require_relative '../../freerasp_spm.rb'
+    freerasp_embed_talsec_spm!(installer)
   end
 end

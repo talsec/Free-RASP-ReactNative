@@ -2,10 +2,14 @@ import {
   AndroidConfig,
   WarningAggregator,
   createRunOncePlugin,
+  withDangerousMod,
+  withPodfileProperties,
   withProjectBuildGradle,
   type ConfigPlugin,
 } from '@expo/config-plugins';
 import { type ExpoConfig } from '@expo/config-types';
+import * as fs from 'fs';
+import * as path from 'path';
 import { type PluginConfigType } from './pluginConfig';
 
 const { createBuildGradlePropsConfigPlugin } = AndroidConfig.BuildProperties;
@@ -106,10 +110,86 @@ const withAndroidR8Version: ConfigPlugin<PluginConfigType> = (
   });
 };
 
+// ---------------------------------------------------------------------------
+// iOS — experimental Swift Package Manager delivery of TalsecRuntime (opt-in).
+//
+// TODO(SPM infra): NOT usable until the dedicated RN-flavour manifest repo +
+// GCP-hosted xcframework are ready. Enabled only via `ios.useSpm: true`; off by
+// default so existing Expo apps keep using the vendored xcframework (non-breaking).
+// TODO(verify): the Podfile anchor and the full `expo prebuild` flow are unverified
+// until the SPM infra lands (see freerasp-react-native.podspec "PHASE 2 FLIP").
+// ---------------------------------------------------------------------------
+
+const FREERASP_SPM_EMBED_TAG = '# @generated freerasp-react-native (SPM embed)';
+
+/**
+ * Force dynamically linked frameworks — required by `spm_dependency`.
+ */
+const withFreeraspIosDynamicFrameworks: ConfigPlugin = (config) => {
+  return withPodfileProperties(config, (config) => {
+    config.modResults['ios.useFrameworks'] = 'dynamic';
+    return config;
+  });
+};
+
+/**
+ * Inject the TalsecRuntime embed step into the generated Podfile `post_install`,
+ * so the SPM binary framework ends up in the app bundle (otherwise dyld fails at launch).
+ */
+const withFreeraspIosSpmEmbed: ConfigPlugin = (config) => {
+  return withDangerousMod(config, [
+    'ios',
+    (config) => {
+      const podfilePath = path.join(
+        config.modRequest.platformProjectRoot,
+        'Podfile'
+      );
+      let contents = fs.readFileSync(podfilePath, 'utf-8');
+
+      if (!contents.includes(FREERASP_SPM_EMBED_TAG)) {
+        const anchor = 'post_install do |installer|';
+        const anchorIndex = contents.indexOf(anchor);
+        if (anchorIndex === -1) {
+          WarningAggregator.addWarningIOS(
+            'freerasp-react-native',
+            'Could not find a `post_install` block in the Podfile to inject the ' +
+              'TalsecRuntime SPM embed step.'
+          );
+        } else {
+          const snippet = [
+            '',
+            `    ${FREERASP_SPM_EMBED_TAG}`,
+            "    require Pod::Executable.execute_command('node', ['-p',",
+            `      'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',`,
+            '      __dir__]).strip',
+            '    freerasp_embed_talsec_spm!(installer)',
+          ].join('\n');
+          const insertAt = anchorIndex + anchor.length;
+          contents =
+            contents.slice(0, insertAt) + snippet + contents.slice(insertAt);
+          fs.writeFileSync(podfilePath, contents);
+        }
+      }
+      return config;
+    },
+  ]);
+};
+
+const withRnTalsecIos: ConfigPlugin<PluginConfigType> = (config, props) => {
+  // Off by default (non-breaking). Enable via `ios.useSpm: true`.
+  if (!props?.ios?.useSpm) {
+    return config;
+  }
+  config = withFreeraspIosDynamicFrameworks(config);
+  config = withFreeraspIosSpmEmbed(config);
+  return config;
+};
+
 const withRnTalsecApp: ConfigPlugin<PluginConfigType> = (config, props) => {
   config = withBuildscriptDependency(config);
   config = withAndroidMinSdkVersion(config, props);
   config = withAndroidR8Version(config, props);
+  config = withRnTalsecIos(config, props);
   return config;
 };
 

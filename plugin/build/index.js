@@ -1,6 +1,31 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_plugins_1 = require("@expo/config-plugins");
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
 const { createBuildGradlePropsConfigPlugin } = config_plugins_1.AndroidConfig.BuildProperties;
 const urlFreerasp = 'https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp';
 const urlJitpack = 'https://www.jitpack.io';
@@ -71,10 +96,75 @@ const withAndroidR8Version = (expoConfig, props) => {
         return config;
     });
 };
+// ---------------------------------------------------------------------------
+// iOS — experimental Swift Package Manager delivery of TalsecRuntime (opt-in).
+//
+// TODO(SPM infra): NOT usable until the dedicated RN-flavour manifest repo +
+// GCP-hosted xcframework are ready. Enabled only via `ios.useSpm: true`; off by
+// default so existing Expo apps keep using the vendored xcframework (non-breaking).
+// TODO(verify): the Podfile anchor and the full `expo prebuild` flow are unverified
+// until the SPM infra lands (see freerasp-react-native.podspec "PHASE 2 FLIP").
+// ---------------------------------------------------------------------------
+const FREERASP_SPM_EMBED_TAG = '# @generated freerasp-react-native (SPM embed)';
+/**
+ * Force dynamically linked frameworks — required by `spm_dependency`.
+ */
+const withFreeraspIosDynamicFrameworks = (config) => {
+    return (0, config_plugins_1.withPodfileProperties)(config, (config) => {
+        config.modResults['ios.useFrameworks'] = 'dynamic';
+        return config;
+    });
+};
+/**
+ * Inject the TalsecRuntime embed step into the generated Podfile `post_install`,
+ * so the SPM binary framework ends up in the app bundle (otherwise dyld fails at launch).
+ */
+const withFreeraspIosSpmEmbed = (config) => {
+    return (0, config_plugins_1.withDangerousMod)(config, [
+        'ios',
+        (config) => {
+            const podfilePath = path.join(config.modRequest.platformProjectRoot, 'Podfile');
+            let contents = fs.readFileSync(podfilePath, 'utf-8');
+            if (!contents.includes(FREERASP_SPM_EMBED_TAG)) {
+                const anchor = 'post_install do |installer|';
+                const anchorIndex = contents.indexOf(anchor);
+                if (anchorIndex === -1) {
+                    config_plugins_1.WarningAggregator.addWarningIOS('freerasp-react-native', 'Could not find a `post_install` block in the Podfile to inject the ' +
+                        'TalsecRuntime SPM embed step.');
+                }
+                else {
+                    const snippet = [
+                        '',
+                        `    ${FREERASP_SPM_EMBED_TAG}`,
+                        "    require Pod::Executable.execute_command('node', ['-p',",
+                        `      'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',`,
+                        '      __dir__]).strip',
+                        '    freerasp_embed_talsec_spm!(installer)',
+                    ].join('\n');
+                    const insertAt = anchorIndex + anchor.length;
+                    contents =
+                        contents.slice(0, insertAt) + snippet + contents.slice(insertAt);
+                    fs.writeFileSync(podfilePath, contents);
+                }
+            }
+            return config;
+        },
+    ]);
+};
+const withRnTalsecIos = (config, props) => {
+    // Off by default (non-breaking). Enable via `ios.useSpm: true`.
+    if (!props?.ios?.useSpm) {
+        return config;
+    }
+    config = withFreeraspIosDynamicFrameworks(config);
+    config = withFreeraspIosSpmEmbed(config);
+    return config;
+};
 const withRnTalsecApp = (config, props) => {
     config = withBuildscriptDependency(config);
     config = withAndroidMinSdkVersion(config, props);
     config = withAndroidR8Version(config, props);
+    config = withRnTalsecIos(config, props);
     return config;
 };
 let pkg = {

@@ -35,5 +35,17 @@ target 'FreeraspRNExample' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # freeRASP: on the opt-in SPM path, embed TalsecRuntime into the app target
+    # so it ships inside the app bundle (otherwise dyld fails at launch).
+    # In a real app (freerasp-react-native installed in node_modules) resolve it via:
+    #   require Pod::Executable.execute_command('node', ['-p',
+    #     'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',
+    #     __dir__]).strip
+    # This example consumes the library from the repo root, so it requires it directly.
+    if ENV['FREERASP_USE_SPM'] == '1'
+      require_relative '../../freerasp_spm.rb'
+      freerasp_embed_talsec_spm!(installer)
+    end
   end
 end

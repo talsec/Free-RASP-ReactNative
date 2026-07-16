@@ -111,13 +111,14 @@ const withAndroidR8Version: ConfigPlugin<PluginConfigType> = (
 };
 
 // ---------------------------------------------------------------------------
-// iOS — experimental Swift Package Manager delivery of TalsecRuntime (opt-in).
+// iOS — Swift Package Manager delivery of TalsecRuntime.
 //
+// Sets dynamically linked frameworks (required by spm_dependency) and injects the
+// TalsecRuntime embed step into the generated Podfile's post_install.
 // TODO(SPM infra): NOT usable until the dedicated RN-flavour manifest repo +
-// GCP-hosted xcframework are ready. Enabled only via `ios.useSpm: true`; off by
-// default so existing Expo apps keep using the vendored xcframework (non-breaking).
+// GCP-hosted xcframework are ready (see freerasp-react-native.podspec).
 // TODO(verify): the Podfile anchor and the full `expo prebuild` flow are unverified
-// until the SPM infra lands (see freerasp-react-native.podspec "PHASE 2 FLIP").
+// until the SPM infra lands.
 // ---------------------------------------------------------------------------
 
 const FREERASP_SPM_EMBED_TAG = '# @generated freerasp-react-native (SPM embed)';
@@ -175,11 +176,7 @@ const withFreeraspIosSpmEmbed: ConfigPlugin = (config) => {
   ]);
 };
 
-const withRnTalsecIos: ConfigPlugin<PluginConfigType> = (config, props) => {
-  // Off by default (non-breaking). Enable via `ios.useSpm: true`.
-  if (!props?.ios?.useSpm) {
-    return config;
-  }
+const withRnTalsecIos: ConfigPlugin = (config) => {
   config = withFreeraspIosDynamicFrameworks(config);
   config = withFreeraspIosSpmEmbed(config);
   return config;
@@ -189,7 +186,7 @@ const withRnTalsecApp: ConfigPlugin<PluginConfigType> = (config, props) => {
   config = withBuildscriptDependency(config);
   config = withAndroidMinSdkVersion(config, props);
   config = withAndroidR8Version(config, props);
-  config = withRnTalsecIos(config, props);
+  config = withRnTalsecIos(config);
   return config;
 };
 

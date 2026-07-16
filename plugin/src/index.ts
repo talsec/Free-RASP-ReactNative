@@ -8,8 +8,8 @@ import {
   type ConfigPlugin,
 } from '@expo/config-plugins';
 import { type ExpoConfig } from '@expo/config-types';
-import * as fs from 'fs';
-import * as path from 'path';
+import { readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
 import { type PluginConfigType } from './pluginConfig';
 
 const { createBuildGradlePropsConfigPlugin } = AndroidConfig.BuildProperties;
@@ -121,9 +121,9 @@ const FREERASP_SPM_EMBED_TAG = '# @generated freerasp-react-native (SPM embed)';
  * Force dynamically linked frameworks — required by `spm_dependency`.
  */
 const withFreeraspIosDynamicFrameworks: ConfigPlugin = (config) => {
-  return withPodfileProperties(config, (config) => {
-    config.modResults['ios.useFrameworks'] = 'dynamic';
-    return config;
+  return withPodfileProperties(config, (cfg) => {
+    cfg.modResults['ios.useFrameworks'] = 'dynamic';
+    return cfg;
   });
 };
 
@@ -134,12 +134,9 @@ const withFreeraspIosDynamicFrameworks: ConfigPlugin = (config) => {
 const withFreeraspIosSpmEmbed: ConfigPlugin = (config) => {
   return withDangerousMod(config, [
     'ios',
-    (config) => {
-      const podfilePath = path.join(
-        config.modRequest.platformProjectRoot,
-        'Podfile'
-      );
-      let contents = fs.readFileSync(podfilePath, 'utf-8');
+    (cfg) => {
+      const podfilePath = join(cfg.modRequest.platformProjectRoot, 'Podfile');
+      let contents = readFileSync(podfilePath, 'utf-8');
 
       if (!contents.includes(FREERASP_SPM_EMBED_TAG)) {
         const anchor = 'post_install do |installer|';
@@ -162,10 +159,10 @@ const withFreeraspIosSpmEmbed: ConfigPlugin = (config) => {
           const insertAt = anchorIndex + anchor.length;
           contents =
             contents.slice(0, insertAt) + snippet + contents.slice(insertAt);
-          fs.writeFileSync(podfilePath, contents);
+          writeFileSync(podfilePath, contents);
         }
       }
-      return config;
+      return cfg;
     },
   ]);
 };

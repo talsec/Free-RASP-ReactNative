@@ -1,31 +1,8 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_plugins_1 = require("@expo/config-plugins");
-const fs = __importStar(require("fs"));
-const path = __importStar(require("path"));
+const fs_1 = require("fs");
+const path_1 = require("path");
 const { createBuildGradlePropsConfigPlugin } = config_plugins_1.AndroidConfig.BuildProperties;
 const urlFreerasp = 'https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp';
 const urlJitpack = 'https://www.jitpack.io';
@@ -105,9 +82,9 @@ const FREERASP_SPM_EMBED_TAG = '# @generated freerasp-react-native (SPM embed)';
  * Force dynamically linked frameworks — required by `spm_dependency`.
  */
 const withFreeraspIosDynamicFrameworks = (config) => {
-    return (0, config_plugins_1.withPodfileProperties)(config, (config) => {
-        config.modResults['ios.useFrameworks'] = 'dynamic';
-        return config;
+    return (0, config_plugins_1.withPodfileProperties)(config, (cfg) => {
+        cfg.modResults['ios.useFrameworks'] = 'dynamic';
+        return cfg;
     });
 };
 /**
@@ -117,9 +94,9 @@ const withFreeraspIosDynamicFrameworks = (config) => {
 const withFreeraspIosSpmEmbed = (config) => {
     return (0, config_plugins_1.withDangerousMod)(config, [
         'ios',
-        (config) => {
-            const podfilePath = path.join(config.modRequest.platformProjectRoot, 'Podfile');
-            let contents = fs.readFileSync(podfilePath, 'utf-8');
+        (cfg) => {
+            const podfilePath = (0, path_1.join)(cfg.modRequest.platformProjectRoot, 'Podfile');
+            let contents = (0, fs_1.readFileSync)(podfilePath, 'utf-8');
             if (!contents.includes(FREERASP_SPM_EMBED_TAG)) {
                 const anchor = 'post_install do |installer|';
                 const anchorIndex = contents.indexOf(anchor);
@@ -139,10 +116,10 @@ const withFreeraspIosSpmEmbed = (config) => {
                     const insertAt = anchorIndex + anchor.length;
                     contents =
                         contents.slice(0, insertAt) + snippet + contents.slice(insertAt);
-                    fs.writeFileSync(podfilePath, contents);
+                    (0, fs_1.writeFileSync)(podfilePath, contents);
                 }
             }
-            return config;
+            return cfg;
         },
     ]);
 };

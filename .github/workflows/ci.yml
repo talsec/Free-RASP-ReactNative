@@ -82,16 +82,12 @@ jobs:
           yarn build:android
 
   build-ios:
-    # iOS build. TalsecRuntime is delivered via Swift Package Manager (dynamic
-    # frameworks). This builds green once the real registry link replaces the
-    # placeholder in freerasp-react-native.podspec.
-    # Kept non-blocking (continue-on-error) only until the SPM infra lands; drop
-    # that line to make it a required gate.
+    # Vendored TalsecRuntime fallback (FREERASP_DISABLE_SPM=1) — the required gate.
+    # Proves the non-breaking fallback keeps building while the SPM infra is not ready.
     runs-on: macos-latest
     needs: build-library
-    continue-on-error: true
     env:
-      USE_FRAMEWORKS: dynamic
+      FREERASP_DISABLE_SPM: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -104,6 +100,31 @@ jobs:
         run: pod install
 
       - name: Build example for iOS
+        working-directory: ./example
+        run: |
+          yarn build:ios
+
+  build-ios-spm:
+    # SPM path (default on RN >= 0.75, dynamic frameworks). Non-blocking until the
+    # real manifest-repo/GCS link replaces the placeholder in the podspec; drop
+    # continue-on-error to make it a required gate once the SPM infra is live.
+    runs-on: macos-latest
+    needs: build-library
+    continue-on-error: true
+    env:
+      USE_FRAMEWORKS: dynamic
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install pods (SPM)
+        working-directory: ./example/ios
+        run: pod install
+
+      - name: Build example for iOS (SPM)
         working-directory: ./example
         run: |
           yarn build:ios

@@ -3,26 +3,11 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
-# ---------------------------------------------------------------------------
-# TalsecRuntime delivery — Swift Package Manager by default, vendored fallback.
-# (Same decision logic as react-native-firebase, non-breaking.)
-#
-#   spm_dependency available (RN >= 0.75) AND FREERASP_DISABLE_SPM != '1'
-#        -> SPM (dedicated RN-flavour manifest repo)
-#   otherwise (RN < 0.75, or FREERASP_DISABLE_SPM=1)
-#        -> vendored TalsecRuntime.xcframework
-#
-# The SPM path requires USE_FRAMEWORKS=dynamic and iOS 13+. The vendored fallback
-# keeps working on any RN / linkage, so this is not a breaking change.
-#
-# TODO(SPM infra): the dedicated RN-flavour manifest repo (which hosts the GCS-backed
-# xcframework via binaryTarget) is NOT ready yet, so the values below are PLACEHOLDERS
-# — the SPM path won't resolve until it exists; consumers fall back to vendored.
-# IMPORTANT: point at the RN-flavour manifest repo — NOT talsec/Free-RASP-iOS
-# (that is the native flavour and the wrong artifact for React Native).
-# ---------------------------------------------------------------------------
-talsec_spm_url = 'https://github.com/talsec/TODO-freerasp-ios-spm' # TODO(SPM infra): real manifest repo git URL
-talsec_spm_min_version = '0.0.0' # TODO(SPM infra): real version once the manifest repo is tagged
+# TalsecRuntime: SPM by default (RN >= 0.75), vendored xcframework fallback.
+# Opt out of SPM with FREERASP_DISABLE_SPM=1. Pin the EXACT TalsecRuntime version this
+# library release is built against (each RN version maps to a specific TalsecRuntime).
+talsec_spm_url = 'https://github.com/talsec/Free-RASP-ReactNative-SPM'
+talsec_spm_version = '6.14.4'
 
 Pod::Spec.new do |s|
   s.name         = "freerasp-react-native"
@@ -47,15 +32,12 @@ Pod::Spec.new do |s|
   ]
 
   if use_spm
-    # TalsecRuntime resolved via Swift Package Manager (dedicated RN-flavour manifest repo).
-    # spm_dependency injects the SPM reference into the Pods project; the framework is
-    # embedded into the app target by `freerasp_embed_talsec_spm!` (freerasp_spm.rb),
-    # called from the consumer Podfile post_install.
-    # TODO(SPM infra): placeholders above — this path is not usable until the infra lands.
+    # SPM injects the reference into the Pods project; the framework is embedded into the
+    # app target by freerasp_embed_talsec_spm! (freerasp_spm.rb), called from the Podfile.
     s.ios.deployment_target = '13.0'
     spm_dependency(s,
       url: talsec_spm_url,
-      requirement: { kind: 'upToNextMajorVersion', minimumVersion: talsec_spm_min_version },
+      requirement: { kind: 'exactVersion', version: talsec_spm_version },
       products: ['TalsecRuntime']
     )
   else

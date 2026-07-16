@@ -33,17 +33,10 @@ target 'FreeraspRNExample' do
       # :ccache_enabled => true
     )
 
-    # freeRASP: when TalsecRuntime is delivered via SPM (the default on RN >= 0.75
-    # unless FREERASP_DISABLE_SPM=1), embed it into the app target so it ships inside
-    # the app bundle (otherwise dyld fails at launch). Skipped on the vendored fallback.
-    # In a real app (freerasp-react-native installed in node_modules) resolve the helper via:
-    #   require Pod::Executable.execute_command('node', ['-p',
-    #     'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',
-    #     __dir__]).strip
-    # This example consumes the library from the repo root, so it requires it directly.
-    if respond_to?(:spm_dependency, true) && ENV['FREERASP_DISABLE_SPM'] != '1'
-      require_relative '../../freerasp_spm.rb'
-      freerasp_embed_talsec_spm!(installer)
-    end
+    # freeRASP: embed TalsecRuntime into the app target on the SPM path (the helper is a
+    # no-op / cleanup on the vendored fallback, so it is safe to call unconditionally).
+    # Real apps resolve the helper from node_modules; this example requires it from the repo root.
+    require_relative '../../freerasp_spm.rb'
+    freerasp_embed_talsec_spm!(installer)
   end
 end

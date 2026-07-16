@@ -97,14 +97,16 @@ const withAndroidR8Version = (expoConfig, props) => {
     });
 };
 // ---------------------------------------------------------------------------
-// iOS — Swift Package Manager delivery of TalsecRuntime.
+// iOS — Swift Package Manager delivery of TalsecRuntime (default on RN >= 0.75).
 //
-// Sets dynamically linked frameworks (required by spm_dependency) and injects the
-// TalsecRuntime embed step into the generated Podfile's post_install.
+// Sets dynamically linked frameworks (required by spm_dependency) and injects a
+// guarded TalsecRuntime embed step into the generated Podfile's post_install. The
+// embed is skipped when SPM is unavailable or FREERASP_DISABLE_SPM=1 (vendored
+// fallback), matching the podspec's decision logic.
 // TODO(SPM infra): NOT usable until the dedicated RN-flavour manifest repo +
-// GCP-hosted xcframework are ready (see freerasp-react-native.podspec).
-// TODO(verify): the Podfile anchor and the full `expo prebuild` flow are unverified
-// until the SPM infra lands.
+// GCS-hosted xcframework are ready (see freerasp-react-native.podspec).
+// TODO(verify): the Podfile anchor, the FREERASP_DISABLE_SPM escape hatch, and the
+// full `expo prebuild` flow are unverified until the SPM infra lands.
 // ---------------------------------------------------------------------------
 const FREERASP_SPM_EMBED_TAG = '# @generated freerasp-react-native (SPM embed)';
 /**
@@ -137,10 +139,12 @@ const withFreeraspIosSpmEmbed = (config) => {
                     const snippet = [
                         '',
                         `    ${FREERASP_SPM_EMBED_TAG}`,
-                        "    require Pod::Executable.execute_command('node', ['-p',",
-                        `      'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',`,
-                        '      __dir__]).strip',
-                        '    freerasp_embed_talsec_spm!(installer)',
+                        "    if respond_to?(:spm_dependency, true) && ENV['FREERASP_DISABLE_SPM'] != '1'",
+                        "      require Pod::Executable.execute_command('node', ['-p',",
+                        `        'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',`,
+                        '        __dir__]).strip',
+                        '      freerasp_embed_talsec_spm!(installer)',
+                        '    end',
                     ].join('\n');
                     const insertAt = anchorIndex + anchor.length;
                     contents =

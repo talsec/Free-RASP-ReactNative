@@ -10,6 +10,8 @@ import {
 import { type ExpoConfig } from '@expo/config-types';
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+import mutatePodfileForFreeraspSpm from './iosSpm';
+import configureIosSpmProperties from './iosSpmProperties';
 import { type PluginConfigType } from './pluginConfig';
 
 const { createBuildGradlePropsConfigPlugin } = AndroidConfig.BuildProperties;
@@ -115,14 +117,16 @@ const withAndroidR8Version: ConfigPlugin<PluginConfigType> = (
 // vendored fallback / FREERASP_DISABLE_SPM=1). Note: the Expo prebuild flow is less
 // battle-tested than bare React Native.
 
-const FREERASP_SPM_EMBED_TAG = '# @generated freerasp-react-native (SPM embed)';
-
 /**
- * Force dynamically linked frameworks — required by `spm_dependency`.
+ * Configure dynamic frameworks while SPM is active and remove only values
+ * previously managed by this plugin when switching back to the vendored path.
  */
-const withFreeraspIosDynamicFrameworks: ConfigPlugin = (config) => {
+const withFreeraspIosFrameworks = (
+  config: ExpoConfig,
+  spmEnabled: boolean
+): ExpoConfig => {
   return withPodfileProperties(config, (cfg) => {
-    cfg.modResults['ios.useFrameworks'] = 'dynamic';
+    configureIosSpmProperties(cfg.modResults, spmEnabled);
     return cfg;
   });
 };
@@ -131,45 +135,38 @@ const withFreeraspIosDynamicFrameworks: ConfigPlugin = (config) => {
  * Inject the TalsecRuntime embed step into the generated Podfile `post_install`,
  * so the SPM binary framework ends up in the app bundle (otherwise dyld fails at launch).
  */
-const withFreeraspIosSpmEmbed: ConfigPlugin = (config) => {
+const withFreeraspIosPodfile: ConfigPlugin<{
+  spmEnabled: boolean;
+}> = (config, props) => {
   return withDangerousMod(config, [
     'ios',
     (cfg) => {
       const podfilePath = join(cfg.modRequest.platformProjectRoot, 'Podfile');
-      let contents = readFileSync(podfilePath, 'utf-8');
+      const contents = readFileSync(podfilePath, 'utf-8');
+      const result = mutatePodfileForFreeraspSpm(
+        contents,
+        props?.spmEnabled ?? true
+      );
 
-      if (!contents.includes(FREERASP_SPM_EMBED_TAG)) {
-        const anchor = 'post_install do |installer|';
-        const anchorIndex = contents.indexOf(anchor);
-        if (anchorIndex === -1) {
-          WarningAggregator.addWarningIOS(
-            'freerasp-react-native',
-            'Could not find a `post_install` block in the Podfile to inject the ' +
-              'TalsecRuntime SPM embed step.'
-          );
-        } else {
-          const snippet = [
-            '',
-            `    ${FREERASP_SPM_EMBED_TAG}`,
-            "    require Pod::Executable.execute_command('node', ['-p',",
-            `      'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',`,
-            '      __dir__]).strip',
-            '    freerasp_embed_talsec_spm!(installer)',
-          ].join('\n');
-          const insertAt = anchorIndex + anchor.length;
-          contents =
-            contents.slice(0, insertAt) + snippet + contents.slice(insertAt);
-          writeFileSync(podfilePath, contents);
-        }
+      if (result.missingAnchors.length > 0) {
+        WarningAggregator.addWarningIOS(
+          'freerasp-react-native',
+          'Could not configure TalsecRuntime delivery because the Podfile is missing: ' +
+            result.missingAnchors.join(', ')
+        );
+      } else if (result.changed) {
+        writeFileSync(podfilePath, result.contents);
       }
       return cfg;
     },
   ]);
 };
 
-const withRnTalsecIos: ConfigPlugin = (config) => {
-  config = withFreeraspIosDynamicFrameworks(config);
-  config = withFreeraspIosSpmEmbed(config);
+const withRnTalsecIos: ConfigPlugin<PluginConfigType> = (config, props) => {
+  const spmEnabled =
+    props?.ios?.useSpm !== false && process.env.FREERASP_DISABLE_SPM !== '1';
+  config = withFreeraspIosFrameworks(config, spmEnabled);
+  config = withFreeraspIosPodfile(config, { spmEnabled });
   return config;
 };
 
@@ -177,7 +174,7 @@ const withRnTalsecApp: ConfigPlugin<PluginConfigType> = (config, props) => {
   config = withBuildscriptDependency(config);
   config = withAndroidMinSdkVersion(config, props);
   config = withAndroidR8Version(config, props);
-  config = withRnTalsecIos(config);
+  config = withRnTalsecIos(config, props);
   return config;
 };
 

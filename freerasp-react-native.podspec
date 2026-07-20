@@ -3,9 +3,9 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
-# TalsecRuntime: local SPM manifest by default (RN >= 0.75), vendored xcframework
+# TalsecRuntime: opt-in local SPM manifest (RN >= 0.75), vendored xcframework
 # fallback. The manifest pins the remote binary URL and checksum.
-# Opt out of SPM with FREERASP_DISABLE_SPM=1.
+# Enable SPM with FREERASP_USE_SPM=1; FREERASP_DISABLE_SPM=1 always wins.
 talsec_spm_path = File.expand_path('ios/TalsecRuntimePackage', __dir__)
 
 Pod::Spec.new do |s|
@@ -19,9 +19,12 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "11.0" }
   s.source       = { :git => "https://github.com/talsec/freerasp-react-native.git", :tag => "#{s.version}" }
 
-  # SPM is the default whenever the spm_dependency helper is available (RN >= 0.75),
-  # unless the consumer opts out with FREERASP_DISABLE_SPM=1.
-  use_spm = respond_to?(:spm_dependency, true) && ENV['FREERASP_DISABLE_SPM'] != '1'
+  spm_requested = ENV['FREERASP_USE_SPM'] == '1' && ENV['FREERASP_DISABLE_SPM'] != '1'
+  use_spm = spm_requested && respond_to?(:spm_dependency, true)
+
+  if spm_requested && !respond_to?(:spm_dependency, true)
+    Pod::UI.warn '[freeRASP][SPM] React Native does not provide spm_dependency; using the vendored TalsecRuntime framework.'
+  end
 
   source_globs = [
     'ios/models/*.{h,m,mm,swift}',
@@ -40,7 +43,7 @@ Pod::Spec.new do |s|
       products: ['TalsecRuntime']
     )
   else
-    # Vendored xcframework fallback (RN < 0.75 or FREERASP_DISABLE_SPM=1).
+    # Vendored xcframework fallback (default, RN < 0.75, or FREERASP_DISABLE_SPM=1).
     source_globs << 'ios/TalsecRuntime.xcframework'
     s.xcconfig = { 'OTHER_LDFLAGS' => '-framework TalsecRuntime' }
     s.ios.vendored_frameworks = 'ios/TalsecRuntime.xcframework'

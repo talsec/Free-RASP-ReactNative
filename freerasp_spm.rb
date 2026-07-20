@@ -12,8 +12,10 @@ def freerasp_embed_talsec_spm!(installer,
   remote_pkg_class = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference
   ref_class = Xcodeproj::Project::Object::XCSwiftPackageProductDependency
 
-  # Mirror the podspec: SPM active unless unavailable (RN < 0.75) or opted out.
-  spm_active = respond_to?(:spm_dependency, true) && ENV['FREERASP_DISABLE_SPM'] != '1'
+  # Mirror the podspec: SPM is explicit and requires RN's spm_dependency helper.
+  spm_active = ENV['FREERASP_USE_SPM'] == '1' &&
+    ENV['FREERASP_DISABLE_SPM'] != '1' &&
+    respond_to?(:spm_dependency, true)
 
   if spm_active && !File.file?(File.join(package_path, 'Package.swift'))
     raise Pod::Informative, "[freeRASP][SPM] Package.swift not found at #{package_path}"
@@ -47,19 +49,30 @@ def freerasp_embed_talsec_spm!(installer,
   projects_and_targets.each do |project, targets|
     targets.uniq!
 
-    # Remove local and incorrectly-created remote references first.
+    # Remove references owned by this integration regardless of their previous
+    # absolute path. This also cleans references committed from another checkout.
+    owned_packages = []
     targets.each do |target|
-      target.package_product_dependencies.delete_if do |r|
-        next false unless r.class == ref_class && r.product_name == product
-
-        package = r.package
-        (package.class == local_pkg_class && package.relative_path == package_path) ||
-          (package.class == remote_pkg_class && package.repositoryURL == package_path)
+      target.package_product_dependencies.select do |reference|
+        reference.class == ref_class && reference.product_name == product
+      end.each do |reference|
+        owned_packages << reference.package unless reference.package.nil?
+        reference.remove_from_project
       end
     end
-    project.root_object.package_references.delete_if do |p|
-      (p.class == local_pkg_class && p.relative_path == package_path) ||
-        (p.class == remote_pkg_class && p.repositoryURL == package_path)
+    project.root_object.package_references.each do |package|
+      reference_path =
+        if package.class == local_pkg_class
+          package.relative_path
+        elsif package.class == remote_pkg_class
+          package.repositoryURL
+        end
+      next if reference_path.nil?
+
+      owned_packages << package if File.basename(reference_path) == 'TalsecRuntimePackage'
+    end
+    owned_packages.uniq.each do |package|
+      package.remove_from_project
     end
 
     if spm_active

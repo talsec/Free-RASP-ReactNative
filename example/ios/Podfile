@@ -8,12 +8,20 @@ require Pod::Executable.execute_command('node', ['-p',
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
-# freerasp-react-native delivers TalsecRuntime via Swift Package Manager, which
-# requires dynamically linked frameworks. Default to dynamic; USE_FRAMEWORKS may
-# override the linkage.
-linkage = (ENV['USE_FRAMEWORKS'] || 'dynamic').to_sym
-Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-use_frameworks! :linkage => linkage
+# The example exercises the vendored fallback by default. Its SPM CI job sets
+# FREERASP_USE_SPM=1; SPM requires dynamic frameworks.
+use_freerasp_spm = ENV['FREERASP_USE_SPM'] == '1' && ENV['FREERASP_DISABLE_SPM'] != '1'
+linkage = ENV['USE_FRAMEWORKS']
+if use_freerasp_spm
+  if linkage != nil && linkage != 'dynamic'
+    raise Pod::Informative, 'freeRASP SPM requires USE_FRAMEWORKS=dynamic'
+  end
+  linkage = 'dynamic'
+end
+if linkage != nil
+  Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+  use_frameworks! :linkage => linkage.to_sym
+end
 
 target 'FreeraspRNExample' do
   config = use_native_modules!

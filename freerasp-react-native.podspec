@@ -3,11 +3,10 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
-# TalsecRuntime: SPM by default (RN >= 0.75), vendored xcframework fallback.
-# Opt out of SPM with FREERASP_DISABLE_SPM=1. Pin the EXACT TalsecRuntime version this
-# library release is built against (each RN version maps to a specific TalsecRuntime).
-talsec_spm_url = 'https://github.com/talsec/Free-RASP-ReactNative-SPM'
-talsec_spm_version = '6.14.4'
+# TalsecRuntime: local SPM manifest by default (RN >= 0.75), vendored xcframework
+# fallback. The manifest pins the remote binary URL and checksum.
+# Opt out of SPM with FREERASP_DISABLE_SPM=1.
+talsec_spm_path = File.expand_path('ios/TalsecRuntimePackage', __dir__)
 
 Pod::Spec.new do |s|
   s.name         = "freerasp-react-native"
@@ -36,8 +35,8 @@ Pod::Spec.new do |s|
     # app target by freerasp_embed_talsec_spm! (freerasp_spm.rb), called from the Podfile.
     s.ios.deployment_target = '13.0'
     spm_dependency(s,
-      url: talsec_spm_url,
-      requirement: { kind: 'exactVersion', version: talsec_spm_version },
+      url: talsec_spm_path,
+      requirement: {},
       products: ['TalsecRuntime']
     )
   else

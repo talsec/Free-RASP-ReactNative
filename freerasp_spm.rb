@@ -1,18 +1,29 @@
-# freeRASP — embeds the SPM-delivered TalsecRuntime into the app target(s). spm_dependency
-# only attaches it to the pod target, so dyld fails at launch otherwise. Idempotent and safe
-# to call unconditionally: removes any stale reference, re-adds only when SPM is active.
-# Keep url/requirement in sync with freerasp-react-native.podspec.
+# freeRASP — links the local TalsecRuntime Swift package to the pod and embeds its
+# product into the app target(s). React Native 0.75–0.83 treats local package paths
+# as remote URLs, so this helper also replaces that invalid reference after
+# react_native_post_install. It is idempotent and safe to call unconditionally.
 
 def freerasp_embed_talsec_spm!(installer,
-  url: 'https://github.com/talsec/Free-RASP-ReactNative-SPM',
-  requirement: { kind: 'exactVersion', version: '6.14.4' },
+  package_path: File.expand_path('ios/TalsecRuntimePackage', __dir__),
   product: 'TalsecRuntime')
 
-  pkg_class = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference
+  package_path = File.expand_path(package_path)
+  local_pkg_class = Xcodeproj::Project::Object::XCLocalSwiftPackageReference
+  remote_pkg_class = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference
   ref_class = Xcodeproj::Project::Object::XCSwiftPackageProductDependency
 
   # Mirror the podspec: SPM active unless unavailable (RN < 0.75) or opted out.
   spm_active = respond_to?(:spm_dependency, true) && ENV['FREERASP_DISABLE_SPM'] != '1'
+
+  if spm_active && !File.file?(File.join(package_path, 'Package.swift'))
+    raise Pod::Informative, "[freeRASP][SPM] Package.swift not found at #{package_path}"
+  end
+
+  projects_and_targets = {}
+  pods_project = installer.pods_project
+  projects_and_targets[pods_project] = pods_project.targets.select do |target|
+    target.name == 'freerasp-react-native'
+  end
 
   installer.aggregate_targets.each do |aggregate_target|
     project = aggregate_target.user_project
@@ -21,27 +32,44 @@ def freerasp_embed_talsec_spm!(installer,
     app_targets = aggregate_target.user_targets.select do |t|
       t.respond_to?(:product_type) && t.product_type == 'com.apple.product-type.application'
     end
+    projects_and_targets[project] ||= []
+    projects_and_targets[project].concat(app_targets)
+  end
 
-    # Remove any previously-added reference first (avoids a double embed on delivery switch).
-    app_targets.each do |target|
+  new_object = lambda do |project, klass|
+    uuid = project.generate_uuid
+    uuid = project.generate_uuid while project.objects_by_uuid.key?(uuid)
+    object = klass.new(project, uuid)
+    object.initialize_defaults
+    object
+  end
+
+  projects_and_targets.each do |project, targets|
+    targets.uniq!
+
+    # Remove local and incorrectly-created remote references first.
+    targets.each do |target|
       target.package_product_dependencies.delete_if do |r|
-        r.class == ref_class && r.product_name == product &&
-          r.package.respond_to?(:repositoryURL) && r.package.repositoryURL == url
+        next false unless r.class == ref_class && r.product_name == product
+
+        package = r.package
+        (package.class == local_pkg_class && package.relative_path == package_path) ||
+          (package.class == remote_pkg_class && package.repositoryURL == package_path)
       end
     end
     project.root_object.package_references.delete_if do |p|
-      p.class == pkg_class && p.repositoryURL == url
+      (p.class == local_pkg_class && p.relative_path == package_path) ||
+        (p.class == remote_pkg_class && p.repositoryURL == package_path)
     end
 
     if spm_active
-      pkg = project.new(pkg_class)
-      pkg.repositoryURL = url
-      pkg.requirement = requirement
+      pkg = new_object.call(project, local_pkg_class)
+      pkg.relative_path = package_path
       project.root_object.package_references << pkg
 
-      app_targets.each do |target|
-        Pod::UI.puts "[freeRASP][SPM] Embedding #{product} into app target #{target.name}"
-        dep = project.new(ref_class)
+      targets.each do |target|
+        Pod::UI.puts "[freeRASP][SPM] Linking #{product} to target #{target.name}"
+        dep = new_object.call(project, ref_class)
         dep.package = pkg
         dep.product_name = product
         target.package_product_dependencies << dep

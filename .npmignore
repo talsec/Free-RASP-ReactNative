@@ -92,5 +92,6 @@ android/local.properties
 **/__fixtures__/*
 **/__mocks__/*
 **/.*
+!ios/TalsecRuntime.xcframework/**
 
 example/

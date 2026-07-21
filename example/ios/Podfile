@@ -41,6 +41,17 @@ target 'FreeraspRNExample' do
       # :ccache_enabled => true
     )
 
+    # React Native 0.78 pins fmt 11.0.2, whose C++20 consteval path does not
+    # compile with Xcode 26.4+. Keep only fmt on C++17 until RN is upgraded to
+    # 0.83 or newer, which includes the upstream fmt fix.
+    installer.pods_project.targets.each do |target|
+      next unless target.name == 'fmt'
+
+      target.build_configurations.each do |build_configuration|
+        build_configuration.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+      end
+    end
+
     # freeRASP: embed TalsecRuntime into the app target on the SPM path (the helper is a
     # no-op / cleanup on the vendored fallback, so it is safe to call unconditionally).
     # Real apps resolve the helper from node_modules; this example requires it from the repo root.

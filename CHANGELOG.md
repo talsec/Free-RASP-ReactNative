@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.1.0]
+
+### iOS
+
+#### Added
+
+- Added Swift Package Manager delivery of `TalsecRuntime`, enabled by default for Expo projects and available as an opt-in for bare React Native 0.75 or newer projects.
+- Added the Expo config plugin option `ios.useSpm`; set it to `false` to use the vendored XCFramework fallback.
+
 ## [5.0.0] - 2026-05-15
 
 - Android SDK version: 18.3.0

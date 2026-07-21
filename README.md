@@ -62,49 +62,6 @@ For integrating freeRASP on the React Native platform, be sure to follow all the
 
 Be sure to bookmark it and stay informed! :books: :sparkles:.
 
-### iOS Swift Package Manager delivery
-Expo projects use Swift Package Manager for `TalsecRuntime` by default. To use
-the vendored XCFramework instead, configure the plugin in `app.json`:
-
-```json
-[
-  "freerasp-react-native",
-  {
-    "ios": {
-      "useSpm": false
-    }
-  }
-]
-```
-
-Swift Package Manager is opt-in for bare React Native projects and requires
-React Native 0.75 or newer, iOS 13 or newer, and dynamically linked frameworks.
-Set `FREERASP_USE_SPM` before dependencies are evaluated in the Podfile:
-
-```ruby
-ENV['FREERASP_USE_SPM'] = '1'
-use_frameworks! :linkage => :dynamic
-```
-
-Call the freeRASP helper after `react_native_post_install` in the same Podfile:
-
-```ruby
-post_install do |installer|
-  react_native_post_install(
-    installer,
-    config[:reactNativePath]
-  )
-
-  require Pod::Executable.execute_command('node', ['-p',
-    'require.resolve("freerasp-react-native/freerasp_spm.rb", {paths: [process.argv[1]]})',
-    __dir__]).strip
-  freerasp_embed_talsec_spm!(installer)
-end
-```
-
-Omit `FREERASP_USE_SPM`, set it to `0`, or set the Expo option to `false` to
-use the vendored fallback.
-
 # :rocket: What's New and Changelog
 
 Stay informed and make the most of freeRASP by checking out [What's New and Changelog](https://docs.talsec.app/freerasp/whats-new-and-changelog?utm_source=github)! Here, you’ll discover the latest features, enhancements, and bug fixes we’ve implemented to improve your experience across all platforms, including Android, iOS, Flutter, React Native, Capacitor, and Cordova. 

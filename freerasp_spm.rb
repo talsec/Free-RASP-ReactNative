@@ -1,7 +1,4 @@
-# freeRASP — links the local TalsecRuntime Swift package to the pod and embeds its
-# product into the app target(s). React Native 0.75–0.83 treats local package paths
-# as remote URLs, so this helper also replaces that invalid reference after
-# react_native_post_install. It is idempotent and safe to call unconditionally.
+# Links and embeds the local TalsecRuntime Swift package.
 
 def freerasp_embed_talsec_spm!(installer,
   package_path: File.expand_path('ios/TalsecRuntimePackage', __dir__),
@@ -12,7 +9,6 @@ def freerasp_embed_talsec_spm!(installer,
   remote_pkg_class = Xcodeproj::Project::Object::XCRemoteSwiftPackageReference
   ref_class = Xcodeproj::Project::Object::XCSwiftPackageProductDependency
 
-  # Mirror the podspec: SPM is explicit and requires RN's spm_dependency helper.
   spm_active = ENV['FREERASP_USE_SPM'] == '1' &&
     respond_to?(:spm_dependency, true)
 
@@ -48,8 +44,7 @@ def freerasp_embed_talsec_spm!(installer,
   projects_and_targets.each do |project, targets|
     targets.uniq!
 
-    # Remove references owned by this integration regardless of their previous
-    # absolute path. This also cleans references committed from another checkout.
+    # Remove existing references before recreating them.
     owned_packages = []
     targets.each do |target|
       target.package_product_dependencies.select do |reference|

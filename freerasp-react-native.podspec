@@ -3,9 +3,6 @@ require "json"
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 -Wno-comma -Wno-shorten-64-to-32'
 
-# TalsecRuntime: opt-in local SPM manifest (RN >= 0.75), vendored xcframework
-# fallback. The manifest pins the remote binary URL and checksum.
-# Enable SPM with FREERASP_USE_SPM=1; any other value uses the vendored fallback.
 talsec_spm_path = File.expand_path('ios/TalsecRuntimePackage', __dir__)
 
 Pod::Spec.new do |s|
@@ -34,8 +31,6 @@ Pod::Spec.new do |s|
   ]
 
   if use_spm
-    # SPM injects the reference into the Pods project; the framework is embedded into the
-    # app target by freerasp_embed_talsec_spm! (freerasp_spm.rb), called from the Podfile.
     s.ios.deployment_target = '13.0'
     spm_dependency(s,
       url: talsec_spm_path,
@@ -43,7 +38,6 @@ Pod::Spec.new do |s|
       products: ['TalsecRuntime']
     )
   else
-    # Vendored xcframework fallback (default, RN < 0.75, or FREERASP_USE_SPM != 1).
     source_globs << 'ios/TalsecRuntime.xcframework'
     s.xcconfig = { 'OTHER_LDFLAGS' => '-framework TalsecRuntime' }
     s.ios.vendored_frameworks = 'ios/TalsecRuntime.xcframework'

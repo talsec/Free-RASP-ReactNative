@@ -78,24 +78,12 @@ const withAndroidR8Version = (expoConfig, props) => {
         return config;
     });
 };
-// iOS — SPM delivery of TalsecRuntime (default on RN >= 0.75). Sets dynamic frameworks
-// and injects a guarded TalsecRuntime embed into the Podfile post_install (skipped on the
-// vendored fallback / FREERASP_USE_SPM=0). Note: the Expo prebuild flow is less
-// battle-tested than bare React Native.
-/**
- * Configure dynamic frameworks while SPM is active and remove only values
- * previously managed by this plugin when switching back to the vendored path.
- */
 const withFreeraspIosFrameworks = (config, spmEnabled) => {
     return (0, config_plugins_1.withPodfileProperties)(config, (cfg) => {
         (0, iosSpmProperties_1.default)(cfg.modResults, spmEnabled);
         return cfg;
     });
 };
-/**
- * Inject the TalsecRuntime embed step into the generated Podfile `post_install`,
- * so the SPM binary framework ends up in the app bundle (otherwise dyld fails at launch).
- */
 const withFreeraspIosPodfile = (config, props) => {
     return (0, config_plugins_1.withDangerousMod)(config, [
         'ios',

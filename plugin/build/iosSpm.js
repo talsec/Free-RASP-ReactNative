@@ -92,8 +92,7 @@ const mutatePodfileForFreeraspSpm = (contents, enabled = true) => {
     }
     const newline = updatedContents.includes('\r\n') ? '\r\n' : '\n';
     if (enabled) {
-        // Insert the later snippet first so the activation insertion cannot
-        // invalidate the post-install index calculated above.
+        // Preserve the post-install index by inserting its snippet first.
         const indent = indentationAt(updatedContents, postInstallIndex);
         const snippet = [
             '',

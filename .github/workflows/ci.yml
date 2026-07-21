@@ -85,7 +85,6 @@ jobs:
           yarn build:android
 
   build-ios:
-    # Vendored TalsecRuntime fallback (FREERASP_USE_SPM=0).
     runs-on: macos-latest
     needs: build-library
     env:
@@ -107,7 +106,6 @@ jobs:
           yarn build:ios
 
   build-ios-spm:
-    # SPM path (default, dynamic frameworks).
     runs-on: macos-latest
     needs: build-library
     env:

@@ -8,8 +8,7 @@ require Pod::Executable.execute_command('node', ['-p',
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
-# The example exercises the vendored fallback by default. Its SPM CI job sets
-# FREERASP_USE_SPM=1; SPM requires dynamic frameworks.
+# SPM CI sets FREERASP_USE_SPM=1 and requires dynamic frameworks.
 use_freerasp_spm = ENV['FREERASP_USE_SPM'] == '1'
 linkage = ENV['USE_FRAMEWORKS']
 if use_freerasp_spm
@@ -52,9 +51,7 @@ target 'FreeraspRNExample' do
       end
     end
 
-    # freeRASP: embed TalsecRuntime into the app target on the SPM path (the helper is a
-    # no-op / cleanup on the vendored fallback, so it is safe to call unconditionally).
-    # Real apps resolve the helper from node_modules; this example requires it from the repo root.
+    # Embed TalsecRuntime when SPM is enabled.
     require_relative '../../freerasp_spm.rb'
     freerasp_embed_talsec_spm!(installer)
   end

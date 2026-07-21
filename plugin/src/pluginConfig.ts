@@ -2,10 +2,6 @@
  * Interface representing base build properties configuration.
  */
 export interface PluginConfigType {
-  /**
-   * Interface representing available configuration for the iOS integration.
-   * @platform ios
-   */
   ios?: PluginConfigTypeIos;
 
   /**
@@ -15,15 +11,10 @@ export interface PluginConfigType {
   android?: PluginConfigTypeAndroid;
 }
 
-/**
- * Interface representing available configuration for the iOS integration.
- * @platform ios
- */
+/** @platform ios */
 export interface PluginConfigTypeIos {
   /**
-   * Deliver TalsecRuntime through Swift Package Manager.
-   *
-   * Defaults to `true`. Set this to `false` to use the vendored XCFramework.
+   * Use Swift Package Manager to deliver TalsecRuntime. Defaults to `true`.
    */
   useSpm?: boolean;
 }

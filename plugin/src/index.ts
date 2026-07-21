@@ -2,10 +2,16 @@ import {
   AndroidConfig,
   WarningAggregator,
   createRunOncePlugin,
+  withDangerousMod,
+  withPodfileProperties,
   withProjectBuildGradle,
   type ConfigPlugin,
 } from '@expo/config-plugins';
 import { type ExpoConfig } from '@expo/config-types';
+import { readFileSync, writeFileSync } from 'fs';
+import { join } from 'path';
+import mutatePodfileForFreeraspSpm from './iosSpm';
+import configureIosSpmProperties from './iosSpmProperties';
 import { type PluginConfigType } from './pluginConfig';
 
 const { createBuildGradlePropsConfigPlugin } = AndroidConfig.BuildProperties;
@@ -106,10 +112,56 @@ const withAndroidR8Version: ConfigPlugin<PluginConfigType> = (
   });
 };
 
+const withFreeraspIosFrameworks = (
+  config: ExpoConfig,
+  spmEnabled: boolean
+): ExpoConfig => {
+  return withPodfileProperties(config, (cfg) => {
+    configureIosSpmProperties(cfg.modResults, spmEnabled);
+    return cfg;
+  });
+};
+
+const withFreeraspIosPodfile: ConfigPlugin<{
+  spmEnabled: boolean;
+}> = (config, props) => {
+  return withDangerousMod(config, [
+    'ios',
+    (cfg) => {
+      const podfilePath = join(cfg.modRequest.platformProjectRoot, 'Podfile');
+      const contents = readFileSync(podfilePath, 'utf-8');
+      const result = mutatePodfileForFreeraspSpm(
+        contents,
+        props?.spmEnabled ?? true
+      );
+
+      if (result.missingAnchors.length > 0) {
+        WarningAggregator.addWarningIOS(
+          'freerasp-react-native',
+          'Could not configure TalsecRuntime delivery because the Podfile is missing: ' +
+            result.missingAnchors.join(', ')
+        );
+      } else if (result.changed) {
+        writeFileSync(podfilePath, result.contents);
+      }
+      return cfg;
+    },
+  ]);
+};
+
+const withRnTalsecIos: ConfigPlugin<PluginConfigType> = (config, props) => {
+  const spmEnabled =
+    props?.ios?.useSpm !== false && process.env.FREERASP_USE_SPM !== '0';
+  config = withFreeraspIosFrameworks(config, spmEnabled);
+  config = withFreeraspIosPodfile(config, { spmEnabled });
+  return config;
+};
+
 const withRnTalsecApp: ConfigPlugin<PluginConfigType> = (config, props) => {
   config = withBuildscriptDependency(config);
   config = withAndroidMinSdkVersion(config, props);
   config = withAndroidR8Version(config, props);
+  config = withRnTalsecIos(config, props);
   return config;
 };
 

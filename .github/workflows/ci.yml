@@ -28,6 +28,9 @@ jobs:
         run: |
           yarn expo:typecheck
 
+      - name: Test Expo plugin
+        run: yarn test:plugin
+
       - name: Format check
         run: yarn prettier --check
 
@@ -84,6 +87,8 @@ jobs:
   build-ios:
     runs-on: macos-latest
     needs: build-library
+    env:
+      FREERASP_USE_SPM: "0"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -96,6 +101,28 @@ jobs:
         run: pod install
 
       - name: Build example for iOS
+        working-directory: ./example
+        run: |
+          yarn build:ios
+
+  build-ios-spm:
+    runs-on: macos-latest
+    needs: build-library
+    env:
+      USE_FRAMEWORKS: dynamic
+      FREERASP_USE_SPM: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install pods (SPM)
+        working-directory: ./example/ios
+        run: pod install
+
+      - name: Build example for iOS (SPM)
         working-directory: ./example
         run: |
           yarn build:ios

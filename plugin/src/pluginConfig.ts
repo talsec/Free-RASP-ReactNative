@@ -2,11 +2,21 @@
  * Interface representing base build properties configuration.
  */
 export interface PluginConfigType {
+  ios?: PluginConfigTypeIos;
+
   /**
    * Interface representing available configuration for Android native build properties.
    * @platform android
    */
   android?: PluginConfigTypeAndroid;
+}
+
+/** @platform ios */
+export interface PluginConfigTypeIos {
+  /**
+   * Use Swift Package Manager to deliver TalsecRuntime. Defaults to `true`.
+   */
+  useSpm?: boolean;
 }
 
 /**

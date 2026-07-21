@@ -1,6 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_plugins_1 = require("@expo/config-plugins");
+const fs_1 = require("fs");
+const path_1 = require("path");
+const iosSpm_1 = __importDefault(require("./iosSpm"));
+const iosSpmProperties_1 = __importDefault(require("./iosSpmProperties"));
 const { createBuildGradlePropsConfigPlugin } = config_plugins_1.AndroidConfig.BuildProperties;
 const urlFreerasp = 'https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp';
 const urlJitpack = 'https://www.jitpack.io';
@@ -71,10 +78,41 @@ const withAndroidR8Version = (expoConfig, props) => {
         return config;
     });
 };
+const withFreeraspIosFrameworks = (config, spmEnabled) => {
+    return (0, config_plugins_1.withPodfileProperties)(config, (cfg) => {
+        (0, iosSpmProperties_1.default)(cfg.modResults, spmEnabled);
+        return cfg;
+    });
+};
+const withFreeraspIosPodfile = (config, props) => {
+    return (0, config_plugins_1.withDangerousMod)(config, [
+        'ios',
+        (cfg) => {
+            const podfilePath = (0, path_1.join)(cfg.modRequest.platformProjectRoot, 'Podfile');
+            const contents = (0, fs_1.readFileSync)(podfilePath, 'utf-8');
+            const result = (0, iosSpm_1.default)(contents, props?.spmEnabled ?? true);
+            if (result.missingAnchors.length > 0) {
+                config_plugins_1.WarningAggregator.addWarningIOS('freerasp-react-native', 'Could not configure TalsecRuntime delivery because the Podfile is missing: ' +
+                    result.missingAnchors.join(', '));
+            }
+            else if (result.changed) {
+                (0, fs_1.writeFileSync)(podfilePath, result.contents);
+            }
+            return cfg;
+        },
+    ]);
+};
+const withRnTalsecIos = (config, props) => {
+    const spmEnabled = props?.ios?.useSpm !== false && process.env.FREERASP_USE_SPM !== '0';
+    config = withFreeraspIosFrameworks(config, spmEnabled);
+    config = withFreeraspIosPodfile(config, { spmEnabled });
+    return config;
+};
 const withRnTalsecApp = (config, props) => {
     config = withBuildscriptDependency(config);
     config = withAndroidMinSdkVersion(config, props);
     config = withAndroidR8Version(config, props);
+    config = withRnTalsecIos(config, props);
     return config;
 };
 let pkg = {

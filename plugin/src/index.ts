@@ -114,7 +114,7 @@ const withAndroidR8Version: ConfigPlugin<PluginConfigType> = (
 
 // iOS — SPM delivery of TalsecRuntime (default on RN >= 0.75). Sets dynamic frameworks
 // and injects a guarded TalsecRuntime embed into the Podfile post_install (skipped on the
-// vendored fallback / FREERASP_DISABLE_SPM=1). Note: the Expo prebuild flow is less
+// vendored fallback / FREERASP_USE_SPM=0). Note: the Expo prebuild flow is less
 // battle-tested than bare React Native.
 
 /**
@@ -164,7 +164,7 @@ const withFreeraspIosPodfile: ConfigPlugin<{
 
 const withRnTalsecIos: ConfigPlugin<PluginConfigType> = (config, props) => {
   const spmEnabled =
-    props?.ios?.useSpm !== false && process.env.FREERASP_DISABLE_SPM !== '1';
+    props?.ios?.useSpm !== false && process.env.FREERASP_USE_SPM !== '0';
   config = withFreeraspIosFrameworks(config, spmEnabled);
   config = withFreeraspIosPodfile(config, { spmEnabled });
   return config;

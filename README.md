@@ -102,8 +102,8 @@ post_install do |installer|
 end
 ```
 
-Omit `FREERASP_USE_SPM`, set the Expo option to `false`, or set
-`FREERASP_DISABLE_SPM=1` to use the vendored fallback.
+Omit `FREERASP_USE_SPM`, set it to `0`, or set the Expo option to `false` to
+use the vendored fallback.
 
 # :rocket: What's New and Changelog
 

@@ -10,7 +10,7 @@ prepare_react_native_project!
 
 # The example exercises the vendored fallback by default. Its SPM CI job sets
 # FREERASP_USE_SPM=1; SPM requires dynamic frameworks.
-use_freerasp_spm = ENV['FREERASP_USE_SPM'] == '1' && ENV['FREERASP_DISABLE_SPM'] != '1'
+use_freerasp_spm = ENV['FREERASP_USE_SPM'] == '1'
 linkage = ENV['USE_FRAMEWORKS']
 if use_freerasp_spm
   if linkage != nil && linkage != 'dynamic'

@@ -14,7 +14,6 @@ def freerasp_embed_talsec_spm!(installer,
 
   # Mirror the podspec: SPM is explicit and requires RN's spm_dependency helper.
   spm_active = ENV['FREERASP_USE_SPM'] == '1' &&
-    ENV['FREERASP_DISABLE_SPM'] != '1' &&
     respond_to?(:spm_dependency, true)
 
   if spm_active && !File.file?(File.join(package_path, 'Package.swift'))

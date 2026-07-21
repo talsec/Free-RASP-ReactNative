@@ -34,6 +34,11 @@ assert(
   activationIndex > mutation.contents.indexOf('prepare_react_native_project!')
 );
 assert(activationIndex < targetIndex);
+assert(
+  mutation.contents.includes(
+    "ENV['FREERASP_USE_SPM'] = '1' unless ENV['FREERASP_USE_SPM'] == '0'"
+  )
+);
 
 const postInstallCloseIndex = mutation.contents.indexOf('\n    )');
 const embedIndex = mutation.contents.indexOf(FREERASP_SPM_EMBED_TAG);
@@ -48,7 +53,7 @@ assert.equal(secondMutation.contents, mutation.contents);
 const disabledMutation = mutatePodfileForFreeraspSpm(mutation.contents, false);
 assert.equal(disabledMutation.changed, true);
 assert(disabledMutation.contents.includes(FREERASP_SPM_DISABLED_TAG));
-assert(disabledMutation.contents.includes("ENV['FREERASP_DISABLE_SPM'] = '1'"));
+assert(disabledMutation.contents.includes("ENV['FREERASP_USE_SPM'] = '0'"));
 assert.equal(
   disabledMutation.contents.includes(FREERASP_SPM_ACTIVATION_TAG),
   false

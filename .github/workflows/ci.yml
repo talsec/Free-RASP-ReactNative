@@ -85,11 +85,11 @@ jobs:
           yarn build:android
 
   build-ios:
-    # Vendored TalsecRuntime fallback (FREERASP_DISABLE_SPM=1).
+    # Vendored TalsecRuntime fallback (FREERASP_USE_SPM=0).
     runs-on: macos-latest
     needs: build-library
     env:
-      FREERASP_DISABLE_SPM: "1"
+      FREERASP_USE_SPM: "0"
     steps:
       - name: Checkout
         uses: actions/checkout@v6

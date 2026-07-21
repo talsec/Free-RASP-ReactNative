@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Swift Package Manager delivery of `TalsecRuntime`, enabled by default for Expo projects and available as an opt-in for bare React Native 0.75 or newer projects.
 - Added the Expo config plugin option `ios.useSpm`; set it to `false` to use the vendored XCFramework fallback.
 
+#### Changed
+
+- Consolidated SPM environment configuration into `FREERASP_USE_SPM`: use `1` for SPM and `0` for the vendored XCFramework.
+
 ## [5.0.0] - 2026-05-15
 
 - Android SDK version: 18.3.0

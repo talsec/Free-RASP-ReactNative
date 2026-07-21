@@ -116,13 +116,13 @@ const mutatePodfileForFreeraspSpm = (contents, enabled = true) => {
             '',
             '',
             `${indent}${FREERASP_SPM_ACTIVATION_TAG}`,
-            `${indent}ENV['FREERASP_USE_SPM'] = '1' unless ENV['FREERASP_DISABLE_SPM'] == '1'`,
+            `${indent}ENV['FREERASP_USE_SPM'] = '1' unless ENV['FREERASP_USE_SPM'] == '0'`,
         ]
         : [
             '',
             '',
             `${indent}${FREERASP_SPM_DISABLED_TAG}`,
-            `${indent}ENV['FREERASP_DISABLE_SPM'] = '1'`,
+            `${indent}ENV['FREERASP_USE_SPM'] = '0'`,
         ];
     updatedContents =
         updatedContents.slice(0, insertAt) +

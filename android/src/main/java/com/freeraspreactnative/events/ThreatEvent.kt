@@ -1,6 +1,5 @@
 package com.freeraspreactnative.events
 
-import com.facebook.react.bridge.Arguments
 import com.freeraspreactnative.utils.RandomGenerator
 
 /**
@@ -41,29 +40,28 @@ internal sealed class ThreatEvent(override val value: Int) : BaseRaspEvent {
     internal val CHANNEL_KEY = RandomGenerator.next().toString()
     internal val MALWARE_CHANNEL_KEY = RandomGenerator.next().toString()
 
-    internal val ALL_EVENTS = Arguments.fromList(
-      listOf(
-        AppIntegrity,
-        PrivilegedAccess,
-        Debug,
-        Hooks,
-        Passcode,
-        Simulator,
-        SecureHardwareNotAvailable,
-        SystemVPN,
-        DeviceBinding,
-        UnofficialStore,
-        ObfuscationIssues,
-        DevMode,
-        Malware,
-        ADBEnabled,
-        Screenshot,
-        ScreenRecording,
-        MultiInstance,
-        TimeSpoofing,
-        LocationSpoofing,
-        UnsecureWifi,
-        Automation
-      ).map { it.value })
+    internal val ALL_EVENT_IDENTIFIERS = listOf(
+      AppIntegrity,
+      PrivilegedAccess,
+      Debug,
+      Hooks,
+      Passcode,
+      Simulator,
+      SecureHardwareNotAvailable,
+      SystemVPN,
+      DeviceBinding,
+      UnofficialStore,
+      ObfuscationIssues,
+      DevMode,
+      Malware,
+      ADBEnabled,
+      Screenshot,
+      ScreenRecording,
+      MultiInstance,
+      TimeSpoofing,
+      LocationSpoofing,
+      UnsecureWifi,
+      Automation
+    ).map { it.value }
   }
 }

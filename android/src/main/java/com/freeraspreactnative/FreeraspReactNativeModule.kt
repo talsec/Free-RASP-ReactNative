@@ -108,8 +108,8 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   // Trigger lazy initialization of the freeRASP events
   private fun initializeEventKeys() {
-    ThreatEvent.ALL_EVENTS
-    RaspExecutionStateEvent.ALL_EVENTS
+    ThreatEvent.ALL_EVENT_IDENTIFIERS
+    RaspExecutionStateEvent.ALL_EVENT_IDENTIFIERS
   }
 
   /**
@@ -117,7 +117,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
    */
   @ReactMethod
   fun getThreatIdentifiers(promise: Promise) {
-    promise.resolve(ThreatEvent.ALL_EVENTS)
+    promise.resolve(
+      Arguments.fromList(ThreatEvent.ALL_EVENT_IDENTIFIERS)
+    )
   }
 
   /**
@@ -125,7 +127,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
    */
   @ReactMethod
   fun getRaspExecutionStateIdentifiers(promise: Promise) {
-    promise.resolve(RaspExecutionStateEvent.ALL_EVENTS)
+    promise.resolve(
+      Arguments.fromList(RaspExecutionStateEvent.ALL_EVENT_IDENTIFIERS)
+    )
   }
 
   /**

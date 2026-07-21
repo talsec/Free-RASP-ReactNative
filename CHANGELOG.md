@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Swift Package Manager delivery of `TalsecRuntime`, enabled by default for Expo projects and available as an opt-in for bare React Native 0.75 or newer projects.
 - Added the Expo config plugin option `ios.useSpm`; set it to `false` to use the vendored XCFramework fallback.
 
+### Android
+
+#### Fixed
+
+- Fixed identifier retrieval after React Native context reinitialization ([#152](https://github.com/talsec/Free-RASP-ReactNative/issues/152)).
+
 ## [5.0.0] - 2026-05-15
 
 - Android SDK version: 18.3.0

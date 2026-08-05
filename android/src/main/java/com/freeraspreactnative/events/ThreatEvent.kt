@@ -34,6 +34,7 @@ internal sealed class ThreatEvent(override val value: Int) : BaseRaspEvent {
   data object LocationSpoofing : ThreatEvent(RandomGenerator.next())
   data object UnsecureWifi : ThreatEvent(RandomGenerator.next())
   data object Automation : ThreatEvent(RandomGenerator.next())
+  data object Bootloader : ThreatEvent(RandomGenerator.next())
 
   companion object {
     internal val CHANNEL_NAME = RandomGenerator.next().toString()
@@ -61,7 +62,8 @@ internal sealed class ThreatEvent(override val value: Int) : BaseRaspEvent {
       TimeSpoofing,
       LocationSpoofing,
       UnsecureWifi,
-      Automation
+      Automation,
+      Bootloader
     ).map { it.value }
   }
 }

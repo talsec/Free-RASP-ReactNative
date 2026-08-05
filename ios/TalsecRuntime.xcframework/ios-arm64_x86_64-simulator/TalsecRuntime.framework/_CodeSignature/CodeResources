@@ -14,11 +14,11 @@
 		</data>
 		<key>Headers/CurlWrapper.h</key>
 		<data>
-		6wr8OlswVsoDXIHFSIehCZy5/WM=
+		cHoXI371NcuiRtuZ1KyxUS9vidE=
 		</data>
 		<key>Headers/TalsecRuntime-Swift.h</key>
 		<data>
-		iLkhsEJ2P6OlkRZ1d+X83uEJ4X8=
+		7DHReqTGkt8SZ0NnxY9wkTjWrPw=
 		</data>
 		<key>Headers/TalsecRuntime_iOS.h</key>
 		<data>
@@ -74,11 +74,11 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		C+rwNOVjD82c5I+dOxAQYEwvvbo=
+		YtRZCnG/f3Uo9icVb2j4DxE8VTQ=
 		</data>
 		<key>Modules/TalsecRuntime.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		PNRmP/piKLXPtWcsYCm5VVyEJl4=
+		3bmLdiT14JJq7eCfVrWsmNz6BeI=
 		</data>
 		<key>Modules/TalsecRuntime.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -94,7 +94,7 @@
 		</data>
 		<key>Modules/TalsecRuntime.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		PNRmP/piKLXPtWcsYCm5VVyEJl4=
+		3bmLdiT14JJq7eCfVrWsmNz6BeI=
 		</data>
 		<key>Modules/TalsecRuntime.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -145,14 +145,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			tlBvZyxaTPi2iagbzloWGrPV3lMqGmUyovqjfFkUx6Y=
+			Qks7U1mOqcnA7S8Wsjke/1d4QR9Gjg6B8NCV0jr38cs=
 			</data>
 		</dict>
 		<key>Headers/TalsecRuntime-Swift.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			tzA65yDQ40zTr0zocuTMsSS4H5XKSXIoFHJ+zTsfOck=
+			zcIiZjgnbPH0lNaD7y5qM5LlLKnMwq3olZe+u+hS1OY=
 			</data>
 		</dict>
 		<key>Headers/TalsecRuntime_iOS.h</key>
@@ -250,7 +250,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			/hldVvxprpH5EL/sSmJhF8ltMvsmgCXzQ4U18KMS3uI=
+			l/pZ+KwWr2R5QoDK/ZNy1bq6l/vzAD3xrSOFuWNJzXw=
 			</data>
 		</dict>
 		<key>Modules/TalsecRuntime.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -278,7 +278,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			/hldVvxprpH5EL/sSmJhF8ltMvsmgCXzQ4U18KMS3uI=
+			l/pZ+KwWr2R5QoDK/ZNy1bq6l/vzAD3xrSOFuWNJzXw=
 			</data>
 		</dict>
 		<key>Modules/TalsecRuntime.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>

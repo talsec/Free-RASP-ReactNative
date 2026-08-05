@@ -1,6 +1,6 @@
 package com.freeraspreactnative.dispatchers
 
-import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
+import app.talsec.rasp.security.api.SuspiciousAppInfo
 import com.freeraspreactnative.events.ThreatEvent
 import com.freeraspreactnative.interfaces.PluginThreatListener
 

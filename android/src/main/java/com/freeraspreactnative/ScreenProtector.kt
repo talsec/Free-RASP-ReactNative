@@ -12,7 +12,7 @@ import android.view.WindowManager.SCREEN_RECORDING_STATE_VISIBLE
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 
-import com.aheaditec.talsec_security.security.api.Talsec
+import app.talsec.rasp.security.api.Talsec
 import java.util.function.Consumer
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)

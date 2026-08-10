@@ -267,6 +267,16 @@ const App = () => {
         )
       );
     },
+    // Android only
+    bootloader: () => {
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Bootloader'
+            ? { ...threat, status: 'nok' }
+            : threat
+        )
+      );
+    },
   };
 
   const raspExecutionStateActions = {

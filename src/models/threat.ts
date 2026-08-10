@@ -25,6 +25,7 @@ export class Threat {
   static LocationSpoofing = new Threat(0);
   static UnsecureWifi = new Threat(0);
   static Automation = new Threat(0);
+  static Bootloader = new Threat(0);
 
   constructor(value: number) {
     this.value = value;
@@ -54,6 +55,7 @@ export class Threat {
           this.LocationSpoofing,
           this.UnsecureWifi,
           this.Automation,
+          this.Bootloader,
         ]
       : [
           this.AppIntegrity,

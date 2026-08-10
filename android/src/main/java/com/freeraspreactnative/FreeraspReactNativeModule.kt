@@ -4,11 +4,11 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
-import com.aheaditec.talsec_security.security.api.ExternalIdResult
-import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
-import com.aheaditec.talsec_security.security.api.Talsec
-import com.aheaditec.talsec_security.security.api.TalsecConfig
-import com.aheaditec.talsec_security.security.api.TalsecMode
+import app.talsec.rasp.security.api.ExternalIdResult
+import app.talsec.rasp.security.api.SuspiciousAppInfo
+import app.talsec.rasp.security.api.Talsec
+import app.talsec.rasp.security.api.TalsecConfig
+import app.talsec.rasp.security.api.TalsecMode
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.Promise

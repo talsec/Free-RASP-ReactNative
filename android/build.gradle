@@ -91,7 +91,7 @@ repositories {
 rootProject.allprojects {
   repositories {
     maven{url "https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp"}
-    maven{url "https://jitpack.io"}
+    maven{url "https://europe-west3-maven.pkg.dev/talsec-artifact-repository/common"}
   }
 }
 
@@ -105,7 +105,7 @@ dependencies {
   implementation "com.facebook.react:react-native:$react_native_version"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
-  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:18.3.0"
+  implementation "com.aheaditec.talsec.security:TalsecSecurity-Community-ReactNative:19.2.1"
 }
 
 if (isNewArchitectureEnabled()) {

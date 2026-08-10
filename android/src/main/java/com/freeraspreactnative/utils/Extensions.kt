@@ -3,11 +3,11 @@ package com.freeraspreactnative.utils
 import android.content.pm.PackageInfo
 import android.util.Base64
 import android.util.Log
-import com.aheaditec.talsec_security.security.api.MalwareScanScope
-import com.aheaditec.talsec_security.security.api.ReasonMode
-import com.aheaditec.talsec_security.security.api.ScopeType
-import com.aheaditec.talsec_security.security.api.SuspiciousAppDetectionConfig
-import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
+import app.talsec.rasp.security.api.MalwareScanScope
+import app.talsec.rasp.security.api.ReasonMode
+import app.talsec.rasp.security.api.ScopeType
+import app.talsec.rasp.security.api.SuspiciousAppDetectionConfig
+import app.talsec.rasp.security.api.SuspiciousAppInfo
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableArray

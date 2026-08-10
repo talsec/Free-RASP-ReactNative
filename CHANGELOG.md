@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [5.2.0] - 2026-08-05
 
 - Android SDK version: 19.2.1
-- iOS SDK version: 7.1.1
+- iOS SDK version: 7.1.2
 
 ### React Native
 
@@ -37,6 +37,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed crash inside AppZygotePreload during root detection
 - Fixed root detection crash in obfuscated release builds
 - Fixed hardware-backed keystore detection failing with `NoSuchMethodError` on some Android 12+ devices
+
+### iOS
+
+#### Changed
+
+- Improved jailbreak detection
 
 ## [5.1.1] - 2026-07-21
 

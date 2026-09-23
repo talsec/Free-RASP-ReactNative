@@ -10,11 +10,14 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://europe-west3-maven.pkg.dev/talsec-artifact-repository/plugin" }
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        // TODO: set the real version once app.talsec.plugin with wrapper support is released
+        classpath("app.talsec.plugin:talsec-security-plugin:1.1.0")
     }
 }
 

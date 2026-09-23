@@ -11,6 +11,10 @@ const iosSpmProperties_1 = __importDefault(require("./iosSpmProperties"));
 const { createBuildGradlePropsConfigPlugin } = config_plugins_1.AndroidConfig.BuildProperties;
 const urlFreerasp = 'https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp';
 const urlJitpack = 'https://www.jitpack.io';
+const urlTalsecPlugin = 'https://europe-west3-maven.pkg.dev/talsec-artifact-repository/plugin';
+const talsecPluginId = 'app.talsec.plugin';
+// TODO: set the real version once app.talsec.plugin with wrapper support is released
+const talsecPluginArtifact = 'app.talsec.plugin:talsec-security-plugin:1.1.0';
 const setBuildscriptDependency = (buildGradle) => {
     // This enables users in bare workflow to comment out the line to prevent freerasp from adding it back.
     const mavenFreerasp = buildGradle.includes(urlFreerasp)
@@ -78,6 +82,50 @@ const withAndroidR8Version = (expoConfig, props) => {
         return config;
     });
 };
+const setTalsecGradlePlugin = (buildGradle) => {
+    if (buildGradle.includes(talsecPluginArtifact)) {
+        return buildGradle;
+    }
+    const talsecBuildscript = `
+    buildscript {
+      repositories {
+        maven { url "${urlTalsecPlugin}" }
+      }
+      dependencies {
+          classpath("${talsecPluginArtifact}")
+      }
+    }
+  `;
+    return buildGradle + `\n${talsecBuildscript}\n`;
+};
+const setTalsecAppPlugin = (appBuildGradle) => {
+    if (appBuildGradle.includes(talsecPluginId)) {
+        return appBuildGradle;
+    }
+    return appBuildGradle + `\napply plugin: "${talsecPluginId}"\n`;
+};
+const withTalsecGradlePlugin = (expoConfig) => {
+    return (0, config_plugins_1.withProjectBuildGradle)(expoConfig, (config) => {
+        if (config.modResults.language === 'groovy') {
+            config.modResults.contents = setTalsecGradlePlugin(config.modResults.contents);
+        }
+        else {
+            config_plugins_1.WarningAggregator.addWarningAndroid('freerasp-react-native', `Cannot automatically configure project build.gradle, because it's not groovy`);
+        }
+        return config;
+    });
+};
+const withTalsecAppPlugin = (expoConfig) => {
+    return (0, config_plugins_1.withAppBuildGradle)(expoConfig, (config) => {
+        if (config.modResults.language === 'groovy') {
+            config.modResults.contents = setTalsecAppPlugin(config.modResults.contents);
+        }
+        else {
+            config_plugins_1.WarningAggregator.addWarningAndroid('freerasp-react-native', `Cannot automatically configure app build.gradle, because it's not groovy`);
+        }
+        return config;
+    });
+};
 const withFreeraspIosFrameworks = (config, spmEnabled) => {
     return (0, config_plugins_1.withPodfileProperties)(config, (cfg) => {
         (0, iosSpmProperties_1.default)(cfg.modResults, spmEnabled);
@@ -110,6 +158,8 @@ const withRnTalsecIos = (config, props) => {
 };
 const withRnTalsecApp = (config, props) => {
     config = withBuildscriptDependency(config);
+    config = withTalsecGradlePlugin(config);
+    config = withTalsecAppPlugin(config);
     config = withAndroidMinSdkVersion(config, props);
     config = withAndroidR8Version(config, props);
     config = withRnTalsecIos(config, props);

@@ -14,7 +14,7 @@
     "prettier": "prettier \"**/*.{ts,js}\"",
     "prepack": "bob build && yarn build:plugin",
     "build": "bob build",
-    "test:plugin": "yarn build:plugin && node plugin/tests/iosSpm.test.js",
+    "test:plugin": "yarn build:plugin && node plugin/tests/iosSpm.test.js && node plugin/tests/pluginProps.test.js",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn install && yarn example pods",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build",

@@ -157,7 +157,10 @@ const withRnTalsecIos: ConfigPlugin<PluginConfigType> = (config, props) => {
   return config;
 };
 
-const withRnTalsecApp: ConfigPlugin<PluginConfigType> = (config, props) => {
+const withRnTalsecApp: ConfigPlugin<PluginConfigType | undefined> = (
+  config,
+  props: PluginConfigType = {}
+) => {
   config = withBuildscriptDependency(config);
   config = withAndroidMinSdkVersion(config, props);
   config = withAndroidR8Version(config, props);

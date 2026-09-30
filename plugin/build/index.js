@@ -108,7 +108,7 @@ const withRnTalsecIos = (config, props) => {
     config = withFreeraspIosPodfile(config, { spmEnabled });
     return config;
 };
-const withRnTalsecApp = (config, props) => {
+const withRnTalsecApp = (config, props = {}) => {
     config = withBuildscriptDependency(config);
     config = withAndroidMinSdkVersion(config, props);
     config = withAndroidR8Version(config, props);

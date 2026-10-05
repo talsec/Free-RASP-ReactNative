@@ -12,8 +12,8 @@ let package = Package(
   targets: [
     .binaryTarget(
       name: "TalsecRuntime",
-      url: "https://storage.googleapis.com/talsec-artifact-repository/freerasp/ios/react-native/7.1.4/TalsecRuntime.xcframework.zip",
-      checksum: "7953acc175adeb138e12c179eebe9ca25c7846a57aa8d07b98f0018e1849db92"
+      url: "https://storage.googleapis.com/talsec-artifact-repository/freerasp/ios/react-native/8.0.1/TalsecRuntime.xcframework.zip",
+      checksum: "97cb3423b296339aad3fd5ef9e24efd8a7ed0e437dd735f99a309ea1695071eb"
     ),
   ]
 )

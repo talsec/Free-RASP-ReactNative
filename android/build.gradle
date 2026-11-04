@@ -14,7 +14,6 @@ buildscript {
     // noinspection DifferentKotlinGradleVersion
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-    // TODO: set the real version once app.talsec.plugin with wrapper support is released
     classpath 'app.talsec.plugin:talsec-security-plugin:1.1.0'
   }
 }

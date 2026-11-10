@@ -3,7 +3,9 @@ import * as React from 'react';
 import { Platform, PermissionsAndroid } from 'react-native';
 import {
   addToWhitelist,
+  startOngoingCallDetection,
   useFreeRasp,
+  type CallState,
   type SuspiciousAppInfo,
   type TalsecConfig,
 } from 'freerasp-react-native';
@@ -22,10 +24,17 @@ const App = () => {
   const [allChecksStatus, setAllChecksStatus] = React.useState<
     'in progress' | 'completed'
   >('in progress');
+  const [postponedChecksStatus, setPostponedChecksStatus] = React.useState<
+    'in progress' | 'completed'
+  >('in progress');
 
   useEffect(() => {
     (async () => {
-      Platform.OS === 'android' && (await addItemsToMalwareWhitelist());
+      if (Platform.OS === 'android') {
+        await addItemsToMalwareWhitelist();
+        // Report cellular and VoIP calls through the ongoingCall action
+        await startOngoingCallDetection();
+      }
       await requestLocationPermission();
     })();
   }, []);
@@ -277,12 +286,27 @@ const App = () => {
         )
       );
     },
+    // Android only
+    ongoingCall: (state: CallState) => {
+      console.info('Ongoing call:', state);
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Ongoing Call'
+            ? { ...threat, status: state === 'STOPPED' ? 'ok' : 'nok' }
+            : threat
+        )
+      );
+    },
   };
 
   const raspExecutionStateActions = {
     // Android & iOS
     allChecksFinished: () => {
       setAllChecksStatus('completed');
+    },
+    // Android only
+    postponedChecksFinished: () => {
+      setPostponedChecksStatus('completed');
     },
   };
 
@@ -338,6 +362,7 @@ const App = () => {
       checks={appChecks}
       suspiciousApps={suspiciousApps}
       allChecksFinishedStatus={allChecksStatus}
+      postponedChecksFinishedStatus={postponedChecksStatus}
     />
   );
 };

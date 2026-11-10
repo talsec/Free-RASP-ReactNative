@@ -3,6 +3,7 @@ package com.freeraspreactnative
 import android.content.Context
 import app.talsec.rasp.security.api.SuspiciousAppInfo
 import app.talsec.rasp.security.api.ThreatListener
+import app.talsec.rasp.security.api.ThreatListener.CallState
 import com.freeraspreactnative.dispatchers.ExecutionStateDispatcher
 import com.freeraspreactnative.dispatchers.ThreatDispatcher
 import com.freeraspreactnative.events.RaspExecutionStateEvent
@@ -79,6 +80,10 @@ internal object PluginThreatHandler {
     override fun onBootloader() {
       ThreatDispatcher.dispatchThreat(ThreatEvent.Bootloader)
     }
+
+    override fun onOngoingCall(state: CallState) {
+      ThreatDispatcher.dispatchOngoingCall(state)
+    }
   }
 
   private val deviceState = object : ThreatListener.DeviceState() {
@@ -105,8 +110,18 @@ internal object PluginThreatHandler {
   }
 
   private val raspExecutionState = object : ThreatListener.RaspExecutionState() {
-    override fun onAllChecksFinished() {
+    override fun onCriticalChecksFinished() {
+      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.CriticalChecksFinished)
+    }
+
+    // Fast checks finish where the removed onAllChecksFinished() used to be triggered, so
+    // they keep driving the cross-platform allChecksFinished state.
+    override fun onFastChecksFinished() {
       ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.AllChecksFinished)
+    }
+
+    override fun onPostponedChecksFinished() {
+      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.PostponedChecksFinished)
     }
   }
 

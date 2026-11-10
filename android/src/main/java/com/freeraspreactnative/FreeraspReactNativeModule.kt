@@ -1,5 +1,7 @@
 package com.freeraspreactnative
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
@@ -9,6 +11,7 @@ import app.talsec.rasp.security.api.SuspiciousAppInfo
 import app.talsec.rasp.security.api.Talsec
 import app.talsec.rasp.security.api.TalsecConfig
 import app.talsec.rasp.security.api.TalsecMode
+import app.talsec.rasp.security.api.ThreatListener.CallState
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.Promise
@@ -34,6 +37,7 @@ import com.freeraspreactnative.utils.getNestedArraySafe
 import com.freeraspreactnative.utils.getStringThrowing
 import com.freeraspreactnative.utils.toEncodedWritableArray
 import com.freeraspreactnative.utils.toSuspiciousAppDetectionConfig
+import java.lang.ref.WeakReference
 
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -54,6 +58,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
         reactContext.currentActivity?.let { ScreenProtector.unregister(it) }
       }
       if (reactContext.currentActivity?.isFinishing == true) {
+        stopOngoingCallDetectionInternal()
         ThreatDispatcher.unregisterListener()
         ExecutionStateDispatcher.unregisterListener()
         PluginThreatHandler.unregisterSDKListener(reactContext)
@@ -134,7 +139,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
 
   /**
    * Method to setup the threat message passing between native and React Native
-   * @return list of [THREAT_CHANNEL_NAME, THREAT_CHANNEL_KEY]
+   * @return list of [THREAT_CHANNEL_NAME, THREAT_CHANNEL_KEY, MALWARE_CHANNEL_KEY, CALL_STATE_CHANNEL_KEY]
    */
   @ReactMethod
   fun getThreatChannelData(promise: Promise) {
@@ -142,6 +147,7 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     channelData.pushString(ThreatEvent.CHANNEL_NAME)
     channelData.pushString(ThreatEvent.CHANNEL_KEY)
     channelData.pushString(ThreatEvent.MALWARE_CHANNEL_KEY)
+    channelData.pushString(ThreatEvent.CALL_STATE_CHANNEL_KEY)
     promise.resolve(channelData)
   }
 
@@ -245,12 +251,156 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
    */
   @ReactMethod
   fun isScreenCaptureBlocked(promise: Promise) {
+    val activity = reactContext.currentActivity ?: run {
+      promise.reject(
+        "NativePluginError", "Cannot check screen capture state, activity is null."
+      )
+      return
+    }
+
     try {
-      val isBlocked = Talsec.isScreenCaptureBlocked()
+      val isBlocked = Talsec.isScreenCaptureBlocked(activity)
       promise.resolve(isBlocked)
     } catch (e: Exception) {
       promise.reject("NativePluginError", "Error in isScreenCaptureBlocked: ${e.message}")
     }
+  }
+
+  /**
+   * Method Block/Unblock accessibility services from reading or controlling the screen
+   * @param enable boolean for whether want to block or unblock the screen control
+   */
+  @ReactMethod
+  fun blockScreenControl(enable: Boolean, promise: Promise) {
+    val activity = reactContext.currentActivity ?: run {
+      promise.reject(
+        "NativePluginError", "Cannot block screen control, activity is null."
+      )
+      return
+    }
+
+    runOnUiThread {
+      try {
+        Talsec.blockScreenControl(activity, enable)
+        promise.resolve("Screen control is now ${if (enable) "Blocked" else "Enabled"}.")
+      } catch (e: Exception) {
+        promise.reject("NativePluginError", "Error in blockScreenControl: ${e.message}")
+      }
+    }
+  }
+
+  /**
+   * Method Returns whether screen control is blocked or not
+   * @return boolean for is screen control blocked or not
+   */
+  @ReactMethod
+  fun isScreenControlBlocked(promise: Promise) {
+    val activity = reactContext.currentActivity ?: run {
+      promise.reject(
+        "NativePluginError", "Cannot check screen control state, activity is null."
+      )
+      return
+    }
+
+    try {
+      promise.resolve(Talsec.isScreenControlBlocked(activity))
+    } catch (e: Exception) {
+      promise.reject("NativePluginError", "Error in isScreenControlBlocked: ${e.message}")
+    }
+  }
+
+  /**
+   * Method Hide/Show overlay windows of other apps over the activity.
+   * Requires Android 12+ and the HIDE_OVERLAY_WINDOWS permission.
+   * @param enable boolean for whether want to hide or show overlay windows
+   * @return boolean whether the request was applied
+   */
+  // Missing permission is suppressed because the decision to use the overlay API is made
+  // by developer, and not enforced by the library.
+  @SuppressLint("MissingPermission")
+  @ReactMethod
+  fun blockOverlayWindows(enable: Boolean, promise: Promise) {
+    val activity = reactContext.currentActivity ?: run {
+      promise.reject(
+        "NativePluginError", "Cannot block overlay windows, activity is null."
+      )
+      return
+    }
+
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+      promise.resolve(false)
+      return
+    }
+
+    runOnUiThread {
+      try {
+        promise.resolve(Talsec.blockOverlayWindows(activity, enable))
+      } catch (e: Exception) {
+        promise.reject("NativePluginError", "Error in blockOverlayWindows: ${e.message}")
+      }
+    }
+  }
+
+  /**
+   * Method Returns whether overlay windows of other apps are hidden or not
+   * @return boolean for are overlay windows hidden or not
+   */
+  @ReactMethod
+  fun isOverlayWindowsBlocked(promise: Promise) {
+    val activity = reactContext.currentActivity ?: run {
+      promise.reject(
+        "NativePluginError", "Cannot check overlay windows state, activity is null."
+      )
+      return
+    }
+
+    try {
+      promise.resolve(Talsec.isOverlayWindowsBlocked(activity))
+    } catch (e: Exception) {
+      promise.reject("NativePluginError", "Error in isOverlayWindowsBlocked: ${e.message}")
+    }
+  }
+
+  /**
+   * Method starts the ongoing call (cellular and VoIP) detection for the current activity
+   */
+  @ReactMethod
+  fun startOngoingCallDetection(promise: Promise) {
+    val activity = reactContext.currentActivity ?: run {
+      promise.reject(
+        "NativePluginError", "Cannot start ongoing call detection, activity is null."
+      )
+      return
+    }
+
+    try {
+      if (ongoingCallActivity?.get() !== activity) {
+        stopOngoingCallDetectionInternal()
+        Talsec.startOngoingCallDetection(activity)
+        ongoingCallActivity = WeakReference(activity)
+      }
+      promise.resolve("Ongoing call detection started.")
+    } catch (e: Exception) {
+      promise.reject("NativePluginError", "Error in startOngoingCallDetection: ${e.message}")
+    }
+  }
+
+  /**
+   * Method stops the ongoing call detection
+   */
+  @ReactMethod
+  fun stopOngoingCallDetection(promise: Promise) {
+    try {
+      stopOngoingCallDetectionInternal()
+      promise.resolve("Ongoing call detection stopped.")
+    } catch (e: Exception) {
+      promise.reject("NativePluginError", "Error in stopOngoingCallDetection: ${e.message}")
+    }
+  }
+
+  private fun stopOngoingCallDetectionInternal() {
+    ongoingCallActivity?.get()?.let { Talsec.stopOngoingCallDetection(it) }
+    ongoingCallActivity = null
   }
 
   @ReactMethod
@@ -319,6 +469,9 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
     private val mainHandler = Handler(Looper.getMainLooper())
 
     internal var talsecStarted = false
+
+    // Ongoing call detection is registered per activity
+    private var ongoingCallActivity: WeakReference<Activity>? = null
   }
 
   internal class PluginListener(private val reactContext: ReactApplicationContext) :
@@ -342,6 +495,13 @@ class FreeraspReactNativeModule(private val reactContext: ReactApplicationContex
           notifyEvent(ThreatEvent.CHANNEL_NAME, params)
         }
       }
+    }
+
+    override fun ongoingCallDetected(state: CallState) {
+      val params = Arguments.createMap()
+      params.putInt(ThreatEvent.CHANNEL_KEY, ThreatEvent.OngoingCall.value)
+      params.putString(ThreatEvent.CALL_STATE_CHANNEL_KEY, state.name)
+      notifyEvent(ThreatEvent.CHANNEL_NAME, params)
     }
 
     override fun raspExecutionStateChanged(event: RaspExecutionStateEvent) {

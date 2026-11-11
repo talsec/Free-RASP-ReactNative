@@ -301,7 +301,7 @@ const App = () => {
 
   const raspExecutionStateActions = {
     // Android & iOS
-    allChecksFinished: () => {
+    fastChecksFinished: () => {
       setAllChecksStatus('completed');
     },
     // Android only
@@ -361,7 +361,7 @@ const App = () => {
     <DemoApp
       checks={appChecks}
       suspiciousApps={suspiciousApps}
-      allChecksFinishedStatus={allChecksStatus}
+      fastChecksFinishedStatus={allChecksStatus}
       postponedChecksFinishedStatus={postponedChecksStatus}
     />
   );

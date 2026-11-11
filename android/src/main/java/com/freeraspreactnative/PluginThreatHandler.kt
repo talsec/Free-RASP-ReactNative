@@ -114,10 +114,8 @@ internal object PluginThreatHandler {
       ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.CriticalChecksFinished)
     }
 
-    // Fast checks finish where the removed onAllChecksFinished() used to be triggered, so
-    // they keep driving the cross-platform allChecksFinished state.
     override fun onFastChecksFinished() {
-      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.AllChecksFinished)
+      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.FastChecksFinished)
     }
 
     override fun onPostponedChecksFinished() {

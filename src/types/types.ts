@@ -100,10 +100,11 @@ export type NativeEvent = {
 
 export type RaspExecutionStateEventActions = {
   /**
-   * All standard checks have been completed. On Android, triggered after the
-   * fast checks are completed, while the postponed checks still run.
+   * The fast (standard) checks have been completed. On Android, the postponed
+   * checks may still run afterwards. On iOS, triggered when all checks have
+   * been completed.
    */
-  allChecksFinished?: () => any;
+  fastChecksFinished?: () => any;
   /**
    * Android only. The critical checks have been completed, before the
    * non-critical checks.

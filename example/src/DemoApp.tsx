@@ -40,12 +40,12 @@ export const DemoApp: React.FC<{
     status: string;
   }[];
   suspiciousApps: SuspiciousAppInfo[];
-  allChecksFinishedStatus: 'in progress' | 'completed';
+  fastChecksFinishedStatus: 'in progress' | 'completed';
   postponedChecksFinishedStatus: 'in progress' | 'completed';
 }> = ({
   checks,
   suspiciousApps,
-  allChecksFinishedStatus,
+  fastChecksFinishedStatus,
   postponedChecksFinishedStatus,
 }) => {
   const [hasScreenCaptureBlocked, setHasScreenCaptureBlocked] =
@@ -277,8 +277,8 @@ export const DemoApp: React.FC<{
               )}
               <Text style={styles.titleText}>RASP Execution State:</Text>
               {renderExecutionState(
-                'All Checks Finished',
-                allChecksFinishedStatus
+                'Fast Checks Finished',
+                fastChecksFinishedStatus
               )}
               {Platform.OS === 'android' &&
                 renderExecutionState(

@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 export class RaspExecutionState {
   value: number;
 
-  static AllChecksFinished = new RaspExecutionState(0);
+  static FastChecksFinished = new RaspExecutionState(0);
   static CriticalChecksFinished = new RaspExecutionState(0);
   static PostponedChecksFinished = new RaspExecutionState(0);
 
@@ -14,10 +14,10 @@ export class RaspExecutionState {
   static getValues(): RaspExecutionState[] {
     return Platform.OS === 'android'
       ? [
-          this.AllChecksFinished,
+          this.FastChecksFinished,
           this.CriticalChecksFinished,
           this.PostponedChecksFinished,
         ]
-      : [this.AllChecksFinished];
+      : [this.FastChecksFinished];
   }
 }

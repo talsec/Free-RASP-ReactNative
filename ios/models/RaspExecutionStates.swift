@@ -1,14 +1,14 @@
 enum RaspExecutionStates : String, Codable, CaseIterable, Equatable {
   
-  case allChecksFinished
+  case fastChecksFinished
   
   public static var allCases: [RaspExecutionStates] {
-    return [.allChecksFinished]
+    return [.fastChecksFinished]
   }
   
   var callbackIdentifier: Int {
     switch self {
-      case .allChecksFinished:
+      case .fastChecksFinished:
         return EventIdentifiers.raspExecutionStateIdentifierList[0]
     }
   }

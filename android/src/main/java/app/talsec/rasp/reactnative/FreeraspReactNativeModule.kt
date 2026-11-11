@@ -1,4 +1,4 @@
-package com.freeraspreactnative
+package app.talsec.rasp.reactnative
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -23,20 +23,20 @@ import com.facebook.react.bridge.UiThreadUtil.runOnUiThread
 import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.freeraspreactnative.dispatchers.ExecutionStateDispatcher
-import com.freeraspreactnative.dispatchers.ThreatDispatcher
-import com.freeraspreactnative.events.RaspExecutionStateEvent
-import com.freeraspreactnative.events.ThreatEvent
-import com.freeraspreactnative.interfaces.PluginExecutionStateListener
-import com.freeraspreactnative.interfaces.PluginThreatListener
-import com.freeraspreactnative.utils.Utils
-import com.freeraspreactnative.utils.getArraySafe
-import com.freeraspreactnative.utils.getBooleanSafe
-import com.freeraspreactnative.utils.getMapThrowing
-import com.freeraspreactnative.utils.getNestedArraySafe
-import com.freeraspreactnative.utils.getStringThrowing
-import com.freeraspreactnative.utils.toEncodedWritableArray
-import com.freeraspreactnative.utils.toSuspiciousAppDetectionConfig
+import app.talsec.rasp.reactnative.dispatchers.ExecutionStateDispatcher
+import app.talsec.rasp.reactnative.dispatchers.ThreatDispatcher
+import app.talsec.rasp.reactnative.events.RaspExecutionStateEvent
+import app.talsec.rasp.reactnative.events.ThreatEvent
+import app.talsec.rasp.reactnative.interfaces.PluginExecutionStateListener
+import app.talsec.rasp.reactnative.interfaces.PluginThreatListener
+import app.talsec.rasp.reactnative.utils.Utils
+import app.talsec.rasp.reactnative.utils.getArraySafe
+import app.talsec.rasp.reactnative.utils.getBooleanSafe
+import app.talsec.rasp.reactnative.utils.getMapThrowing
+import app.talsec.rasp.reactnative.utils.getNestedArraySafe
+import app.talsec.rasp.reactnative.utils.getStringThrowing
+import app.talsec.rasp.reactnative.utils.toEncodedWritableArray
+import app.talsec.rasp.reactnative.utils.toSuspiciousAppDetectionConfig
 import java.lang.ref.WeakReference
 
 class FreeraspReactNativeModule(private val reactContext: ReactApplicationContext) :

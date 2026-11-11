@@ -1,9 +1,9 @@
-package com.freeraspreactnative.dispatchers
+package app.talsec.rasp.reactnative.dispatchers
 
 import app.talsec.rasp.security.api.SuspiciousAppInfo
 import app.talsec.rasp.security.api.ThreatListener.CallState
-import com.freeraspreactnative.events.ThreatEvent
-import com.freeraspreactnative.interfaces.PluginThreatListener
+import app.talsec.rasp.reactnative.events.ThreatEvent
+import app.talsec.rasp.reactnative.interfaces.PluginThreatListener
 
 internal object ThreatDispatcher {
   private lateinit var listener: PluginThreatListener

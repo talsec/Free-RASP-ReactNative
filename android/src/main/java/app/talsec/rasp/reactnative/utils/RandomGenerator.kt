@@ -1,4 +1,4 @@
-package com.freeraspreactnative.utils
+package app.talsec.rasp.reactnative.utils
 
 import java.security.SecureRandom
 

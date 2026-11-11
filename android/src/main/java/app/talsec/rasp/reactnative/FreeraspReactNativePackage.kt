@@ -1,4 +1,4 @@
-package com.freeraspreactnative
+package app.talsec.rasp.reactnative
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

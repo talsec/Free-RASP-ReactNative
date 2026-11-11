@@ -1,4 +1,4 @@
-package com.freeraspreactnative.models
+package app.talsec.rasp.reactnative.models
 
 import kotlinx.serialization.Serializable
 

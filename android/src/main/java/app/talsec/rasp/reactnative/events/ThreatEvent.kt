@@ -1,6 +1,6 @@
-package com.freeraspreactnative.events
+package app.talsec.rasp.reactnative.events
 
-import com.freeraspreactnative.utils.RandomGenerator
+import app.talsec.rasp.reactnative.utils.RandomGenerator
 
 /**
  * Sealed class to represent the error codes.

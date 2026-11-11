@@ -13,6 +13,9 @@ import { DemoApp } from './DemoApp';
 import { commonChecks, iosChecks, androidChecks } from './checks';
 import { useEffect } from 'react';
 
+const callStateLabel = (state: CallState) =>
+  state.charAt(0) + state.slice(1).toLowerCase();
+
 const App = () => {
   const [appChecks, setAppChecks] = React.useState([
     ...commonChecks,
@@ -292,7 +295,11 @@ const App = () => {
       setAppChecks((currentState) =>
         currentState.map((threat) =>
           threat.name === 'Ongoing Call'
-            ? { ...threat, status: state === 'STOPPED' ? 'ok' : 'nok' }
+            ? {
+                ...threat,
+                status: state === 'STOPPED' ? 'ok' : 'nok',
+                detail: callStateLabel(state),
+              }
             : threat
         )
       );

@@ -38,6 +38,7 @@ export const DemoApp: React.FC<{
   checks: {
     name: string;
     status: string;
+    detail?: string;
   }[];
   suspiciousApps: SuspiciousAppInfo[];
   fastChecksFinishedStatus: 'in progress' | 'completed';
@@ -303,7 +304,9 @@ export const DemoApp: React.FC<{
                         fontWeight: 'bold',
                         alignSelf: 'center',
                       }}>
-                      {check.name}
+                      {check.detail
+                        ? `${check.name}: ${check.detail}`
+                        : check.name}
                     </Text>
                     {check.name === 'Malware' && (
                       <MalwareModal

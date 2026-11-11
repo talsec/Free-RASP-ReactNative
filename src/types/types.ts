@@ -1,3 +1,5 @@
+import type { TalsecError } from './errors';
+
 export type TalsecConfig = {
   androidConfig?: TalsecAndroidConfig;
   iosConfig?: TalsecIosConfig;
@@ -115,4 +117,14 @@ export type RaspExecutionStateEventActions = {
    * initial evaluation.
    */
   postponedChecksFinished?: () => any;
+};
+
+/**
+ * State returned by `useFreeRasp`.
+ */
+export type FreeRaspStatus = {
+  /** `true` once freeRASP has been started. */
+  started: boolean;
+  /** Error that prevented the listeners from being registered or freeRASP from starting. */
+  error: TalsecError | null;
 };

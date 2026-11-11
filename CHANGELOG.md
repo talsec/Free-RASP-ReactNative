@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Added
 
+- `useFreeRasp` returns `{ started, error }`; `error` is the `TalsecError` that prevented the listeners from being registered or freeRASP from starting, which was previously only logged to the console
 - `ongoingCall` threat action with the new `CallState` type (`'STARTED' | 'ONGOING' | 'STOPPED'`), driven by `startOngoingCallDetection()` and `stopOngoingCallDetection()` (Android only)
 - `blockScreenControl()` and `isScreenControlBlocked()` to prevent accessibility services from reading or controlling the app screen (Android only)
 - `blockOverlayWindows()` and `isOverlayWindowsBlocked()` to hide overlay windows of other apps (Android 12+ only, requires the `HIDE_OVERLAY_WINDOWS` permission)

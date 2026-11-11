@@ -360,7 +360,19 @@ const App = () => {
     );
   };
 
-  useFreeRasp(config, actions, raspExecutionStateActions);
+  const { error: raspError } = useFreeRasp(
+    config,
+    actions,
+    raspExecutionStateActions
+  );
+
+  useEffect(() => {
+    if (raspError) {
+      console.error(
+        `freeRASP failed to start: ${raspError.code}: ${raspError.message}`
+      );
+    }
+  }, [raspError]);
 
   return (
     <DemoApp

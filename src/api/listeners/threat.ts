@@ -38,8 +38,13 @@ export const setThreatListeners = async (config: ThreatEventActions) => {
 
   await removeThreatListener();
 
-  if (!threatChannel || !threatKey || !threatMalwareKey) {
-    [threatChannel, threatKey, threatMalwareKey, threatCallStateKey = null] =
+  if (
+    !threatChannel ||
+    !threatKey ||
+    !threatMalwareKey ||
+    !threatCallStateKey
+  ) {
+    [threatChannel, threatKey, threatMalwareKey, threatCallStateKey] =
       await getThreatChannelData();
   }
 
@@ -49,7 +54,7 @@ export const setThreatListeners = async (config: ThreatEventActions) => {
   }
 
   const listener = async (event: NativeEvent) => {
-    if (!threatKey || !threatMalwareKey) {
+    if (!threatKey || !threatMalwareKey || !threatCallStateKey) {
       onInvalidCallback();
       return;
     }
@@ -128,9 +133,7 @@ export const setThreatListeners = async (config: ThreatEventActions) => {
         config.bootloader?.();
         break;
       case Threat.OngoingCall.value:
-        const callState = threatCallStateKey
-          ? event[threatCallStateKey]
-          : undefined;
+        const callState = event[threatCallStateKey];
         if (!isCallState(callState)) {
           onInvalidCallback();
           break;

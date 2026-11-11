@@ -107,7 +107,8 @@ class FreeraspReactNative: RCTEventEmitter {
      */
     @objc(getThreatChannelData:withRejecter:)
     private func getThreatChannelData(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        resolve([EventIdentifiers.threatChannelName, EventIdentifiers.threatChannelKey, "0"])
+        // Malware and ongoing call are Android only, so iOS sends placeholders for their keys
+        resolve([EventIdentifiers.threatChannelName, EventIdentifiers.threatChannelKey, "0", "0"])
     }
   
     /**

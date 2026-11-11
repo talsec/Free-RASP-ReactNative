@@ -1,6 +1,6 @@
-package com.freeraspreactnative.events
+package app.talsec.rasp.reactnative.events
 
-import com.freeraspreactnative.utils.RandomGenerator
+import app.talsec.rasp.reactnative.utils.RandomGenerator
 
 internal sealed class RaspExecutionStateEvent(override val value: Int) : BaseRaspEvent {
   override val channelName: String get() = CHANNEL_NAME

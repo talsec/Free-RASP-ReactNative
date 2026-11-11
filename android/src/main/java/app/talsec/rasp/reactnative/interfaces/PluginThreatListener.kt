@@ -1,8 +1,8 @@
-package com.freeraspreactnative.interfaces
+package app.talsec.rasp.reactnative.interfaces
 
 import app.talsec.rasp.security.api.SuspiciousAppInfo
 import app.talsec.rasp.security.api.ThreatListener.CallState
-import com.freeraspreactnative.events.ThreatEvent
+import app.talsec.rasp.reactnative.events.ThreatEvent
 
 internal interface PluginThreatListener {
   fun threatDetected(threatEventType: ThreatEvent)

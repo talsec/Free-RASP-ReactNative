@@ -1,6 +1,6 @@
-package com.freeraspreactnative.interfaces
+package app.talsec.rasp.reactnative.interfaces
 
-import com.freeraspreactnative.events.RaspExecutionStateEvent
+import app.talsec.rasp.reactnative.events.RaspExecutionStateEvent
 
 internal interface PluginExecutionStateListener {
   fun raspExecutionStateChanged(event: RaspExecutionStateEvent)

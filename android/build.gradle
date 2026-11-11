@@ -87,7 +87,7 @@ android {
   }
 
   if (project.android.hasProperty("namespace")) {
-    namespace("com.freeraspreactnative")
+    namespace("app.talsec.rasp.reactnative")
   }
 }
 
@@ -119,6 +119,6 @@ if (isNewArchitectureEnabled()) {
   react {
     jsRootDir = file("../src/")
     libraryName = "FreeraspReactNative"
-    codegenJavaPackageName = "com.freeraspreactnative"
+    codegenJavaPackageName = "app.talsec.rasp.reactnative"
   }
 }

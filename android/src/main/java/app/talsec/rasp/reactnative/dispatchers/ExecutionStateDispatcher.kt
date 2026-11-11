@@ -1,7 +1,7 @@
-package com.freeraspreactnative.dispatchers
+package app.talsec.rasp.reactnative.dispatchers
 
-import com.freeraspreactnative.events.RaspExecutionStateEvent
-import com.freeraspreactnative.interfaces.PluginExecutionStateListener
+import app.talsec.rasp.reactnative.events.RaspExecutionStateEvent
+import app.talsec.rasp.reactnative.interfaces.PluginExecutionStateListener
 
 internal object ExecutionStateDispatcher {
   private lateinit var listener: PluginExecutionStateListener

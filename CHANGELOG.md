@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Changed
 
+- Android package (namespace) of the plugin renamed from `com.freeraspreactnative` to `app.talsec.rasp.reactnative`, following the Android SDK's `app.talsec.rasp` (update the import if you register `FreeraspReactNativePackage` manually)
 - On Android, `isScreenCaptureBlocked()` reports the protection state of the current activity
 
 ### Android

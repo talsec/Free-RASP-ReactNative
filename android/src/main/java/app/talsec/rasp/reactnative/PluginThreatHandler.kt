@@ -1,13 +1,13 @@
-package com.freeraspreactnative
+package app.talsec.rasp.reactnative
 
 import android.content.Context
 import app.talsec.rasp.security.api.SuspiciousAppInfo
 import app.talsec.rasp.security.api.ThreatListener
 import app.talsec.rasp.security.api.ThreatListener.CallState
-import com.freeraspreactnative.dispatchers.ExecutionStateDispatcher
-import com.freeraspreactnative.dispatchers.ThreatDispatcher
-import com.freeraspreactnative.events.RaspExecutionStateEvent
-import com.freeraspreactnative.events.ThreatEvent
+import app.talsec.rasp.reactnative.dispatchers.ExecutionStateDispatcher
+import app.talsec.rasp.reactnative.dispatchers.ThreatDispatcher
+import app.talsec.rasp.reactnative.events.RaspExecutionStateEvent
+import app.talsec.rasp.reactnative.events.ThreatEvent
 
 internal object PluginThreatHandler {
 

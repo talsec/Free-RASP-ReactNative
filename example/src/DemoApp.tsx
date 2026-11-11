@@ -75,8 +75,7 @@ export const DemoApp: React.FC<{
 
   const toggleScreenCaptureBlock = async () => {
     try {
-      const response = await blockScreenCapture(!hasScreenCaptureBlocked);
-      console.info('Changing Screen Capture Status:', response);
+      await blockScreenCapture(!hasScreenCaptureBlocked);
       await updateScreenCaptureStatus();
     } catch (error: any) {
       console.error('Screen capture Error:', error.message);

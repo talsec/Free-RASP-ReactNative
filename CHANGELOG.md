@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Breaking
 
 - `allChecksFinished` RASP execution state action renamed to `fastChecksFinished`. On Android, it is triggered when the fast checks are completed, while the postponed checks may still run; on iOS, when all checks are completed
+- `TalsecIosConfig.appBundleId` (string) replaced by `appBundleIds` (string[]), matching the iOS SDK
+- Methods that resolved with a status string or a constant now resolve to `void`: `talsecStart`, `addToWhitelist`, `blockScreenCapture`, `blockScreenControl`, `startOngoingCallDetection`, `stopOngoingCallDetection`, `storeExternalId`, `removeExternalId`
+- All methods now reject with `TalsecError` (`code`: `talsec-failure`, `unsupported-platform`, `configuration-exception`, `external-id-failure`, `malware-failure`) instead of native errors or plain strings
+- `onInvalidCallback` and `removeListenerForEvent` are no longer exported; use `abortApp` to terminate the app
 
 ### React Native
 

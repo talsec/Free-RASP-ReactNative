@@ -10,7 +10,6 @@ import type {
   TalsecConfig,
   RaspExecutionStateEventActions,
 } from '../../types/types';
-import { onInvalidCallback } from './native';
 
 let isRaspStarted = false;
 
@@ -30,10 +29,7 @@ export const useFreeRasp = (
       }
 
       try {
-        const response = await talsecStart(config);
-        if (response !== 'freeRASP started') {
-          onInvalidCallback();
-        }
+        await talsecStart(config);
         isRaspStarted = true;
       } catch (e: any) {
         console.error(`${e.code}: ${e.message}`);

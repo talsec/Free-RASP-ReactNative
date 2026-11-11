@@ -1,6 +1,6 @@
 import { NativeEventEmitter, type EmitterSubscription } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
-import { onInvalidCallback, removeListenerForEvent } from '../methods/native';
+import { onInvalidCallback, removeListenerForEvent } from '../methods/internal';
 import type {
   NativeEvent,
   RaspExecutionStateEventActions,

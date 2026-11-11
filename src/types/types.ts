@@ -37,7 +37,7 @@ export type TalsecAndroidConfig = {
 };
 
 export type TalsecIosConfig = {
-  appBundleId: string;
+  appBundleIds: string[];
   appTeamId: string;
 };
 

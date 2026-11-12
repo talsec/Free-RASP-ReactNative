@@ -67,33 +67,33 @@ export type PackageInfo = {
 export type CallState = 'STARTED' | 'ONGOING' | 'STOPPED';
 
 export type ThreatEventActions = {
-  privilegedAccess?: () => any;
-  debug?: () => any;
-  simulator?: () => any;
-  appIntegrity?: () => any;
-  unofficialStore?: () => any;
-  hooks?: () => any;
-  deviceBinding?: () => any;
-  deviceID?: () => any;
-  passcode?: () => any;
-  secureHardwareNotAvailable?: () => any;
-  obfuscationIssues?: () => any;
-  devMode?: () => any;
-  systemVPN?: () => any;
-  malware?: (suspiciousApps: SuspiciousAppInfo[]) => any;
-  adbEnabled?: () => any;
-  screenshot?: () => any;
-  screenRecording?: () => any;
-  multiInstance?: () => any;
-  timeSpoofing?: () => any;
-  locationSpoofing?: () => any;
-  unsecureWifi?: () => any;
-  automation?: () => any;
-  bootloader?: () => any;
+  privilegedAccess?: () => void;
+  debug?: () => void;
+  simulator?: () => void;
+  appIntegrity?: () => void;
+  unofficialStore?: () => void;
+  hooks?: () => void;
+  deviceBinding?: () => void;
+  deviceID?: () => void;
+  passcode?: () => void;
+  secureHardwareNotAvailable?: () => void;
+  obfuscationIssues?: () => void;
+  devMode?: () => void;
+  systemVPN?: () => void;
+  malware?: (suspiciousApps: SuspiciousAppInfo[]) => void;
+  adbEnabled?: () => void;
+  screenshot?: () => void;
+  screenRecording?: () => void;
+  multiInstance?: () => void;
+  timeSpoofing?: () => void;
+  locationSpoofing?: () => void;
+  unsecureWifi?: () => void;
+  automation?: () => void;
+  bootloader?: () => void;
   /**
    * Android only. Requires `startOngoingCallDetection()`.
    */
-  ongoingCall?: (state: CallState) => any;
+  ongoingCall?: (state: CallState) => void;
 };
 
 export type NativeEvent = {
@@ -106,17 +106,17 @@ export type RaspExecutionStateEventActions = {
    * checks may still run afterwards. On iOS, triggered when all checks have
    * been completed.
    */
-  fastChecksFinished?: () => any;
+  fastChecksFinished?: () => void;
   /**
    * Android only. The critical checks have been completed, before the
    * non-critical checks.
    */
-  criticalChecksFinished?: () => any;
+  criticalChecksFinished?: () => void;
   /**
    * Android only. The postponed checks have been completed, which ends the
    * initial evaluation.
    */
-  postponedChecksFinished?: () => any;
+  postponedChecksFinished?: () => void;
 };
 
 /**

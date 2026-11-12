@@ -1,7 +1,7 @@
 import { getThreatCount, itemsHaveType } from '../utils/utils';
 import { FreeraspReactNative } from '../api/nativeModules';
 import { Threat } from '../models/threat';
-import { onInvalidCallback } from '../api/methods/native';
+import { onInvalidCallback } from '../api/methods/internal';
 
 export const getThreatIdentifiers = async (): Promise<number[]> => {
   const identifiers = await FreeraspReactNative.getThreatIdentifiers();

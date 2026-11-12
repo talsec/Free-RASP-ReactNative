@@ -67,7 +67,7 @@ const App = () => {
       },
     },
     iosConfig: {
-      appBundleId: 'org.reactjs.native.example.FreeraspReactNativeExample',
+      appBundleIds: ['org.reactjs.native.example.FreeraspReactNativeExample'],
       appTeamId: 'your_team_ID',
     },
     watcherMail: 'your_email_address@example.com',
@@ -351,10 +351,8 @@ const App = () => {
     await Promise.all(
       appsToWhitelist.map(async (app) => {
         try {
-          const whitelistResponse = await addToWhitelist(app);
-          console.info(
-            `${app} stored to Malware Whitelist: ${whitelistResponse}`
-          );
+          await addToWhitelist(app);
+          console.info(`${app} stored to Malware Whitelist`);
         } catch (error) {
           console.info('Malware whitelist failed: ', error);
         }
@@ -362,7 +360,19 @@ const App = () => {
     );
   };
 
-  useFreeRasp(config, actions, raspExecutionStateActions);
+  const { error: raspError } = useFreeRasp(
+    config,
+    actions,
+    raspExecutionStateActions
+  );
+
+  useEffect(() => {
+    if (raspError) {
+      console.error(
+        `freeRASP failed to start: ${raspError.code}: ${raspError.message}`
+      );
+    }
+  }, [raspError]);
 
   return (
     <DemoApp

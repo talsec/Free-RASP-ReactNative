@@ -13,11 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Breaking
 
 - `allChecksFinished` RASP execution state action renamed to `fastChecksFinished`. On Android, it is triggered when the fast checks are completed, while the postponed checks may still run; on iOS, when all checks are completed
+- `TalsecIosConfig.appBundleId` (string) replaced by `appBundleIds` (string[]), matching the iOS SDK
+- Methods that resolved with a status string or a constant now resolve to `void`: `talsecStart`, `addToWhitelist`, `blockScreenCapture`, `blockScreenControl`, `startOngoingCallDetection`, `stopOngoingCallDetection`, `storeExternalId`, `removeExternalId`
+- All methods now reject with `TalsecError` (`code`: `talsec-failure`, `unsupported-platform`, `configuration-exception`, `external-id-failure`, `malware-failure`) instead of native errors or plain strings
+- `onInvalidCallback` and `removeListenerForEvent` are no longer exported; use `abortApp` to terminate the app
 
 ### React Native
 
 #### Added
 
+- `useFreeRasp` returns `{ started, error }`; `error` is the `TalsecError` that prevented the listeners from being registered or freeRASP from starting, which was previously only logged to the console
 - `ongoingCall` threat action with the new `CallState` type (`'STARTED' | 'ONGOING' | 'STOPPED'`), driven by `startOngoingCallDetection()` and `stopOngoingCallDetection()` (Android only)
 - `blockScreenControl()` and `isScreenControlBlocked()` to prevent accessibility services from reading or controlling the app screen (Android only)
 - `blockOverlayWindows()` and `isOverlayWindowsBlocked()` to hide overlay windows of other apps (Android 12+ only, requires the `HIDE_OVERLAY_WINDOWS` permission)
@@ -27,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Android package (namespace) of the plugin renamed from `com.freeraspreactnative` to `app.talsec.rasp.reactnative`, following the Android SDK's `app.talsec.rasp` (update the import if you register `FreeraspReactNativePackage` manually)
 - On Android, `isScreenCaptureBlocked()` reports the protection state of the current activity
+- Threat and RASP execution state actions are typed as returning `void` instead of `any`
 
 ### Android
 

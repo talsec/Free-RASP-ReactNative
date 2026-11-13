@@ -1,12 +1,13 @@
-package com.freeraspreactnative
+package app.talsec.rasp.reactnative
 
 import android.content.Context
 import app.talsec.rasp.security.api.SuspiciousAppInfo
 import app.talsec.rasp.security.api.ThreatListener
-import com.freeraspreactnative.dispatchers.ExecutionStateDispatcher
-import com.freeraspreactnative.dispatchers.ThreatDispatcher
-import com.freeraspreactnative.events.RaspExecutionStateEvent
-import com.freeraspreactnative.events.ThreatEvent
+import app.talsec.rasp.security.api.ThreatListener.CallState
+import app.talsec.rasp.reactnative.dispatchers.ExecutionStateDispatcher
+import app.talsec.rasp.reactnative.dispatchers.ThreatDispatcher
+import app.talsec.rasp.reactnative.events.RaspExecutionStateEvent
+import app.talsec.rasp.reactnative.events.ThreatEvent
 
 internal object PluginThreatHandler {
 
@@ -79,6 +80,10 @@ internal object PluginThreatHandler {
     override fun onBootloader() {
       ThreatDispatcher.dispatchThreat(ThreatEvent.Bootloader)
     }
+
+    override fun onOngoingCall(state: CallState) {
+      ThreatDispatcher.dispatchOngoingCall(state)
+    }
   }
 
   private val deviceState = object : ThreatListener.DeviceState() {
@@ -105,8 +110,16 @@ internal object PluginThreatHandler {
   }
 
   private val raspExecutionState = object : ThreatListener.RaspExecutionState() {
-    override fun onAllChecksFinished() {
-      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.AllChecksFinished)
+    override fun onCriticalChecksFinished() {
+      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.CriticalChecksFinished)
+    }
+
+    override fun onFastChecksFinished() {
+      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.FastChecksFinished)
+    }
+
+    override fun onPostponedChecksFinished() {
+      ExecutionStateDispatcher.dispatch(RaspExecutionStateEvent.PostponedChecksFinished)
     }
   }
 

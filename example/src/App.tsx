@@ -3,13 +3,18 @@ import * as React from 'react';
 import { Platform, PermissionsAndroid } from 'react-native';
 import {
   addToWhitelist,
+  startOngoingCallDetection,
   useFreeRasp,
+  type CallState,
   type SuspiciousAppInfo,
   type TalsecConfig,
 } from 'freerasp-react-native';
 import { DemoApp } from './DemoApp';
 import { commonChecks, iosChecks, androidChecks } from './checks';
 import { useEffect } from 'react';
+
+const callStateLabel = (state: CallState) =>
+  state.charAt(0) + state.slice(1).toLowerCase();
 
 const App = () => {
   const [appChecks, setAppChecks] = React.useState([
@@ -22,10 +27,17 @@ const App = () => {
   const [allChecksStatus, setAllChecksStatus] = React.useState<
     'in progress' | 'completed'
   >('in progress');
+  const [postponedChecksStatus, setPostponedChecksStatus] = React.useState<
+    'in progress' | 'completed'
+  >('in progress');
 
   useEffect(() => {
     (async () => {
-      Platform.OS === 'android' && (await addItemsToMalwareWhitelist());
+      if (Platform.OS === 'android') {
+        await addItemsToMalwareWhitelist();
+        // Report cellular and VoIP calls through the ongoingCall action
+        await startOngoingCallDetection();
+      }
       await requestLocationPermission();
     })();
   }, []);
@@ -55,7 +67,7 @@ const App = () => {
       },
     },
     iosConfig: {
-      appBundleId: 'org.reactjs.native.example.FreeraspReactNativeExample',
+      appBundleIds: ['org.reactjs.native.example.FreeraspReactNativeExample'],
       appTeamId: 'your_team_ID',
     },
     watcherMail: 'your_email_address@example.com',
@@ -277,12 +289,31 @@ const App = () => {
         )
       );
     },
+    // Android only
+    ongoingCall: (state: CallState) => {
+      console.info('Ongoing call:', state);
+      setAppChecks((currentState) =>
+        currentState.map((threat) =>
+          threat.name === 'Ongoing Call'
+            ? {
+                ...threat,
+                status: state === 'STOPPED' ? 'ok' : 'nok',
+                detail: callStateLabel(state),
+              }
+            : threat
+        )
+      );
+    },
   };
 
   const raspExecutionStateActions = {
     // Android & iOS
-    allChecksFinished: () => {
+    fastChecksFinished: () => {
       setAllChecksStatus('completed');
+    },
+    // Android only
+    postponedChecksFinished: () => {
+      setPostponedChecksStatus('completed');
     },
   };
 
@@ -320,10 +351,8 @@ const App = () => {
     await Promise.all(
       appsToWhitelist.map(async (app) => {
         try {
-          const whitelistResponse = await addToWhitelist(app);
-          console.info(
-            `${app} stored to Malware Whitelist: ${whitelistResponse}`
-          );
+          await addToWhitelist(app);
+          console.info(`${app} stored to Malware Whitelist`);
         } catch (error) {
           console.info('Malware whitelist failed: ', error);
         }
@@ -331,13 +360,26 @@ const App = () => {
     );
   };
 
-  useFreeRasp(config, actions, raspExecutionStateActions);
+  const { error: raspError } = useFreeRasp(
+    config,
+    actions,
+    raspExecutionStateActions
+  );
+
+  useEffect(() => {
+    if (raspError) {
+      console.error(
+        `freeRASP failed to start: ${raspError.code}: ${raspError.message}`
+      );
+    }
+  }, [raspError]);
 
   return (
     <DemoApp
       checks={appChecks}
       suspiciousApps={suspiciousApps}
-      allChecksFinishedStatus={allChecksStatus}
+      fastChecksFinishedStatus={allChecksStatus}
+      postponedChecksFinishedStatus={postponedChecksStatus}
     />
   );
 };

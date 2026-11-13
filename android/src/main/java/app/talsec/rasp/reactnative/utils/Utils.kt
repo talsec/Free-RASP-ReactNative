@@ -1,4 +1,4 @@
-package com.freeraspreactnative.utils
+package app.talsec.rasp.reactnative.utils
 
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap

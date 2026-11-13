@@ -1,6 +1,6 @@
 import { NativeEventEmitter, type EmitterSubscription } from 'react-native';
 import { FreeraspReactNative } from '../nativeModules';
-import { onInvalidCallback, removeListenerForEvent } from '../methods/native';
+import { onInvalidCallback, removeListenerForEvent } from '../methods/internal';
 import type {
   NativeEvent,
   RaspExecutionStateEventActions,
@@ -47,8 +47,14 @@ export const setRaspExecutionStateListener = async (
     }
 
     switch (event[executionStateKey]) {
-      case RaspExecutionState.AllChecksFinished.value:
-        config.allChecksFinished?.();
+      case RaspExecutionState.FastChecksFinished.value:
+        config.fastChecksFinished?.();
+        break;
+      case RaspExecutionState.CriticalChecksFinished.value:
+        config.criticalChecksFinished?.();
+        break;
+      case RaspExecutionState.PostponedChecksFinished.value:
+        config.postponedChecksFinished?.();
         break;
       default:
         onInvalidCallback();

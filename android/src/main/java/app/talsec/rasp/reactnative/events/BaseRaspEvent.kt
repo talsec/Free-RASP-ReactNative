@@ -1,4 +1,4 @@
-package com.freeraspreactnative.events
+package app.talsec.rasp.reactnative.events
 
 internal interface BaseRaspEvent {
   val value: Int

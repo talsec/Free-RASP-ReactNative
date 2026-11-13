@@ -1,4 +1,4 @@
-package com.freeraspreactnative
+package app.talsec.rasp.reactnative
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi

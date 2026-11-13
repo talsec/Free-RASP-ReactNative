@@ -26,4 +26,5 @@ export const androidChecks = [
   { name: 'Unsecure Wifi', status: 'ok' },
   { name: 'Automation', status: 'ok' },
   { name: 'Bootloader', status: 'ok' },
+  { name: 'Ongoing Call', status: 'ok', detail: 'Not detected' },
 ];

@@ -1,6 +1,6 @@
 import { getRaspExecutionStateCount, itemsHaveType } from '../utils/utils';
 import { FreeraspReactNative } from '../api/nativeModules';
-import { onInvalidCallback } from '../api/methods/native';
+import { onInvalidCallback } from '../api/methods/internal';
 import { RaspExecutionState } from '../models/raspExecutionState';
 
 export const getRaspExecutionStateIdentifiers = async (): Promise<number[]> => {

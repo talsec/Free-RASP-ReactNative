@@ -1,4 +1,4 @@
-package com.freeraspreactnative.utils
+package app.talsec.rasp.reactnative.utils
 
 import android.content.pm.PackageInfo
 import android.util.Base64
@@ -13,9 +13,9 @@ import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableArray
-import com.freeraspreactnative.exceptions.TalsecException
-import com.freeraspreactnative.models.RNPackageInfo
-import com.freeraspreactnative.models.RNSuspiciousAppInfo
+import app.talsec.rasp.reactnative.exceptions.TalsecException
+import app.talsec.rasp.reactnative.models.RNPackageInfo
+import app.talsec.rasp.reactnative.models.RNSuspiciousAppInfo
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.json.JSONException

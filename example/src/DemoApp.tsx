@@ -5,6 +5,7 @@ import CheckmarkCircle from '../assets/checkmark-circle-outline.png';
 import CloseCircle from '../assets/close-circle-outline.png';
 import TalsecLogo from '../assets/talsec-logo.png';
 import {
+  Platform,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -19,6 +20,10 @@ import { MalwareModal } from './MalwareModal';
 import {
   isScreenCaptureBlocked,
   blockScreenCapture,
+  isScreenControlBlocked,
+  blockScreenControl,
+  isOverlayWindowsBlocked,
+  blockOverlayWindows,
   type SuspiciousAppInfo,
   storeExternalId,
   removeExternalId,
@@ -33,11 +38,22 @@ export const DemoApp: React.FC<{
   checks: {
     name: string;
     status: string;
+    detail?: string;
   }[];
   suspiciousApps: SuspiciousAppInfo[];
-  allChecksFinishedStatus: 'in progress' | 'completed';
-}> = ({ checks, suspiciousApps, allChecksFinishedStatus }) => {
+  fastChecksFinishedStatus: 'in progress' | 'completed';
+  postponedChecksFinishedStatus: 'in progress' | 'completed';
+}> = ({
+  checks,
+  suspiciousApps,
+  fastChecksFinishedStatus,
+  postponedChecksFinishedStatus,
+}) => {
   const [hasScreenCaptureBlocked, setHasScreenCaptureBlocked] =
+    React.useState(false);
+  const [hasScreenControlBlocked, setHasScreenControlBlocked] =
+    React.useState(false);
+  const [hasOverlayWindowsBlocked, setHasOverlayWindowsBlocked] =
     React.useState(false);
   const [externalIdValue, setExternalIdValue] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -59,13 +75,81 @@ export const DemoApp: React.FC<{
 
   const toggleScreenCaptureBlock = async () => {
     try {
-      const response = await blockScreenCapture(!hasScreenCaptureBlocked);
-      console.info('Changing Screen Capture Status:', response);
+      await blockScreenCapture(!hasScreenCaptureBlocked);
       await updateScreenCaptureStatus();
     } catch (error: any) {
       console.error('Screen capture Error:', error.message);
     }
   };
+
+  const toggleScreenControlBlock = async () => {
+    try {
+      await blockScreenControl(!hasScreenControlBlocked);
+      setHasScreenControlBlocked(await isScreenControlBlocked());
+    } catch (error: any) {
+      console.error('Screen control Error:', error);
+    }
+  };
+
+  const toggleOverlayWindowsBlock = async () => {
+    try {
+      const applied = await blockOverlayWindows(!hasOverlayWindowsBlocked);
+      console.info('Changing Overlay Windows Status applied:', applied);
+      setHasOverlayWindowsBlocked(await isOverlayWindowsBlocked());
+    } catch (error: any) {
+      console.error('Overlay windows Error:', error);
+    }
+  };
+
+  const renderToggle = (
+    isBlocked: boolean,
+    onPress: () => void,
+    blockLabel: string,
+    enableLabel: string
+  ) => (
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.button, isBlocked && styles.blockedButton]}>
+      <Text
+        style={[styles.buttonText, { color: isBlocked ? 'white' : 'black' }]}>
+        {isBlocked ? enableLabel : blockLabel}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const renderExecutionState = (
+    label: string,
+    status: 'in progress' | 'completed'
+  ) => (
+    <Box
+      style={[
+        styles.box,
+        status === 'completed' ? styles.boxCheckOk : styles.boxProgress,
+      ]}>
+      <HStack
+        style={{
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <Text
+          style={{
+            color: status === 'completed' ? 'green' : Colors.progressDark,
+            fontWeight: 'bold',
+            alignSelf: 'center',
+          }}>
+          {label}
+        </Text>
+        {status === 'completed' ? (
+          <Image
+            source={CheckmarkCircle}
+            style={[styles.checkIcon, { tintColor: Colors.checkOkDark }]}
+          />
+        ) : (
+          <ActivityIndicator size={30} color={Colors.progressDark} />
+        )}
+      </HStack>
+    </Box>
+  );
 
   const handleModalSend = async () => {
     setModalVisible(false);
@@ -174,45 +258,33 @@ export const DemoApp: React.FC<{
                   </View>
                 </Modal>
               </HStack>
-              <Text style={styles.titleText}>RASP Execution State:</Text>
-              <Box
-                style={[
-                  styles.box,
-                  allChecksFinishedStatus === 'completed'
-                    ? styles.boxCheckOk
-                    : styles.boxProgress,
-                ]}>
+              {Platform.OS === 'android' && (
                 <HStack
-                  style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color:
-                        allChecksFinishedStatus === 'completed'
-                          ? 'green'
-                          : Colors.progressDark,
-                      fontWeight: 'bold',
-                      alignSelf: 'center',
-                    }}>
-                    All Checks Finished
-                  </Text>
-                  {allChecksFinishedStatus === 'completed' ? (
-                    <Image
-                      source={CheckmarkCircle}
-                      style={[
-                        styles.checkIcon,
-                        {
-                          tintColor: Colors.checkOkDark,
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <ActivityIndicator size={30} color={Colors.progressDark} />
+                  style={{ justifyContent: 'space-evenly', paddingTop: 10 }}>
+                  {renderToggle(
+                    hasScreenControlBlocked,
+                    toggleScreenControlBlock,
+                    'Block Screen Control',
+                    'Enable Screen Control'
+                  )}
+                  {renderToggle(
+                    hasOverlayWindowsBlocked,
+                    toggleOverlayWindowsBlock,
+                    'Block Overlays',
+                    'Enable Overlays'
                   )}
                 </HStack>
-              </Box>
+              )}
+              <Text style={styles.titleText}>RASP Execution State:</Text>
+              {renderExecutionState(
+                'Fast Checks Finished',
+                fastChecksFinishedStatus
+              )}
+              {Platform.OS === 'android' &&
+                renderExecutionState(
+                  'Postponed Checks Finished',
+                  postponedChecksFinishedStatus
+                )}
               <Text style={styles.titleText}>freeRASP checks:</Text>
               {checks.map((check: any, idx: number) => (
                 <Box
@@ -231,7 +303,9 @@ export const DemoApp: React.FC<{
                         fontWeight: 'bold',
                         alignSelf: 'center',
                       }}>
-                      {check.name}
+                      {check.detail
+                        ? `${check.name}: ${check.detail}`
+                        : check.name}
                     </Text>
                     {check.name === 'Malware' && (
                       <MalwareModal

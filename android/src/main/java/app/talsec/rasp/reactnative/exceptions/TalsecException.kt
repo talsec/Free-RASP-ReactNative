@@ -1,3 +1,3 @@
-package com.freeraspreactnative.exceptions
+package app.talsec.rasp.reactnative.exceptions
 
 class TalsecException(message: String, val code: String? = null, val ex: Exception? = null) : Exception(message)

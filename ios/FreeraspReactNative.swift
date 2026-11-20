@@ -92,13 +92,13 @@ class FreeraspReactNative: RCTEventEmitter {
   
     @objc(storeExternalId:withResolver:withRejecter:)
     private func storeExternalId(externalId: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        UserDefaults.standard.set(externalId, forKey: "app.talsec.externalid")
+        Talsec.storeExternalId(externalId: externalId)
         resolve("OK - Store external ID")
     }
 
     @objc(removeExternalId:withRejecter:)
     private func removeExternalId(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        UserDefaults.standard.removeObject(forKey: "app.talsec.externalid")
+        Talsec.removeExternalId()
         resolve("OK - External ID removed")
     }
 

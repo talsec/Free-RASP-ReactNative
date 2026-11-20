@@ -1,5 +1,3 @@
-import { Platform } from 'react-native';
-
 export class RaspExecutionState {
   value: number;
 
@@ -12,12 +10,10 @@ export class RaspExecutionState {
   }
 
   static getValues(): RaspExecutionState[] {
-    return Platform.OS === 'android'
-      ? [
-          this.FastChecksFinished,
-          this.CriticalChecksFinished,
-          this.PostponedChecksFinished,
-        ]
-      : [this.FastChecksFinished];
+    return [
+      this.FastChecksFinished,
+      this.CriticalChecksFinished,
+      this.PostponedChecksFinished,
+    ];
   }
 }

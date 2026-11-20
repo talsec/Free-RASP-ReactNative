@@ -24,6 +24,9 @@ const App = () => {
   const [suspiciousApps, setSuspiciousApps] = React.useState<
     SuspiciousAppInfo[]
   >([]);
+  const [criticalChecksStatus, setCriticalChecksStatus] = React.useState<
+    'in progress' | 'completed'
+  >('in progress');
   const [allChecksStatus, setAllChecksStatus] = React.useState<
     'in progress' | 'completed'
   >('in progress');
@@ -307,11 +310,12 @@ const App = () => {
   };
 
   const raspExecutionStateActions = {
-    // Android & iOS
+    criticalChecksFinished: () => {
+      setCriticalChecksStatus('completed');
+    },
     fastChecksFinished: () => {
       setAllChecksStatus('completed');
     },
-    // Android only
     postponedChecksFinished: () => {
       setPostponedChecksStatus('completed');
     },
@@ -378,6 +382,7 @@ const App = () => {
     <DemoApp
       checks={appChecks}
       suspiciousApps={suspiciousApps}
+      criticalChecksFinishedStatus={criticalChecksStatus}
       fastChecksFinishedStatus={allChecksStatus}
       postponedChecksFinishedStatus={postponedChecksStatus}
     />

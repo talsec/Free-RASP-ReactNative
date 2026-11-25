@@ -92,13 +92,13 @@ class FreeraspReactNative: RCTEventEmitter {
   
     @objc(storeExternalId:withResolver:withRejecter:)
     private func storeExternalId(externalId: String, resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        UserDefaults.standard.set(externalId, forKey: "app.talsec.externalid")
+        Talsec.storeExternalId(externalId: externalId)
         resolve("OK - Store external ID")
     }
 
     @objc(removeExternalId:withRejecter:)
     private func removeExternalId(resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
-        UserDefaults.standard.removeObject(forKey: "app.talsec.externalid")
+        Talsec.removeExternalId()
         resolve("OK - External ID removed")
     }
 
@@ -173,9 +173,16 @@ extension SecurityThreatCenter: @retroactive SecurityThreatHandler, @retroactive
         ThreatDispatcher.shared.dispatch(threat: securityThreat)
     }
   
-    // The iOS SDK reports its standard checks as a single "all checks" event, which maps to fastChecksFinished.
-    public func onAllChecksFinished() {
+    public func onCriticalChecksFinished() {
+        ExecutionStateDispatcher.shared.dispatch(event: RaspExecutionStates.criticalChecksFinished)
+    }
+
+    public func onFastChecksFinished() {
         ExecutionStateDispatcher.shared.dispatch(event: RaspExecutionStates.fastChecksFinished)
+    }
+
+    public func onPostponedChecksFinished() {
+        ExecutionStateDispatcher.shared.dispatch(event: RaspExecutionStates.postponedChecksFinished)
     }
 }
 

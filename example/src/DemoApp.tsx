@@ -41,11 +41,13 @@ export const DemoApp: React.FC<{
     detail?: string;
   }[];
   suspiciousApps: SuspiciousAppInfo[];
+  criticalChecksFinishedStatus: 'in progress' | 'completed';
   fastChecksFinishedStatus: 'in progress' | 'completed';
   postponedChecksFinishedStatus: 'in progress' | 'completed';
 }> = ({
   checks,
   suspiciousApps,
+  criticalChecksFinishedStatus,
   fastChecksFinishedStatus,
   postponedChecksFinishedStatus,
 }) => {
@@ -277,14 +279,17 @@ export const DemoApp: React.FC<{
               )}
               <Text style={styles.titleText}>RASP Execution State:</Text>
               {renderExecutionState(
+                'Critical Checks Finished',
+                criticalChecksFinishedStatus
+              )}
+              {renderExecutionState(
                 'Fast Checks Finished',
                 fastChecksFinishedStatus
               )}
-              {Platform.OS === 'android' &&
-                renderExecutionState(
-                  'Postponed Checks Finished',
-                  postponedChecksFinishedStatus
-                )}
+              {renderExecutionState(
+                'Postponed Checks Finished',
+                postponedChecksFinishedStatus
+              )}
               <Text style={styles.titleText}>freeRASP checks:</Text>
               {checks.map((check: any, idx: number) => (
                 <Box
